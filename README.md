@@ -1,18 +1,69 @@
-# React + Vite
+# 🏀 WNBA Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Une application web moderne qui affiche les matchs de la WNBA en temps réel avec scores, statut des matchs et navigation par jour.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Démo
 
-## React Compiler
+👉 https://wnba-tracker.vercel.app (à remplacer avec ton lien)
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+---
 
-Note: This will impact Vite dev & build performances.
+## 📸 Aperçu
 
-## Expanding the ESLint configuration
+- Liste des matchs du jour
+- Scores en direct
+- Statut du match (LIVE / FINISHED / UPCOMING)
+- Navigation par date
+- Affichage des logos d’équipes
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## ⚙️ Stack utilisée
+
+- React (Vite)
+- JavaScript (ES6+)
+- CSS moderne (dark UI)
+- API ESPN (données sportives)
+- Font Awesome (icônes)
+
+---
+
+## 📡 API utilisée
+
+Les données viennent de l’API ESPN : https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard
+
+---
+
+## ✨ Fonctionnalités
+
+- 📅 Navigation par jour
+- 🏀 Affichage des matchs WNBA
+- 📊 Scores en direct
+- 🔴 Indication LIVE
+- 🕒 Heure des matchs
+- 🖼️ Logos des équipes
+- 🎨 Interface moderne type app sportive
+
+---
+
+## 🧠 Ce que j’ai appris
+
+- Utilisation de React (useState, useEffect)
+- Consommation d’API REST
+- Gestion de données dynamiques
+- Structuration de composants React
+- UI moderne avec CSS
+- Déploiement d’une app web
+
+---
+
+## 📁 Installation locale
+
+```bash
+git clone https://github.com/amelbdj/wnba-tracker.git
+cd wnba-tracker
+npm install
+npm run dev
+```
