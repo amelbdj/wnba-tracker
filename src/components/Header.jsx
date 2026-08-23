@@ -6,7 +6,7 @@ const NAV_ITEMS = [
   { to: "/standings", label: "Classement", icon: "fa-solid fa-ranking-star" },
   { to: "/teams", label: "Équipes", icon: "fa-solid fa-people-group" },
   { to: "/players", label: "Joueuses", icon: "fa-solid fa-star" },
-  { label: "Stats", icon: "fa-solid fa-chart-simple", soon: true },
+  { to: "/statistics", label: "Stats", icon: "fa-solid fa-chart-simple" },
 ];
 
 function isActive(pathname, to) {
