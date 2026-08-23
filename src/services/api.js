@@ -9,6 +9,21 @@ export async function getGamesByDate(league, date) {
   return data.events;
 }
 
+// ESPN doesn't guarantee standings entries arrive in rank order (WNBA does,
+// but NCAA's conferences come back in an arbitrary order) — sort explicitly
+// by seed, falling back to win percentage when no seed is reported.
+function sortEntriesByRank(entries) {
+  return [...entries].sort((a, b) => {
+    const seedA = a.stats?.find((s) => s.name === "playoffSeed")?.value;
+    const seedB = b.stats?.find((s) => s.name === "playoffSeed")?.value;
+    if (seedA != null && seedB != null) return seedA - seedB;
+
+    const pctA = a.stats?.find((s) => s.name === "winPercent")?.value ?? 0;
+    const pctB = b.stats?.find((s) => s.name === "winPercent")?.value ?? 0;
+    return pctB - pctA;
+  });
+}
+
 export async function getStandings(league) {
   const res = await fetch(`${CORE_API_ROOT}/${league}/standings`);
   const data = await res.json();
@@ -20,7 +35,7 @@ export async function getStandings(league) {
       id: g.id,
       name: g.name,
       abbreviation: g.abbreviation,
-      entries: g.standings?.entries || [],
+      entries: sortEntriesByRank(g.standings?.entries || []),
     }));
   }
 
