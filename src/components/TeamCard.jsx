@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { getStat } from "../utils/stats";
 
-export default function TeamCard({ entry, conferenceAbbr, index }) {
+export default function TeamCard({ entry, conferenceAbbr, index, league }) {
   const team = entry.team;
   const wins = getStat(entry, "wins")?.value ?? 0;
   const losses = getStat(entry, "losses")?.value ?? 0;
@@ -16,7 +16,7 @@ export default function TeamCard({ entry, conferenceAbbr, index }) {
         : 0;
 
   return (
-    <Link to={`/teams/${team.id}`} className="team-card">
+    <Link to={`/${league}/teams/${team.id}`} className="team-card">
       <div className="team-card-top">
         <span className="rank-badge">{seed}</span>
         {conferenceAbbr && <span className="team-card-conf">{conferenceAbbr}</span>}

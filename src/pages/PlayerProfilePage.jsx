@@ -23,7 +23,7 @@ function parseRecentGames(gamelog, limit = 8) {
 }
 
 export default function PlayerProfilePage() {
-  const { playerId } = useParams();
+  const { league, playerId } = useParams();
   const [player, setPlayer] = useState(null);
   const [gamelog, setGamelog] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,15 +33,15 @@ export default function PlayerProfilePage() {
     setLoading(true);
     async function load() {
       const [profile, log] = await Promise.all([
-        getPlayerProfile(playerId),
-        getPlayerGameLog(playerId),
+        getPlayerProfile(league, playerId),
+        getPlayerGameLog(league, playerId),
       ]);
       setPlayer(profile);
       setGamelog(log);
       setLoading(false);
     }
     load();
-  }, [playerId]);
+  }, [league, playerId]);
 
   if (loading) {
     return (
@@ -70,7 +70,7 @@ export default function PlayerProfilePage() {
 
   return (
     <div className="container">
-      <Link to="/players" className="nav-btn">
+      <Link to={`/${league}/players`} className="nav-btn">
         <i className="fa-solid fa-arrow-left"></i> Toutes les joueuses
       </Link>
 
@@ -123,7 +123,7 @@ export default function PlayerProfilePage() {
             </div>
 
             {player.team && (
-              <Link to={`/teams/${player.team.id}`} className="btn btn-ghost">
+              <Link to={`/${league}/teams/${player.team.id}`} className="btn btn-ghost">
                 <i className="fa-solid fa-people-group"></i> Voir l'équipe
               </Link>
             )}

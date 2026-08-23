@@ -9,7 +9,7 @@ function findStat(items, description, name) {
 }
 
 export default function TeamDetailPage() {
-  const { teamId } = useParams();
+  const { league, teamId } = useParams();
   const [team, setTeam] = useState(null);
   const [roster, setRoster] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,15 +19,15 @@ export default function TeamDetailPage() {
     setLoading(true);
     async function load() {
       const [teamData, rosterData] = await Promise.all([
-        getTeamDetails(teamId),
-        getTeamRoster(teamId),
+        getTeamDetails(league, teamId),
+        getTeamRoster(league, teamId),
       ]);
       setTeam(teamData);
       setRoster(rosterData);
       setLoading(false);
     }
     load();
-  }, [teamId]);
+  }, [league, teamId]);
 
   if (loading) {
     return (
@@ -73,7 +73,7 @@ export default function TeamDetailPage() {
 
   return (
     <div className="container-wide">
-      <Link to="/teams" className="nav-btn">
+      <Link to={`/${league}/teams`} className="nav-btn">
         <i className="fa-solid fa-arrow-left"></i> Toutes les équipes
       </Link>
 
@@ -163,7 +163,7 @@ export default function TeamDetailPage() {
         ) : (
           <div className="player-grid">
             {roster.map((player) => (
-              <PlayerCard key={player.id} player={player} showTeam={false} />
+              <PlayerCard key={player.id} player={player} league={league} showTeam={false} />
             ))}
           </div>
         )}

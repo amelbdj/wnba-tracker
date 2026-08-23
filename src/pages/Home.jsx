@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { getGamesByDate } from "../services/api";
 import GameCard from "../components/GameCard";
 import HeroGame from "../components/HeroGame";
 import Standings from "../components/Standings";
-import { Link } from "react-router-dom";
 
 function formatDate(date) {
   return date.toISOString().slice(0, 10).replace(/-/g, "");
@@ -31,6 +31,7 @@ function getFeaturedGame(games) {
 }
 
 export default function Home() {
+  const { league } = useParams();
   const [date, setDate] = useState(new Date());
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,7 +39,7 @@ export default function Home() {
   async function loadGames() {
     setLoading(true);
     const formatted = formatDate(date);
-    const data = await getGamesByDate(formatted);
+    const data = await getGamesByDate(league, formatted);
     setGames(data || []);
     setLoading(false);
   }
@@ -47,7 +48,7 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadGames();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
+  }, [date, league]);
 
   function prevDay() {
     const newDate = new Date(date);
@@ -69,7 +70,7 @@ export default function Home() {
       {loading ? (
         <div className="skeleton skeleton-card"></div>
       ) : (
-        <HeroGame game={featuredGame} />
+        <HeroGame game={featuredGame} league={league} />
       )}
 
       <div className="section">
@@ -118,7 +119,7 @@ export default function Home() {
         ) : (
           <div className="games-grid">
             {games.map((game) => (
-              <GameCard key={game.id} game={game} />
+              <GameCard key={game.id} game={game} league={league} />
             ))}
           </div>
         )}
@@ -132,12 +133,12 @@ export default function Home() {
             </span>
             <div className="section-title">Le top de la ligue</div>
           </div>
-          <Link to="/standings" className="section-link">
+          <Link to={`/${league}/standings`} className="section-link">
             Classement complet <i className="fa-solid fa-arrow-right"></i>
           </Link>
         </div>
 
-        <Standings limit={5} />
+        <Standings league={league} limit={5} />
       </div>
     </div>
   );

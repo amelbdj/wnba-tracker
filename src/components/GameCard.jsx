@@ -1,7 +1,7 @@
 import { useState } from "react";
 import GameDetails from "./GameDetails";
 
-export default function GameCard({ game }) {
+export default function GameCard({ game, league }) {
   const comp = game.competitions[0];
   const [open, setOpen] = useState(false);
 
@@ -71,7 +71,7 @@ export default function GameCard({ game }) {
         </div>
       </div>
 
-      {open && <GameDetails gameId={game.id} onClose={() => setOpen(false)} />}
+      {open && <GameDetails gameId={game.id} league={league} onClose={() => setOpen(false)} />}
     </>
   );
 }
