@@ -4,10 +4,36 @@ import { Link, useLocation } from "react-router-dom";
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: "fa-solid fa-house" },
   { to: "/standings", label: "Classement", icon: "fa-solid fa-ranking-star" },
-  { label: "Équipes", icon: "fa-solid fa-people-group", soon: true },
-  { label: "Joueuses", icon: "fa-solid fa-star", soon: true },
+  { to: "/teams", label: "Équipes", icon: "fa-solid fa-people-group" },
+  { to: "/players", label: "Joueuses", icon: "fa-solid fa-star" },
   { label: "Stats", icon: "fa-solid fa-chart-simple", soon: true },
 ];
+
+function isActive(pathname, to) {
+  if (to === "/") return pathname === "/";
+  return pathname === to || pathname.startsWith(`${to}/`);
+}
+
+function NavLinks({ pathname }) {
+  return NAV_ITEMS.map((item) =>
+    item.soon ? (
+      <span key={item.label} className="nav-item disabled">
+        <i className={item.icon}></i>
+        {item.label}
+        <span className="nav-soon">Bientôt</span>
+      </span>
+    ) : (
+      <Link
+        key={item.to}
+        to={item.to}
+        className={`nav-item${isActive(pathname, item.to) ? " active" : ""}`}
+      >
+        <i className={item.icon}></i>
+        {item.label}
+      </Link>
+    ),
+  );
+}
 
 export default function Header() {
   const location = useLocation();
@@ -32,24 +58,7 @@ export default function Header() {
         </Link>
 
         <nav className="main-nav">
-          {NAV_ITEMS.map((item) =>
-            item.soon ? (
-              <span key={item.label} className="nav-item disabled">
-                <i className={item.icon}></i>
-                {item.label}
-                <span className="nav-soon">Bientôt</span>
-              </span>
-            ) : (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`nav-item${location.pathname === item.to ? " active" : ""}`}
-              >
-                <i className={item.icon}></i>
-                {item.label}
-              </Link>
-            ),
-          )}
+          <NavLinks pathname={location.pathname} />
         </nav>
 
         <button
@@ -64,24 +73,7 @@ export default function Header() {
 
       {open && (
         <nav className="mobile-nav">
-          {NAV_ITEMS.map((item) =>
-            item.soon ? (
-              <span key={item.label} className="nav-item disabled">
-                <i className={item.icon}></i>
-                {item.label}
-                <span className="nav-soon">Bientôt</span>
-              </span>
-            ) : (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`nav-item${location.pathname === item.to ? " active" : ""}`}
-              >
-                <i className={item.icon}></i>
-                {item.label}
-              </Link>
-            ),
-          )}
+          <NavLinks pathname={location.pathname} />
         </nav>
       )}
     </header>

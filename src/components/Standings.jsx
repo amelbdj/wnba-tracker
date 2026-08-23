@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getStandings } from "../services/api";
-
-function stat(entry, name) {
-  return entry.stats?.find((s) => s.name === name);
-}
+import { getStat as stat } from "../utils/stats";
 
 function rankClass(index) {
   if (index === 0) return "rank-badge gold";
@@ -48,10 +46,10 @@ function StandingsTable({ entries }) {
           <div key={entry.team?.id || index} className="standing-row">
             <span className={rankClass(index)}>{index + 1}</span>
 
-            <div className="standing-team">
+            <Link to={`/teams/${entry.team?.id}`} className="standing-team">
               <img src={entry.team?.logos?.[0]?.href} alt="" />
               <span>{entry.team?.displayName}</span>
-            </div>
+            </Link>
 
             <span className="standing-w">{wins}</span>
             <span className="standing-l">{losses}</span>
