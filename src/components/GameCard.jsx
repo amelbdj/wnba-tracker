@@ -1,53 +1,77 @@
+import { useState } from "react";
+import GameDetails from "./GameDetails";
+
 export default function GameCard({ game }) {
   const comp = game.competitions[0];
+  const [open, setOpen] = useState(false);
 
   const team1 = comp.competitors[0];
   const team2 = comp.competitors[1];
 
-  const status = game.status.type.description;
-  const isLive = status === "In Progress";
+  const statusType = game.status?.type || {};
+  const description = statusType.description || "";
+  const isLive = statusType.state === "in" || description === "In Progress";
+  const isFinal = statusType.state === "post" || description === "Final";
+
+  const score1 = Number(team1.score);
+  const score2 = Number(team2.score);
+  const team1Wins = isFinal && score1 > score2;
+  const team2Wins = isFinal && score2 > score1;
 
   const time = new Date(game.date).toLocaleTimeString("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
   });
 
+  const liveDetail =
+    game.status?.displayClock && game.status?.period
+      ? `Q${game.status.period} · ${game.status.displayClock}`
+      : statusType.shortDetail || description;
+
   return (
-    <div className="card">
-      {/* teams */}
-      <div className="team">
-        <div className="team-row">
-          <img src={team1.team.logo} />
-          <span>{team1.team.displayName}</span>
-        </div>
-
-        <div className="team-row">
-          <img src={team2.team.logo} />
-          <span>{team2.team.displayName}</span>
-        </div>
-      </div>
-
-      {/* score + time */}
-      <div className="middle">
-        <div className="score">
-          {team1.score} - {team2.score}
-        </div>
-
-        <div className="time">
-          <i className="fa-regular fa-clock"></i> {time}
-        </div>
-      </div>
-
-      {/* status */}
-      <div className="status">
-        {isLive ? (
-          <span className="live">
-            <i className="fa-solid fa-circle"></i> LIVE
+    <>
+      <div
+        className={`card${isLive ? " is-live" : ""}`}
+        onClick={() => setOpen(true)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === "Enter" && setOpen(true)}
+      >
+        <div className="card-head">
+          {isLive ? (
+            <span className="card-status live">
+              <span className="dot"></span> {liveDetail || "LIVE"}
+            </span>
+          ) : (
+            <span className="card-status">{description}</span>
+          )}
+          <span className="card-time">
+            <i className="fa-regular fa-clock"></i> {time}
           </span>
-        ) : (
-          status
-        )}
+        </div>
+
+        <div className="card-matchup">
+          <div className={`card-team${team1Wins ? " is-winner" : ""}`}>
+            <div className="card-team-id">
+              <img src={team1.team.logo} alt="" />
+              <span className="card-team-name">{team1.team.displayName}</span>
+            </div>
+            <span className="card-team-score">{team1.score}</span>
+          </div>
+
+          <div className="card-divider"></div>
+
+          <div className={`card-team${team2Wins ? " is-winner" : ""}`}>
+            <div className="card-team-id">
+              <img src={team2.team.logo} alt="" />
+              <span className="card-team-name">{team2.team.displayName}</span>
+            </div>
+            <span className="card-team-score">{team2.score}</span>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {open && <GameDetails gameId={game.id} onClose={() => setOpen(false)} />}
+    </>
   );
 }
