@@ -250,17 +250,7 @@ img {
   letter-spacing: -0.01em;
 }
 
-.brand-mark {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--gradient-brand);
-  box-shadow: var(--shadow-glow);
-  color: #fff;
-  font-size: 15px;
+.brand svg {
   flex-shrink: 0;
 }
 

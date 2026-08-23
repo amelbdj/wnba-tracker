@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { LEAGUES, getLeague } from "../leagues";
+import Logo from "./Logo";
 
 const NAV_ITEMS = [
   { section: "", label: "Dashboard", icon: "fa-solid fa-house" },
@@ -98,9 +99,7 @@ export default function Header() {
       <div className="header-inner">
         <div className="header-left">
           <Link to={`/${league}`} className="brand">
-            <span className="brand-mark">
-              <i className="fa-solid fa-basketball"></i>
-            </span>
+            <Logo size={30} />
             <span className="brand-text">
               FRONTROW
               <small>The home of women's sports.</small>
