@@ -56,6 +56,12 @@ export async function getPlayerGameLog(playerId) {
   return res.json();
 }
 
+export async function getLeagueLeaders() {
+  const res = await fetch(`${SITE_API}/statistics`);
+  const data = await res.json();
+  return data?.stats?.categories || [];
+}
+
 let allPlayersPromise = null;
 
 // There is no single "all players" endpoint, so the directory is built by
