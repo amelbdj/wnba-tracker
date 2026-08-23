@@ -18,7 +18,7 @@ function StreakPill({ displayValue }) {
   );
 }
 
-function StandingsTable({ entries }) {
+function StandingsTable({ entries, league }) {
   return (
     <div className="standings-card">
       <div className="standings-header-row">
@@ -46,7 +46,7 @@ function StandingsTable({ entries }) {
           <div key={entry.team?.id || index} className="standing-row">
             <span className={rankClass(index)}>{index + 1}</span>
 
-            <Link to={`/teams/${entry.team?.id}`} className="standing-team">
+            <Link to={`/${league}/teams/${entry.team?.id}`} className="standing-team">
               <img src={entry.team?.logos?.[0]?.href} alt="" />
               <span>{entry.team?.displayName}</span>
             </Link>
@@ -71,18 +71,20 @@ function StandingsTable({ entries }) {
   );
 }
 
-export default function Standings({ limit, grouped }) {
+export default function Standings({ league, limit, grouped }) {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
     async function load() {
-      const data = await getStandings();
+      const data = await getStandings(league);
       setGroups(data || []);
       setLoading(false);
     }
     load();
-  }, []);
+  }, [league]);
 
   if (loading) {
     return (
@@ -116,7 +118,7 @@ export default function Standings({ limit, grouped }) {
             <div className="section-head">
               <div className="section-title standings-group-title">{group.name}</div>
             </div>
-            <StandingsTable entries={group.entries} />
+            <StandingsTable entries={group.entries} league={league} />
           </div>
         ))}
       </div>
@@ -129,5 +131,5 @@ export default function Standings({ limit, grouped }) {
     return pb - pa;
   });
 
-  return <StandingsTable entries={limit ? sorted.slice(0, limit) : sorted} />;
+  return <StandingsTable entries={limit ? sorted.slice(0, limit) : sorted} league={league} />;
 }

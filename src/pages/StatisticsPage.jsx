@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getLeagueLeaders } from "../services/api";
+import { getLeague } from "../leagues";
 
 const CATEGORIES = [
   { name: "pointsPerGame", label: "Points", short: "PPG", icon: "fa-solid fa-basketball" },
@@ -33,18 +34,21 @@ function LeaderTeam({ team }) {
 }
 
 export default function StatisticsPage() {
+  const { league } = useParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(CATEGORIES[0].name);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
     async function load() {
-      const data = await getLeagueLeaders();
+      const data = await getLeagueLeaders(league);
       setCategories(data || []);
       setLoading(false);
     }
     load();
-  }, []);
+  }, [league]);
 
   const byName = Object.fromEntries(categories.map((c) => [c.name, c]));
   const available = CATEGORIES.filter((c) => byName[c.name]?.leaders?.length);
@@ -58,7 +62,7 @@ export default function StatisticsPage() {
         <span className="badge-icon">
           <i className="fa-solid fa-chart-simple"></i>
         </span>
-        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Statistiques</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Statistiques {getLeague(league).label}</h1>
       </div>
       <p className="page-subtitle">Les meilleures performances de la ligue, catégorie par catégorie.</p>
 
@@ -85,7 +89,7 @@ export default function StatisticsPage() {
           </div>
 
           {top && (
-            <Link to={`/players/${top.athlete.id}`} className="leader-spotlight">
+            <Link to={`/${league}/players/${top.athlete.id}`} className="leader-spotlight">
               <div className="leader-spotlight-glow"></div>
               <span className="rank-badge gold leader-spotlight-rank">1</span>
 
@@ -113,7 +117,7 @@ export default function StatisticsPage() {
             {rest.slice(0, 9).map((leader, i) => (
               <Link
                 key={leader.athlete.id}
-                to={`/players/${leader.athlete.id}`}
+                to={`/${league}/players/${leader.athlete.id}`}
                 className="leader-row"
               >
                 <span className={rankClass(i + 1)}>{i + 2}</span>

@@ -12,16 +12,16 @@ function formatStatName(name) {
     .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
 }
 
-export default function GameDetails({ gameId, onClose }) {
+export default function GameDetails({ gameId, league, onClose }) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
     async function load() {
-      const res = await getGameDetails(gameId);
+      const res = await getGameDetails(league, gameId);
       setData(res);
     }
     load();
-  }, [gameId]);
+  }, [gameId, league]);
 
   if (!data || !data.boxscore || !data.boxscore.teams) {
     return (

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { getAllPlayers, getStandings } from "../services/api";
+import { useParams } from "react-router-dom";
+import { getAllPlayers, getStandings, searchPlayers } from "../services/api";
 import PlayerCard from "../components/PlayerCard";
+import { getLeague } from "../leagues";
 
 const POSITIONS = [
   { value: "all", label: "Toutes" },
@@ -9,7 +11,7 @@ const POSITIONS = [
   { value: "Center", label: "Pivots" },
 ];
 
-export default function PlayersPage() {
+function AggregatePlayers({ league }) {
   const [players, setPlayers] = useState([]);
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,8 +20,13 @@ export default function PlayersPage() {
   const [positionFilter, setPositionFilter] = useState("all");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(true);
     async function load() {
-      const [allPlayers, standings] = await Promise.all([getAllPlayers(), getStandings()]);
+      const [allPlayers, standings] = await Promise.all([
+        getAllPlayers(league),
+        getStandings(league),
+      ]);
       setPlayers(allPlayers);
       setTeams(
         standings
@@ -29,7 +36,7 @@ export default function PlayersPage() {
       setLoading(false);
     }
     load();
-  }, []);
+  }, [league]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -43,15 +50,7 @@ export default function PlayersPage() {
   }, [players, query, teamFilter, positionFilter]);
 
   return (
-    <div className="container-wide">
-      <div className="page-title">
-        <span className="badge-icon">
-          <i className="fa-solid fa-star"></i>
-        </span>
-        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Joueuses WNBA</h1>
-      </div>
-      <p className="page-subtitle">Recherche et explore les effectifs de toute la ligue.</p>
-
+    <>
       <div className="filter-bar">
         <div className="search-field">
           <i className="fa-solid fa-magnifying-glass"></i>
@@ -108,11 +107,108 @@ export default function PlayersPage() {
           </div>
           <div className="player-grid">
             {filtered.map((p) => (
-              <PlayerCard key={p.id} player={p} />
+              <PlayerCard key={p.id} player={p} league={league} />
             ))}
           </div>
         </>
       )}
+    </>
+  );
+}
+
+function SearchPlayers({ league }) {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [searched, setSearched] = useState(false);
+
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setResults([]);
+      setSearched(false);
+      return;
+    }
+
+    setSearching(true);
+    const timeout = setTimeout(async () => {
+      const found = await searchPlayers(league, q);
+      setResults(found);
+      setSearching(false);
+      setSearched(true);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [league, query]);
+
+  return (
+    <>
+      <div className="filter-bar">
+        <div className="search-field">
+          <i className="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            placeholder="Rechercher une joueuse par son nom..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoFocus
+          />
+        </div>
+      </div>
+
+      {query.trim().length < 2 ? (
+        <div className="empty-state">
+          <i className="fa-solid fa-magnifying-glass"></i>
+          <strong>Cherche une joueuse</strong>
+          <span>
+            {getLeague(league).label} compte des centaines d'équipes — tape au moins 2 lettres
+            d'un nom pour commencer.
+          </span>
+        </div>
+      ) : searching ? (
+        <div className="player-grid">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="skeleton skeleton-card"></div>
+          ))}
+        </div>
+      ) : searched && results.length === 0 ? (
+        <div className="empty-state">
+          <i className="fa-solid fa-magnifying-glass"></i>
+          <strong>Aucune joueuse trouvée</strong>
+          <span>Vérifie l'orthographe ou essaie un autre nom.</span>
+        </div>
+      ) : (
+        <>
+          <div className="results-count">
+            {results.length} résultat{results.length > 1 ? "s" : ""}
+          </div>
+          <div className="player-grid">
+            {results.map((p) => (
+              <PlayerCard key={p.id} player={p} league={league} showTeam={!!p.team} />
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+export default function PlayersPage() {
+  const { league } = useParams();
+  const mode = getLeague(league).playersMode;
+
+  return (
+    <div className="container-wide">
+      <div className="page-title">
+        <span className="badge-icon">
+          <i className="fa-solid fa-star"></i>
+        </span>
+        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Joueuses {getLeague(league).label}</h1>
+      </div>
+      <p className="page-subtitle">Recherche et explore les effectifs de la ligue.</p>
+
+      {mode === "search" ? <SearchPlayers league={league} /> : <AggregatePlayers league={league} />}
     </div>
   );
 }

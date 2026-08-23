@@ -1,7 +1,8 @@
 import { useState } from "react";
 import GameDetails from "./GameDetails";
+import { getLeague } from "../leagues";
 
-export default function HeroGame({ game }) {
+export default function HeroGame({ game, league }) {
   const [open, setOpen] = useState(false);
 
   if (!game) {
@@ -9,7 +10,7 @@ export default function HeroGame({ game }) {
       <section className="hero">
         <div className="hero-inner">
           <span className="hero-tag">
-            <span className="dot"></span> WNBA Tracker
+            <span className="dot"></span> {getLeague(league).label}
           </span>
           <div className="hero-empty">
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
@@ -99,7 +100,7 @@ export default function HeroGame({ game }) {
         </div>
       </section>
 
-      {open && <GameDetails gameId={game.id} onClose={() => setOpen(false)} />}
+      {open && <GameDetails gameId={game.id} league={league} onClose={() => setOpen(false)} />}
     </>
   );
 }
