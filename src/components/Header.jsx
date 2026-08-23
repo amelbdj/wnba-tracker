@@ -102,8 +102,8 @@ export default function Header() {
               <i className="fa-solid fa-basketball"></i>
             </span>
             <span className="brand-text">
-              WNBA Tracker
-              <small>LIVE SCORES &amp; STANDINGS</small>
+              FRONTROW
+              <small>The home of women's sports.</small>
             </span>
           </Link>
 

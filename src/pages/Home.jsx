@@ -67,6 +67,12 @@ export default function Home() {
 
   return (
     <div className="container-wide">
+      <div className="brand-kicker">
+        <span className="brand-kicker-mark">FRONTROW</span>
+        <span className="brand-kicker-divider"></span>
+        <span className="brand-kicker-tagline">The home of women's sports.</span>
+      </div>
+
       {loading ? (
         <div className="skeleton skeleton-card"></div>
       ) : (
