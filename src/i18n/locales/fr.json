@@ -131,5 +131,33 @@
     "fgPct": "% Tirs",
     "threePct": "% 3 pts",
     "ftPct": "% Lancers francs"
+  },
+  "landing": {
+    "enter": "Explorer FRONTROW",
+    "heroSubtitle": "Scores en direct, classements et joueuses à suivre : le basketball féminin professionnel réuni au même endroit.",
+    "ctaPrimary": "Voir les matchs du jour",
+    "ctaSecondary": "Découvrir les compétitions",
+    "featured": "À la une",
+    "competitionsEyebrow": "Compétitions",
+    "competitionsTitle": "Le basketball féminin, toutes ligues confondues",
+    "competitionsSubtitle": "De la WNBA aux Jeux Olympiques, suis toutes les grandes compétitions féminines.",
+    "watchEyebrow": "Joueuses à suivre",
+    "watchTitle": "Les meilleures marqueuses du moment",
+    "futureEyebrow": "Ce qui arrive",
+    "futureTitle": "FRONTROW ne s'arrête pas au basketball",
+    "futureSubtitle": "On construit la maison du sport féminin dans son ensemble. D'autres sports rejoindront bientôt la plateforme.",
+    "footerNote": "Construit pour les fans du sport féminin."
+  },
+  "leagueBlurb": {
+    "wnba": "La ligue professionnelle nord-américaine",
+    "ncaa": "Le basketball universitaire américain",
+    "fiba": "Les compétitions internationales",
+    "olympics": "Le tournoi olympique féminin"
+  },
+  "futureSports": {
+    "soccer": "Football",
+    "tennis": "Tennis",
+    "volleyball": "Volleyball",
+    "athletics": "Athlétisme"
   }
 }

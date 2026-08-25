@@ -131,5 +131,33 @@
     "fgPct": "% Tiros",
     "threePct": "% Triples",
     "ftPct": "% Tiros libres"
+  },
+  "landing": {
+    "enter": "Explorar FRONTROW",
+    "heroSubtitle": "Marcadores en directo, clasificaciones y jugadoras a seguir: el baloncesto femenino profesional reunido en un solo lugar.",
+    "ctaPrimary": "Ver los partidos de hoy",
+    "ctaSecondary": "Descubrir las competiciones",
+    "featured": "Destacado",
+    "competitionsEyebrow": "Competiciones",
+    "competitionsTitle": "Baloncesto femenino, todas las ligas",
+    "competitionsSubtitle": "De la WNBA a los Juegos Olímpicos, sigue todas las grandes competiciones femeninas.",
+    "watchEyebrow": "Jugadoras a seguir",
+    "watchTitle": "Las mejores anotadoras del momento",
+    "futureEyebrow": "Lo que viene",
+    "futureTitle": "FRONTROW no se detiene en el baloncesto",
+    "futureSubtitle": "Estamos construyendo la casa del deporte femenino en su conjunto. Pronto se sumarán más deportes a la plataforma.",
+    "footerNote": "Creado para las fans del deporte femenino."
+  },
+  "leagueBlurb": {
+    "wnba": "La liga profesional norteamericana",
+    "ncaa": "El baloncesto universitario estadounidense",
+    "fiba": "Las competiciones internacionales",
+    "olympics": "El torneo olímpico femenino"
+  },
+  "futureSports": {
+    "soccer": "Fútbol",
+    "tennis": "Tenis",
+    "volleyball": "Vóleibol",
+    "athletics": "Atletismo"
   }
 }
