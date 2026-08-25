@@ -82,7 +82,7 @@ export default function TeamDetailPage() {
           className="team-hero-glow"
           style={{
             background: `radial-gradient(60% 80% at 15% 20%, ${
-              team.color ? `#${team.color}55` : "rgba(109,91,255,0.35)"
+              team.color ? `#${team.color}55` : "rgba(79,70,229,0.35)"
             } 0%, transparent 70%)`,
           }}
         ></div>
