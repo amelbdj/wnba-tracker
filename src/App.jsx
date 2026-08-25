@@ -1,5 +1,6 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
+import Landing from "./pages/Landing";
 import Home from "./pages/Home";
 import StandingsPage from "./pages/StandingsPage";
 import TeamsPage from "./pages/TeamsPage";
@@ -7,12 +8,11 @@ import TeamDetailPage from "./pages/TeamDetailPage";
 import PlayersPage from "./pages/PlayersPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
 import StatisticsPage from "./pages/StatisticsPage";
-import { DEFAULT_LEAGUE } from "./leagues";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to={`/${DEFAULT_LEAGUE}`} replace />} />
+      <Route path="/" element={<Landing />} />
       <Route path="/:league" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="standings" element={<StandingsPage />} />

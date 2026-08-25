@@ -6,30 +6,10 @@ import GameCard from "../components/GameCard";
 import HeroGame from "../components/HeroGame";
 import Standings from "../components/Standings";
 import { toLocale } from "../utils/locale";
-
-function formatDate(date) {
-  return date.toISOString().slice(0, 10).replace(/-/g, "");
-}
+import { formatDateParam, getFeaturedGame } from "../utils/games";
 
 function isSameDay(a, b) {
-  return formatDate(a) === formatDate(b);
-}
-
-function getFeaturedGame(games) {
-  if (!games.length) return null;
-
-  const live = games.find((g) => g.status?.type?.state === "in");
-  if (live) return live;
-
-  const upcoming = games
-    .filter((g) => g.status?.type?.state === "pre")
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-  if (upcoming.length) return upcoming[0];
-
-  const final = games.find((g) => g.status?.type?.state === "post");
-  if (final) return final;
-
-  return games[0];
+  return formatDateParam(a) === formatDateParam(b);
 }
 
 export default function Home() {
@@ -41,7 +21,7 @@ export default function Home() {
 
   async function loadGames() {
     setLoading(true);
-    const formatted = formatDate(date);
+    const formatted = formatDateParam(date);
     const data = await getGamesByDate(league, formatted);
     setGames(data || []);
     setLoading(false);
