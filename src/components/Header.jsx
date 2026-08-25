@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { LEAGUES, getLeague } from "../leagues";
+import { LANGUAGES } from "../i18n";
 import Logo from "./Logo";
-
-const NAV_ITEMS = [
-  { section: "", label: "Dashboard", icon: "fa-solid fa-house" },
-  { section: "standings", label: "Classement", icon: "fa-solid fa-ranking-star" },
-  { section: "teams", label: "Équipes", icon: "fa-solid fa-people-group" },
-  { section: "players", label: "Joueuses", icon: "fa-solid fa-star" },
-  { section: "statistics", label: "Stats", icon: "fa-solid fa-chart-simple" },
-];
 
 function isActive(pathname, league, section) {
   const to = section ? `/${league}/${section}` : `/${league}`;
@@ -23,6 +17,15 @@ function currentSection(pathname, league) {
 }
 
 function NavLinks({ pathname, league }) {
+  const { t } = useTranslation();
+  const NAV_ITEMS = [
+    { section: "", label: t("nav.dashboard"), icon: "fa-solid fa-house" },
+    { section: "standings", label: t("nav.standings"), icon: "fa-solid fa-ranking-star" },
+    { section: "teams", label: t("nav.teams"), icon: "fa-solid fa-people-group" },
+    { section: "players", label: t("nav.players"), icon: "fa-solid fa-star" },
+    { section: "statistics", label: t("nav.stats"), icon: "fa-solid fa-chart-simple" },
+  ];
+
   return NAV_ITEMS.map((item) => (
     <Link
       key={item.section}
@@ -36,6 +39,7 @@ function NavLinks({ pathname, league }) {
 }
 
 function LeagueSwitcher({ league, pathname }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const current = getLeague(league);
@@ -73,7 +77,7 @@ function LeagueSwitcher({ league, pathname }) {
                 aria-selected={l.slug === league}
               >
                 <i className={l.icon}></i>
-                {l.label}
+                {t(l.labelKey)}
                 {l.slug === league && <i className="fa-solid fa-check check"></i>}
               </button>
             ))}
@@ -84,7 +88,54 @@ function LeagueSwitcher({ league, pathname }) {
   );
 }
 
+function LanguageSwitcher() {
+  const { i18n } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const current = LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+
+  function goTo(code) {
+    setOpen(false);
+    i18n.changeLanguage(code);
+  }
+
+  return (
+    <div className="lang-switcher">
+      <button
+        className={`icon-btn lang-trigger${open ? " open" : ""}`}
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label="Language"
+      >
+        <span className="lang-code">{current.code.toUpperCase()}</span>
+      </button>
+
+      {open && (
+        <>
+          <div className="league-menu-backdrop" onClick={() => setOpen(false)}></div>
+          <div className="league-menu lang-menu" role="listbox">
+            {LANGUAGES.map((l) => (
+              <button
+                key={l.code}
+                className={`league-option${l.code === i18n.language ? " active" : ""}`}
+                onClick={() => goTo(l.code)}
+                role="option"
+                aria-selected={l.code === i18n.language}
+              >
+                <span className="lang-code">{l.code.toUpperCase()}</span>
+                {l.label}
+                {l.code === i18n.language && <i className="fa-solid fa-check check"></i>}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function Header() {
+  const { t } = useTranslation();
   const { league } = useParams();
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -113,14 +164,18 @@ export default function Header() {
           <NavLinks pathname={location.pathname} league={league} />
         </nav>
 
-        <button
-          className="nav-toggle"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Ouvrir le menu"
-          aria-expanded={open}
-        >
-          <i className={open ? "fa-solid fa-xmark" : "fa-solid fa-bars"}></i>
-        </button>
+        <div className="header-right">
+          <LanguageSwitcher />
+
+          <button
+            className="nav-toggle"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={t("nav.openMenu")}
+            aria-expanded={open}
+          >
+            <i className={open ? "fa-solid fa-xmark" : "fa-solid fa-bars"}></i>
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -136,9 +191,26 @@ export default function Header() {
               </Link>
             ))}
           </div>
+          <div className="chip-group" style={{ marginBottom: 14 }}>
+            {LANGUAGES.map((l) => (
+              <MobileLangChip key={l.code} lang={l} />
+            ))}
+          </div>
           <NavLinks pathname={location.pathname} league={league} />
         </nav>
       )}
     </header>
+  );
+}
+
+function MobileLangChip({ lang }) {
+  const { i18n } = useTranslation();
+  return (
+    <button
+      className={`chip${lang.code === i18n.language ? " active" : ""}`}
+      onClick={() => i18n.changeLanguage(lang.code)}
+    >
+      {lang.label}
+    </button>
   );
 }

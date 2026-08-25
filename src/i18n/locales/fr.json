@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "standings": "Classement",
+    "teams": "Équipes",
+    "players": "Joueuses",
+    "stats": "Stats",
+    "comingSoon": "Bientôt",
+    "openMenu": "Ouvrir le menu"
+  },
+  "league": {
+    "wnba": "WNBA",
+    "ncaa": "NCAA Femmes",
+    "fiba": "FIBA",
+    "olympics": "Jeux Olympiques"
+  },
+  "common": {
+    "viewStats": "Voir les statistiques",
+    "viewTeam": "Voir l'équipe",
+    "close": "Fermer",
+    "retryLater": "Réessaie un peu plus tard.",
+    "tryAnotherSearch": "Essaie une autre recherche.",
+    "backToDashboard": "Retour au dashboard",
+    "allTeams": "Toutes les équipes",
+    "allPlayers": "Toutes les joueuses",
+    "loadingStats": "Chargement des stats...",
+    "wins": "Victoires",
+    "losses": "Défaites",
+    "winAbbr": "V",
+    "lossAbbr": "D",
+    "pctWinAbbr": "%V"
+  },
+  "home": {
+    "prevDay": "Jour précédent",
+    "nextDay": "Jour suivant",
+    "today": "Aujourd'hui",
+    "backToToday": "Revenir à aujourd'hui",
+    "gamesToday": "Matchs du jour",
+    "noGamesTitle": "Aucun match ce jour-là",
+    "noGamesSubtitle": "Essaie une autre date pour voir le calendrier de la ligue.",
+    "topOfLeague": "Le top de la ligue",
+    "fullStandings": "Classement complet"
+  },
+  "hero": {
+    "live": "En direct",
+    "upcoming": "À venir",
+    "final": "Terminé",
+    "nextGame": "Prochain match à suivre",
+    "liveGame": "Match en direct",
+    "lastResult": "Dernier résultat",
+    "noGameSubtitle": "Change de date pour découvrir les prochains matchs de la ligue."
+  },
+  "game": {
+    "live": "LIVE",
+    "final": "Final",
+    "scheduled": "Programmé"
+  },
+  "modal": {
+    "gameStats": "Statistiques du match"
+  },
+  "standings": {
+    "rank": "#",
+    "team": "Équipe",
+    "streak": "Série",
+    "subtitle": "Le classement complet de la ligue, mis à jour en direct.",
+    "unavailable": "Classement indisponible"
+  },
+  "teams": {
+    "subtitle": "Toutes les équipes de la ligue, par conférence.",
+    "searchPlaceholder": "Rechercher une équipe...",
+    "unavailable": "Équipes indisponibles",
+    "noResults": "Aucune équipe trouvée",
+    "pctWin": "% V"
+  },
+  "team": {
+    "notFound": "Équipe introuvable",
+    "notFoundSubtitle": "Cette équipe n'a pas pu être chargée.",
+    "pointsPerGame": "Points/match",
+    "pointsAgainst": "Points encaissés",
+    "differential": "Différentiel",
+    "nextGame": "Prochain match :",
+    "roster": "Effectif",
+    "rosterCount_one": "{{count}} joueuse",
+    "rosterCount_other": "{{count}} joueuses",
+    "rosterUnavailable": "Effectif indisponible"
+  },
+  "players": {
+    "subtitle": "Recherche et explore les effectifs de la ligue.",
+    "searchPlaceholder": "Rechercher une joueuse...",
+    "searchPlaceholderLarge": "Rechercher une joueuse par son nom...",
+    "noResults": "Aucune joueuse trouvée",
+    "tryOtherFilter": "Essaie une autre recherche ou change de filtre.",
+    "noResultsSubtitle": "Vérifie l'orthographe ou essaie un autre nom.",
+    "resultsCount_one": "{{count}} joueuse",
+    "resultsCount_other": "{{count}} joueuses",
+    "searchResultsCount_one": "{{count}} résultat",
+    "searchResultsCount_other": "{{count}} résultats",
+    "searchPromptTitle": "Cherche une joueuse",
+    "searchPromptSubtitle": "{{league}} compte des centaines d'équipes — tape au moins 2 lettres d'un nom pour commencer."
+  },
+  "positions": {
+    "all": "Toutes",
+    "guard": "Arrières",
+    "forward": "Ailières",
+    "center": "Pivots"
+  },
+  "player": {
+    "notFound": "Joueuse introuvable",
+    "notFoundSubtitle": "Ce profil n'a pas pu être chargé.",
+    "age_one": "{{count}} an",
+    "age_other": "{{count}} ans",
+    "seasonStatsFallback": "Stats de la saison",
+    "pointsScored": "Points marqués",
+    "recentTrend": "Tendance récente",
+    "noRecentGames": "Pas de matchs récents",
+    "noPerformanceData": "Aucune donnée de performance disponible pour le moment.",
+    "recentGames": "Derniers matchs",
+    "pts": "{{count}} pts"
+  },
+  "statistics": {
+    "subtitle": "Les meilleures performances de la ligue, catégorie par catégorie.",
+    "unavailable": "Statistiques indisponibles"
+  },
+  "statCategories": {
+    "points": "Points",
+    "rebounds": "Rebonds",
+    "assists": "Passes",
+    "steals": "Interceptions",
+    "blocks": "Contres",
+    "threeMade": "3 points",
+    "fgPct": "% Tirs",
+    "threePct": "% 3 pts",
+    "ftPct": "% Lancers francs"
+  }
+}

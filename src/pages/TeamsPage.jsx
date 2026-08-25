@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getStandings } from "../services/api";
 import TeamCard from "../components/TeamCard";
 import { getLeague } from "../leagues";
 
 export default function TeamsPage() {
+  const { t } = useTranslation();
   const { league } = useParams();
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,9 +40,11 @@ export default function TeamsPage() {
         <span className="badge-icon">
           <i className="fa-solid fa-people-group"></i>
         </span>
-        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Équipes {getLeague(league).label}</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 800 }}>
+          {t("nav.teams")} {t(getLeague(league).labelKey)}
+        </h1>
       </div>
-      <p className="page-subtitle">Toutes les équipes de la ligue, par conférence.</p>
+      <p className="page-subtitle">{t("teams.subtitle")}</p>
 
       {!loading && groups.length > 0 && (
         <div className="filter-bar">
@@ -48,7 +52,7 @@ export default function TeamsPage() {
             <i className="fa-solid fa-magnifying-glass"></i>
             <input
               type="text"
-              placeholder="Rechercher une équipe..."
+              placeholder={t("teams.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -65,14 +69,14 @@ export default function TeamsPage() {
       ) : groups.length === 0 ? (
         <div className="empty-state">
           <i className="fa-solid fa-people-group"></i>
-          <strong>Équipes indisponibles</strong>
-          <span>Réessaie un peu plus tard.</span>
+          <strong>{t("teams.unavailable")}</strong>
+          <span>{t("common.retryLater")}</span>
         </div>
       ) : filteredGroups.length === 0 ? (
         <div className="empty-state">
           <i className="fa-solid fa-magnifying-glass"></i>
-          <strong>Aucune équipe trouvée</strong>
-          <span>Essaie une autre recherche.</span>
+          <strong>{t("teams.noResults")}</strong>
+          <span>{t("common.tryAnotherSearch")}</span>
         </div>
       ) : (
         filteredGroups.map((group) => (

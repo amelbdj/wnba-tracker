@@ -1,28 +1,28 @@
 export const LEAGUES = [
   {
     slug: "wnba",
-    label: "WNBA",
+    labelKey: "league.wnba",
     shortLabel: "WNBA",
     icon: "fa-solid fa-basketball",
     playersMode: "aggregate",
   },
   {
     slug: "womens-college-basketball",
-    label: "NCAA Femmes",
+    labelKey: "league.ncaa",
     shortLabel: "NCAA",
     icon: "fa-solid fa-graduation-cap",
     playersMode: "search",
   },
   {
     slug: "fiba",
-    label: "FIBA",
+    labelKey: "league.fiba",
     shortLabel: "FIBA",
     icon: "fa-solid fa-earth-americas",
     playersMode: "aggregate",
   },
   {
     slug: "womens-olympics-basketball",
-    label: "Jeux Olympiques",
+    labelKey: "league.olympics",
     shortLabel: "JO",
     icon: "fa-solid fa-medal",
     playersMode: "aggregate",

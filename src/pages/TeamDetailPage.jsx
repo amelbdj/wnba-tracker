@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getTeamDetails, getTeamRoster } from "../services/api";
 import PlayerCard from "../components/PlayerCard";
 
@@ -9,6 +10,7 @@ function findStat(items, description, name) {
 }
 
 export default function TeamDetailPage() {
+  const { t } = useTranslation();
   const { league, teamId } = useParams();
   const [team, setTeam] = useState(null);
   const [roster, setRoster] = useState([]);
@@ -49,8 +51,8 @@ export default function TeamDetailPage() {
       <div className="container-wide">
         <div className="empty-state">
           <i className="fa-solid fa-people-group"></i>
-          <strong>Équipe introuvable</strong>
-          <span>Cette équipe n'a pas pu être chargée.</span>
+          <strong>{t("team.notFound")}</strong>
+          <span>{t("team.notFoundSubtitle")}</span>
         </div>
       </div>
     );
@@ -74,7 +76,7 @@ export default function TeamDetailPage() {
   return (
     <div className="container-wide">
       <Link to={`/${league}/teams`} className="nav-btn">
-        <i className="fa-solid fa-arrow-left"></i> Toutes les équipes
+        <i className="fa-solid fa-arrow-left"></i> {t("common.allTeams")}
       </Link>
 
       <section className="hero team-hero" style={{ marginTop: 20 }}>
@@ -106,28 +108,28 @@ export default function TeamDetailPage() {
           <div className="team-hero-stats">
             <div className="stat-tile">
               <div className="stat-tile-value">{wins}</div>
-              <div className="stat-tile-label">Victoires</div>
+              <div className="stat-tile-label">{t("common.wins")}</div>
             </div>
             <div className="stat-tile">
               <div className="stat-tile-value">{losses}</div>
-              <div className="stat-tile-label">Défaites</div>
+              <div className="stat-tile-label">{t("common.losses")}</div>
             </div>
             {pointsFor && (
               <div className="stat-tile">
                 <div className="stat-tile-value">{pointsFor}</div>
-                <div className="stat-tile-label">Points/match</div>
+                <div className="stat-tile-label">{t("team.pointsPerGame")}</div>
               </div>
             )}
             {pointsAgainst && (
               <div className="stat-tile">
                 <div className="stat-tile-value">{pointsAgainst}</div>
-                <div className="stat-tile-label">Points encaissés</div>
+                <div className="stat-tile-label">{t("team.pointsAgainst")}</div>
               </div>
             )}
             {diff && (
               <div className="stat-tile">
                 <div className="stat-tile-value">{diff}</div>
-                <div className="stat-tile-label">Différentiel</div>
+                <div className="stat-tile-label">{t("team.differential")}</div>
               </div>
             )}
           </div>
@@ -135,7 +137,7 @@ export default function TeamDetailPage() {
           {nextComp && (
             <div className="team-next-game">
               <i className="fa-regular fa-calendar"></i>
-              Prochain match :
+              {t("team.nextGame")}
               {nextComp.competitors?.map((c) => (
                 <strong key={c.homeAway}>{c.team?.abbreviation || c.team?.displayName}</strong>
               ))}
@@ -148,17 +150,17 @@ export default function TeamDetailPage() {
         <div className="section-head">
           <div>
             <span className="section-eyebrow">
-              <i className="fa-solid fa-people-group"></i> Effectif
+              <i className="fa-solid fa-people-group"></i> {t("team.roster")}
             </span>
-            <div className="section-title">{roster.length} joueuses</div>
+            <div className="section-title">{t("team.rosterCount", { count: roster.length })}</div>
           </div>
         </div>
 
         {roster.length === 0 ? (
           <div className="empty-state">
             <i className="fa-solid fa-person"></i>
-            <strong>Effectif indisponible</strong>
-            <span>Réessaie un peu plus tard.</span>
+            <strong>{t("team.rosterUnavailable")}</strong>
+            <span>{t("common.retryLater")}</span>
           </div>
         ) : (
           <div className="player-grid">

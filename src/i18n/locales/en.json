@@ -1,0 +1,135 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "standings": "Standings",
+    "teams": "Teams",
+    "players": "Players",
+    "stats": "Stats",
+    "comingSoon": "Coming soon",
+    "openMenu": "Open menu"
+  },
+  "league": {
+    "wnba": "WNBA",
+    "ncaa": "NCAA Women's",
+    "fiba": "FIBA",
+    "olympics": "Olympics"
+  },
+  "common": {
+    "viewStats": "View stats",
+    "viewTeam": "View team",
+    "close": "Close",
+    "retryLater": "Try again in a moment.",
+    "tryAnotherSearch": "Try another search.",
+    "backToDashboard": "Back to dashboard",
+    "allTeams": "All teams",
+    "allPlayers": "All players",
+    "loadingStats": "Loading stats...",
+    "wins": "Wins",
+    "losses": "Losses",
+    "winAbbr": "W",
+    "lossAbbr": "L",
+    "pctWinAbbr": "PCT"
+  },
+  "home": {
+    "prevDay": "Previous day",
+    "nextDay": "Next day",
+    "today": "Today",
+    "backToToday": "Back to today",
+    "gamesToday": "Today's games",
+    "noGamesTitle": "No games that day",
+    "noGamesSubtitle": "Try another date to see the league's schedule.",
+    "topOfLeague": "Top of the league",
+    "fullStandings": "Full standings"
+  },
+  "hero": {
+    "live": "Live",
+    "upcoming": "Upcoming",
+    "final": "Final",
+    "nextGame": "Next game to watch",
+    "liveGame": "Live game",
+    "lastResult": "Latest result",
+    "noGameSubtitle": "Change the date to see the league's upcoming games."
+  },
+  "game": {
+    "live": "LIVE",
+    "final": "Final",
+    "scheduled": "Scheduled"
+  },
+  "modal": {
+    "gameStats": "Game statistics"
+  },
+  "standings": {
+    "rank": "#",
+    "team": "Team",
+    "streak": "Streak",
+    "subtitle": "The league's full standings, updated live.",
+    "unavailable": "Standings unavailable"
+  },
+  "teams": {
+    "subtitle": "All the league's teams, by conference.",
+    "searchPlaceholder": "Search for a team...",
+    "unavailable": "Teams unavailable",
+    "noResults": "No team found",
+    "pctWin": "% W"
+  },
+  "team": {
+    "notFound": "Team not found",
+    "notFoundSubtitle": "This team couldn't be loaded.",
+    "pointsPerGame": "Points/game",
+    "pointsAgainst": "Points allowed",
+    "differential": "Differential",
+    "nextGame": "Next game:",
+    "roster": "Roster",
+    "rosterCount_one": "{{count}} player",
+    "rosterCount_other": "{{count}} players",
+    "rosterUnavailable": "Roster unavailable"
+  },
+  "players": {
+    "subtitle": "Search and explore the league's rosters.",
+    "searchPlaceholder": "Search for a player...",
+    "searchPlaceholderLarge": "Search for a player by name...",
+    "noResults": "No player found",
+    "tryOtherFilter": "Try another search or change the filter.",
+    "noResultsSubtitle": "Check the spelling or try another name.",
+    "resultsCount_one": "{{count}} player",
+    "resultsCount_other": "{{count}} players",
+    "searchResultsCount_one": "{{count}} result",
+    "searchResultsCount_other": "{{count}} results",
+    "searchPromptTitle": "Search for a player",
+    "searchPromptSubtitle": "{{league}} has hundreds of teams — type at least 2 letters of a name to get started."
+  },
+  "positions": {
+    "all": "All",
+    "guard": "Guards",
+    "forward": "Forwards",
+    "center": "Centers"
+  },
+  "player": {
+    "notFound": "Player not found",
+    "notFoundSubtitle": "This profile couldn't be loaded.",
+    "age_one": "{{count}} year old",
+    "age_other": "{{count}} years old",
+    "seasonStatsFallback": "Season stats",
+    "pointsScored": "Points scored",
+    "recentTrend": "Recent trend",
+    "noRecentGames": "No recent games",
+    "noPerformanceData": "No performance data available right now.",
+    "recentGames": "Recent games",
+    "pts": "{{count}} pts"
+  },
+  "statistics": {
+    "subtitle": "The league's top performers, category by category.",
+    "unavailable": "Statistics unavailable"
+  },
+  "statCategories": {
+    "points": "Points",
+    "rebounds": "Rebounds",
+    "assists": "Assists",
+    "steals": "Steals",
+    "blocks": "Blocks",
+    "threeMade": "3-pointers",
+    "fgPct": "FG%",
+    "threePct": "3P%",
+    "ftPct": "FT%"
+  }
+}

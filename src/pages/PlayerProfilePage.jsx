@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getPlayerProfile, getPlayerGameLog } from "../services/api";
+import { toLocale } from "../utils/locale";
 
 function parseRecentGames(gamelog, limit = 8) {
   if (!gamelog?.seasonTypes?.length) return { games: [], ptsIndex: -1 };
@@ -23,6 +25,7 @@ function parseRecentGames(gamelog, limit = 8) {
 }
 
 export default function PlayerProfilePage() {
+  const { t, i18n } = useTranslation();
   const { league, playerId } = useParams();
   const [player, setPlayer] = useState(null);
   const [gamelog, setGamelog] = useState(null);
@@ -56,8 +59,8 @@ export default function PlayerProfilePage() {
       <div className="container">
         <div className="empty-state">
           <i className="fa-solid fa-person"></i>
-          <strong>Joueuse introuvable</strong>
-          <span>Ce profil n'a pas pu être chargé.</span>
+          <strong>{t("player.notFound")}</strong>
+          <span>{t("player.notFoundSubtitle")}</span>
         </div>
       </div>
     );
@@ -67,11 +70,12 @@ export default function PlayerProfilePage() {
   const trendGames = [...games].reverse();
   const maxPts = Math.max(1, ...trendGames.map((g) => Number(g.stats?.[ptsIndex]) || 0));
   const teamLogo = player.team?.logos?.[0]?.href;
+  const locale = toLocale(i18n.language);
 
   return (
     <div className="container">
       <Link to={`/${league}/players`} className="nav-btn">
-        <i className="fa-solid fa-arrow-left"></i> Toutes les joueuses
+        <i className="fa-solid fa-arrow-left"></i> {t("common.allPlayers")}
       </Link>
 
       <section className="hero profile-hero" style={{ marginTop: 20 }}>
@@ -107,7 +111,7 @@ export default function PlayerProfilePage() {
               )}
               {player.age && (
                 <span>
-                  <i className="fa-regular fa-calendar"></i> {player.age} ans
+                  <i className="fa-regular fa-calendar"></i> {t("player.age", { count: player.age })}
                 </span>
               )}
               {player.displayBirthPlace && (
@@ -124,7 +128,7 @@ export default function PlayerProfilePage() {
 
             {player.team && (
               <Link to={`/${league}/teams/${player.team.id}`} className="btn btn-ghost">
-                <i className="fa-solid fa-people-group"></i> Voir l'équipe
+                <i className="fa-solid fa-people-group"></i> {t("common.viewTeam")}
               </Link>
             )}
           </div>
@@ -137,7 +141,7 @@ export default function PlayerProfilePage() {
             <div>
               <span className="section-eyebrow">
                 <i className="fa-solid fa-chart-simple"></i>{" "}
-                {player.statsSummary.displayName || "Stats de la saison"}
+                {player.statsSummary.displayName || t("player.seasonStatsFallback")}
               </span>
             </div>
           </div>
@@ -157,17 +161,17 @@ export default function PlayerProfilePage() {
         <div className="section-head">
           <div>
             <span className="section-eyebrow">
-              <i className="fa-solid fa-chart-line"></i> Points marqués
+              <i className="fa-solid fa-chart-line"></i> {t("player.pointsScored")}
             </span>
-            <div className="section-title">Tendance récente</div>
+            <div className="section-title">{t("player.recentTrend")}</div>
           </div>
         </div>
 
         {trendGames.length === 0 || ptsIndex === -1 ? (
           <div className="empty-state">
             <i className="fa-solid fa-chart-line"></i>
-            <strong>Pas de matchs récents</strong>
-            <span>Aucune donnée de performance disponible pour le moment.</span>
+            <strong>{t("player.noRecentGames")}</strong>
+            <span>{t("player.noPerformanceData")}</span>
           </div>
         ) : (
           <div className="standings-card" style={{ padding: "8px 16px" }}>
@@ -196,7 +200,7 @@ export default function PlayerProfilePage() {
           <div className="section-head">
             <div>
               <span className="section-eyebrow">
-                <i className="fa-regular fa-calendar"></i> Derniers matchs
+                <i className="fa-regular fa-calendar"></i> {t("player.recentGames")}
               </span>
             </div>
           </div>
@@ -205,7 +209,7 @@ export default function PlayerProfilePage() {
             {games.map((g) => {
               const pts = ptsIndex !== -1 ? g.stats?.[ptsIndex] : "—";
               const isWin = g.meta.gameResult === "W";
-              const date = new Date(g.meta.gameDate).toLocaleDateString("fr-FR", {
+              const date = new Date(g.meta.gameDate).toLocaleDateString(locale, {
                 day: "2-digit",
                 month: "short",
               });
@@ -218,7 +222,7 @@ export default function PlayerProfilePage() {
                     {g.meta.atVs} {g.meta.opponent?.displayName}
                   </span>
                   <span className="games-log-date">{date}</span>
-                  <span className="games-log-pts">{pts} pts</span>
+                  <span className="games-log-pts">{t("player.pts", { count: pts })}</span>
                 </div>
               );
             })}
