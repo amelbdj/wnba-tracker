@@ -1,35 +1,34 @@
 /* =========================================================
-   WNBA TRACKER — DESIGN SYSTEM
-   Dark-first, blue/indigo/violet premium sports identity
+   FRONTROW — DESIGN SYSTEM
+   Dark-first, deep blue/violet premium sports identity
    ========================================================= */
 
 :root {
   /* --- surfaces & background --- */
-  --bg: #06070f;
-  --bg-elevated: #0b0e1c;
+  --bg: #080b14;
+  --bg-elevated: #0d1220;
   --surface: rgba(255, 255, 255, 0.035);
-  --surface-solid: #10142a;
+  --surface-solid: #111827;
   --surface-hover: rgba(255, 255, 255, 0.06);
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
 
   /* --- text --- */
-  --text: #f4f6fb;
-  --text-secondary: #a6aec4;
-  --muted: #6d7690;
+  --text: #ffffff;
+  --text-secondary: #a1a1aa;
+  --muted: #71717a;
 
-  /* --- brand accents (anchored to the app's violet/electric-blue mark) --- */
-  --indigo: #6d5bff;
-  --violet: #a855f7;
-  --blue: #47bfff;
-  --gradient-brand: linear-gradient(135deg, #5b4fe8 0%, #8b5cf6 55%, #47bfff 100%);
+  /* --- brand accents --- */
+  --indigo: #4f46e5;
+  --violet: #7c3aed;
+  --gradient-brand: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   --gradient-hero: radial-gradient(
       120% 140% at 15% 0%,
-      rgba(109, 91, 255, 0.35) 0%,
-      rgba(109, 91, 255, 0) 55%
+      rgba(79, 70, 229, 0.35) 0%,
+      rgba(79, 70, 229, 0) 55%
     ),
-    radial-gradient(90% 120% at 100% 0%, rgba(71, 191, 255, 0.22) 0%, rgba(71, 191, 255, 0) 55%),
-    linear-gradient(180deg, #0b0e1e 0%, #06070f 100%);
+    radial-gradient(90% 120% at 100% 0%, rgba(124, 58, 237, 0.22) 0%, rgba(124, 58, 237, 0) 55%),
+    linear-gradient(180deg, #0d1220 0%, #080b14 100%);
 
   /* --- semantic --- */
   --live: #fb3d5c;
@@ -48,7 +47,7 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 10px 30px -12px rgba(0, 0, 0, 0.55);
   --shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, 0.65);
-  --shadow-glow: 0 0 0 1px rgba(109, 91, 255, 0.18), 0 12px 40px -12px rgba(109, 91, 255, 0.35);
+  --shadow-glow: 0 0 0 1px rgba(79, 70, 229, 0.18), 0 12px 40px -12px rgba(79, 70, 229, 0.35);
 
   --font-heading: "Bebas Neue", "Inter", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
@@ -112,7 +111,7 @@ img {
 }
 
 ::selection {
-  background: rgba(109, 91, 255, 0.35);
+  background: rgba(79, 70, 229, 0.35);
 }
 
 ::-webkit-scrollbar {
@@ -414,7 +413,7 @@ img {
 }
 
 .league-option.active {
-  background: rgba(109, 91, 255, 0.14);
+  background: rgba(79, 70, 229, 0.14);
   color: var(--text);
 }
 
@@ -514,7 +513,7 @@ img {
 }
 
 .btn-primary:hover {
-  box-shadow: 0 0 0 1px rgba(109, 91, 255, 0.3), 0 16px 44px -10px rgba(109, 91, 255, 0.55);
+  box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.3), 0 16px 44px -10px rgba(79, 70, 229, 0.55);
   transform: translateY(-1px);
 }
 
@@ -618,7 +617,7 @@ img {
   height: 420px;
   right: -140px;
   top: -160px;
-  background: radial-gradient(circle, rgba(71, 191, 255, 0.28) 0%, rgba(71, 191, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(124, 58, 237, 0) 70%);
   pointer-events: none;
 }
 
@@ -834,7 +833,7 @@ img {
 .card:hover {
   transform: translateY(-3px);
   background: var(--surface-hover);
-  border-color: rgba(109, 91, 255, 0.35);
+  border-color: rgba(79, 70, 229, 0.35);
   box-shadow: var(--shadow-md);
 }
 
@@ -1379,12 +1378,12 @@ img {
 }
 
 .stat-compare-bar .left {
-  background: linear-gradient(90deg, #5b4fe8, #8b5cf6);
+  background: var(--indigo);
   border-radius: var(--r-pill) 0 0 var(--r-pill);
 }
 
 .stat-compare-bar .right {
-  background: linear-gradient(90deg, #47bfff, #38a5e0);
+  background: var(--violet);
   margin-left: auto;
   border-radius: 0 var(--r-pill) var(--r-pill) 0;
 }
@@ -1665,7 +1664,7 @@ img {
 .team-card:hover {
   transform: translateY(-3px);
   background: var(--surface-hover);
-  border-color: rgba(109, 91, 255, 0.35);
+  border-color: rgba(79, 70, 229, 0.35);
   box-shadow: var(--shadow-md);
 }
 
@@ -1815,7 +1814,7 @@ img {
 .player-card:hover {
   transform: translateY(-3px);
   background: var(--surface-hover);
-  border-color: rgba(109, 91, 255, 0.35);
+  border-color: rgba(79, 70, 229, 0.35);
   box-shadow: var(--shadow-md);
 }
 
@@ -1825,7 +1824,7 @@ img {
   height: 72px;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(160deg, rgba(109, 91, 255, 0.22), rgba(71, 191, 255, 0.14));
+  background: linear-gradient(160deg, rgba(79, 70, 229, 0.22), rgba(124, 58, 237, 0.14));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1865,7 +1864,7 @@ img {
   justify-content: center;
   padding: 2px 7px;
   border-radius: var(--r-pill);
-  background: rgba(109, 91, 255, 0.14);
+  background: rgba(79, 70, 229, 0.14);
   color: var(--indigo);
   font-size: 10px;
   font-weight: 800;
@@ -1902,7 +1901,7 @@ img {
   height: clamp(96px, 14vw, 132px);
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(160deg, rgba(109, 91, 255, 0.28), rgba(71, 191, 255, 0.16));
+  background: linear-gradient(160deg, rgba(79, 70, 229, 0.28), rgba(124, 58, 237, 0.16));
   border: 1px solid var(--border-strong);
   display: flex;
   align-items: center;
@@ -2119,7 +2118,7 @@ img {
 
 .leader-spotlight:hover {
   transform: translateY(-2px);
-  border-color: rgba(109, 91, 255, 0.35);
+  border-color: rgba(79, 70, 229, 0.35);
 }
 
 .leader-spotlight-glow {
@@ -2146,7 +2145,7 @@ img {
   height: clamp(64px, 8vw, 84px);
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(160deg, rgba(109, 91, 255, 0.28), rgba(71, 191, 255, 0.16));
+  background: linear-gradient(160deg, rgba(79, 70, 229, 0.28), rgba(124, 58, 237, 0.16));
   border: 1px solid var(--border-strong);
   display: flex;
   align-items: center;
@@ -2235,7 +2234,7 @@ img {
   height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(160deg, rgba(109, 91, 255, 0.2), rgba(71, 191, 255, 0.12));
+  background: linear-gradient(160deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.12));
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
