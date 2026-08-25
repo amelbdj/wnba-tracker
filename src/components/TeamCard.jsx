@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getStat } from "../utils/stats";
 
 export default function TeamCard({ entry, conferenceAbbr, index, league }) {
+  const { t } = useTranslation();
   const team = entry.team;
   const wins = getStat(entry, "wins")?.value ?? 0;
   const losses = getStat(entry, "losses")?.value ?? 0;
@@ -30,7 +32,10 @@ export default function TeamCard({ entry, conferenceAbbr, index, league }) {
       </div>
 
       <div className="team-card-foot">
-        <span className="team-card-pct">{pct.toFixed(0)}% V</span>
+        <span className="team-card-pct">
+          {pct.toFixed(0)}
+          {t("teams.pctWin")}
+        </span>
       </div>
     </Link>
   );

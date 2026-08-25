@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getStandings } from "../services/api";
 import { getStat as stat } from "../utils/stats";
 
@@ -19,15 +20,16 @@ function StreakPill({ displayValue }) {
 }
 
 function StandingsTable({ entries, league }) {
+  const { t } = useTranslation();
   return (
     <div className="standings-card">
       <div className="standings-header-row">
-        <span>#</span>
-        <span>Équipe</span>
-        <span>V</span>
-        <span>D</span>
-        <span className="standing-streak-head">Série</span>
-        <span>%V</span>
+        <span>{t("standings.rank")}</span>
+        <span>{t("standings.team")}</span>
+        <span>{t("common.winAbbr")}</span>
+        <span>{t("common.lossAbbr")}</span>
+        <span className="standing-streak-head">{t("standings.streak")}</span>
+        <span>{t("common.pctWinAbbr")}</span>
       </div>
 
       {entries.map((entry, index) => {
@@ -72,6 +74,7 @@ function StandingsTable({ entries, league }) {
 }
 
 export default function Standings({ league, limit, grouped }) {
+  const { t } = useTranslation();
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -104,8 +107,8 @@ export default function Standings({ league, limit, grouped }) {
     return (
       <div className="empty-state">
         <i className="fa-solid fa-ranking-star"></i>
-        <strong>Classement indisponible</strong>
-        <span>Réessaie un peu plus tard.</span>
+        <strong>{t("standings.unavailable")}</strong>
+        <span>{t("common.retryLater")}</span>
       </div>
     );
   }

@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import GameDetails from "./GameDetails";
+import { toLocale } from "../utils/locale";
 
 export default function GameCard({ game, league }) {
+  const { t, i18n } = useTranslation();
   const comp = game.competitions[0];
   const [open, setOpen] = useState(false);
 
@@ -18,7 +21,7 @@ export default function GameCard({ game, league }) {
   const team1Wins = isFinal && score1 > score2;
   const team2Wins = isFinal && score2 > score1;
 
-  const time = new Date(game.date).toLocaleTimeString("fr-FR", {
+  const time = new Date(game.date).toLocaleTimeString(toLocale(i18n.language), {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -27,6 +30,10 @@ export default function GameCard({ game, league }) {
     game.status?.displayClock && game.status?.period
       ? `Q${game.status.period} · ${game.status.displayClock}`
       : statusType.shortDetail || description;
+
+  let statusLabel = description;
+  if (isFinal) statusLabel = t("game.final");
+  else if (statusType.state === "pre") statusLabel = t("game.scheduled");
 
   return (
     <>
@@ -40,10 +47,10 @@ export default function GameCard({ game, league }) {
         <div className="card-head">
           {isLive ? (
             <span className="card-status live">
-              <span className="dot"></span> {liveDetail || "LIVE"}
+              <span className="dot"></span> {liveDetail || t("game.live")}
             </span>
           ) : (
-            <span className="card-status">{description}</span>
+            <span className="card-status">{statusLabel}</span>
           )}
           <span className="card-time">
             <i className="fa-regular fa-clock"></i> {time}

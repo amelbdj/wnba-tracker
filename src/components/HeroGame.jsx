@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import GameDetails from "./GameDetails";
 import { getLeague } from "../leagues";
+import { toLocale } from "../utils/locale";
 
 export default function HeroGame({ game, league }) {
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
 
   if (!game) {
@@ -10,14 +13,14 @@ export default function HeroGame({ game, league }) {
       <section className="hero">
         <div className="hero-inner">
           <span className="hero-tag">
-            <span className="dot"></span> {getLeague(league).label}
+            <span className="dot"></span> {t(getLeague(league).labelKey)}
           </span>
           <div className="hero-empty">
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
-              Aucun match ce jour-là
+              {t("home.noGamesTitle")}
             </h2>
             <p style={{ color: "var(--text-secondary)", fontSize: 14 }}>
-              Change de date pour découvrir les prochains matchs de la ligue.
+              {t("hero.noGameSubtitle")}
             </p>
           </div>
         </div>
@@ -35,17 +38,18 @@ export default function HeroGame({ game, league }) {
   const isFinal = statusType.state === "post" || description === "Final";
 
   const dateObj = new Date(game.date);
-  const time = dateObj.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-  const day = dateObj.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  const locale = toLocale(i18n.language);
+  const time = dateObj.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+  const day = dateObj.toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" });
 
   const liveDetail =
     game.status?.displayClock && game.status?.period
       ? `Q${game.status.period} · ${game.status.displayClock}`
       : statusType.shortDetail || description;
 
-  let headline = "Prochain match à suivre";
-  if (isLive) headline = "Match en direct";
-  else if (isFinal) headline = "Dernier résultat";
+  let headline = t("hero.nextGame");
+  if (isLive) headline = t("hero.liveGame");
+  else if (isFinal) headline = t("hero.lastResult");
 
   return (
     <>
@@ -54,7 +58,7 @@ export default function HeroGame({ game, league }) {
           <div className="hero-top">
             <span className={`hero-tag${isLive ? " is-live" : ""}`}>
               <span className="dot"></span>
-              {isLive ? liveDetail || "En direct" : isFinal ? "Terminé" : "À venir"}
+              {isLive ? liveDetail || t("hero.live") : isFinal ? t("hero.final") : t("hero.upcoming")}
             </span>
           </div>
 
@@ -79,7 +83,7 @@ export default function HeroGame({ game, league }) {
               )}
               <span className="hero-meta">
                 <i className="fa-regular fa-calendar"></i>
-                {isFinal ? "Terminé" : `${day} · ${time}`}
+                {isFinal ? t("hero.final") : `${day} · ${time}`}
               </span>
             </div>
 
@@ -94,7 +98,7 @@ export default function HeroGame({ game, league }) {
 
           <div className="hero-bottom">
             <button className="btn btn-primary" onClick={() => setOpen(true)}>
-              <i className="fa-solid fa-chart-simple"></i> Voir les statistiques
+              <i className="fa-solid fa-chart-simple"></i> {t("common.viewStats")}
             </button>
           </div>
         </div>

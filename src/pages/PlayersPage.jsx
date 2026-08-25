@@ -1,17 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getAllPlayers, getStandings, searchPlayers } from "../services/api";
 import PlayerCard from "../components/PlayerCard";
 import { getLeague } from "../leagues";
 
 const POSITIONS = [
-  { value: "all", label: "Toutes" },
-  { value: "Guard", label: "Arrières" },
-  { value: "Forward", label: "Ailières" },
-  { value: "Center", label: "Pivots" },
+  { value: "all", key: "positions.all" },
+  { value: "Guard", key: "positions.guard" },
+  { value: "Forward", key: "positions.forward" },
+  { value: "Center", key: "positions.center" },
 ];
 
 function AggregatePlayers({ league }) {
+  const { t } = useTranslation();
   const [players, setPlayers] = useState([]);
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +58,7 @@ function AggregatePlayers({ league }) {
           <i className="fa-solid fa-magnifying-glass"></i>
           <input
             type="text"
-            placeholder="Rechercher une joueuse..."
+            placeholder={t("players.searchPlaceholder")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -67,10 +69,10 @@ function AggregatePlayers({ league }) {
           value={teamFilter}
           onChange={(e) => setTeamFilter(e.target.value)}
         >
-          <option value="all">Toutes les équipes</option>
-          {teams.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.displayName}
+          <option value="all">{t("common.allTeams")}</option>
+          {teams.map((t2) => (
+            <option key={t2.id} value={t2.id}>
+              {t2.displayName}
             </option>
           ))}
         </select>
@@ -83,7 +85,7 @@ function AggregatePlayers({ league }) {
             className={`chip${positionFilter === pos.value ? " active" : ""}`}
             onClick={() => setPositionFilter(pos.value)}
           >
-            {pos.label}
+            {t(pos.key)}
           </button>
         ))}
       </div>
@@ -97,14 +99,12 @@ function AggregatePlayers({ league }) {
       ) : filtered.length === 0 ? (
         <div className="empty-state">
           <i className="fa-solid fa-magnifying-glass"></i>
-          <strong>Aucune joueuse trouvée</strong>
-          <span>Essaie une autre recherche ou change de filtre.</span>
+          <strong>{t("players.noResults")}</strong>
+          <span>{t("players.tryOtherFilter")}</span>
         </div>
       ) : (
         <>
-          <div className="results-count">
-            {filtered.length} joueuse{filtered.length > 1 ? "s" : ""}
-          </div>
+          <div className="results-count">{t("players.resultsCount", { count: filtered.length })}</div>
           <div className="player-grid">
             {filtered.map((p) => (
               <PlayerCard key={p.id} player={p} league={league} />
@@ -117,6 +117,7 @@ function AggregatePlayers({ league }) {
 }
 
 function SearchPlayers({ league }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
@@ -149,7 +150,7 @@ function SearchPlayers({ league }) {
           <i className="fa-solid fa-magnifying-glass"></i>
           <input
             type="text"
-            placeholder="Rechercher une joueuse par son nom..."
+            placeholder={t("players.searchPlaceholderLarge")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
@@ -160,10 +161,9 @@ function SearchPlayers({ league }) {
       {query.trim().length < 2 ? (
         <div className="empty-state">
           <i className="fa-solid fa-magnifying-glass"></i>
-          <strong>Cherche une joueuse</strong>
+          <strong>{t("players.searchPromptTitle")}</strong>
           <span>
-            {getLeague(league).label} compte des centaines d'équipes — tape au moins 2 lettres
-            d'un nom pour commencer.
+            {t("players.searchPromptSubtitle", { league: t(getLeague(league).labelKey) })}
           </span>
         </div>
       ) : searching ? (
@@ -175,13 +175,13 @@ function SearchPlayers({ league }) {
       ) : searched && results.length === 0 ? (
         <div className="empty-state">
           <i className="fa-solid fa-magnifying-glass"></i>
-          <strong>Aucune joueuse trouvée</strong>
-          <span>Vérifie l'orthographe ou essaie un autre nom.</span>
+          <strong>{t("players.noResults")}</strong>
+          <span>{t("players.noResultsSubtitle")}</span>
         </div>
       ) : (
         <>
           <div className="results-count">
-            {results.length} résultat{results.length > 1 ? "s" : ""}
+            {t("players.searchResultsCount", { count: results.length })}
           </div>
           <div className="player-grid">
             {results.map((p) => (
@@ -195,6 +195,7 @@ function SearchPlayers({ league }) {
 }
 
 export default function PlayersPage() {
+  const { t } = useTranslation();
   const { league } = useParams();
   const mode = getLeague(league).playersMode;
 
@@ -204,9 +205,11 @@ export default function PlayersPage() {
         <span className="badge-icon">
           <i className="fa-solid fa-star"></i>
         </span>
-        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Joueuses {getLeague(league).label}</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 800 }}>
+          {t("nav.players")} {t(getLeague(league).labelKey)}
+        </h1>
       </div>
-      <p className="page-subtitle">Recherche et explore les effectifs de la ligue.</p>
+      <p className="page-subtitle">{t("players.subtitle")}</p>
 
       {mode === "search" ? <SearchPlayers league={league} /> : <AggregatePlayers league={league} />}
     </div>

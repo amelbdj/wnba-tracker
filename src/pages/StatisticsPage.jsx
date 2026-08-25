@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getLeagueLeaders } from "../services/api";
 import { getLeague } from "../leagues";
 
 const CATEGORIES = [
-  { name: "pointsPerGame", label: "Points", short: "PPG", icon: "fa-solid fa-basketball" },
-  { name: "reboundsPerGame", label: "Rebonds", short: "REB", icon: "fa-solid fa-hand-fist" },
-  { name: "assistsPerGame", label: "Passes", short: "AST", icon: "fa-solid fa-people-arrows" },
-  { name: "stealsPerGame", label: "Interceptions", short: "STL", icon: "fa-solid fa-hand" },
-  { name: "blocksPerGame", label: "Contres", short: "BLK", icon: "fa-solid fa-shield-halved" },
-  { name: "3PointsMadePerGame", label: "3 points", short: "3PM", icon: "fa-solid fa-bullseye" },
-  { name: "fieldGoalPercentage", label: "% Tirs", short: "FG%", icon: "fa-solid fa-percent" },
-  { name: "3PointPct", label: "% 3 pts", short: "3P%", icon: "fa-solid fa-percent" },
-  { name: "FreeThrowPct", label: "% Lancers francs", short: "FT%", icon: "fa-solid fa-percent" },
+  { name: "pointsPerGame", key: "statCategories.points", short: "PPG", icon: "fa-solid fa-basketball" },
+  { name: "reboundsPerGame", key: "statCategories.rebounds", short: "REB", icon: "fa-solid fa-hand-fist" },
+  { name: "assistsPerGame", key: "statCategories.assists", short: "AST", icon: "fa-solid fa-people-arrows" },
+  { name: "stealsPerGame", key: "statCategories.steals", short: "STL", icon: "fa-solid fa-hand" },
+  { name: "blocksPerGame", key: "statCategories.blocks", short: "BLK", icon: "fa-solid fa-shield-halved" },
+  { name: "3PointsMadePerGame", key: "statCategories.threeMade", short: "3PM", icon: "fa-solid fa-bullseye" },
+  { name: "fieldGoalPercentage", key: "statCategories.fgPct", short: "FG%", icon: "fa-solid fa-percent" },
+  { name: "3PointPct", key: "statCategories.threePct", short: "3P%", icon: "fa-solid fa-percent" },
+  { name: "FreeThrowPct", key: "statCategories.ftPct", short: "FT%", icon: "fa-solid fa-percent" },
 ];
 
 function rankClass(index) {
@@ -34,6 +35,7 @@ function LeaderTeam({ team }) {
 }
 
 export default function StatisticsPage() {
+  const { t } = useTranslation();
   const { league } = useParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,17 +64,19 @@ export default function StatisticsPage() {
         <span className="badge-icon">
           <i className="fa-solid fa-chart-simple"></i>
         </span>
-        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Statistiques {getLeague(league).label}</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 800 }}>
+          {t("nav.stats")} {t(getLeague(league).labelKey)}
+        </h1>
       </div>
-      <p className="page-subtitle">Les meilleures performances de la ligue, catégorie par catégorie.</p>
+      <p className="page-subtitle">{t("statistics.subtitle")}</p>
 
       {loading ? (
         <div className="skeleton skeleton-card" style={{ height: 320 }}></div>
       ) : available.length === 0 ? (
         <div className="empty-state">
           <i className="fa-solid fa-chart-simple"></i>
-          <strong>Statistiques indisponibles</strong>
-          <span>Réessaie un peu plus tard.</span>
+          <strong>{t("statistics.unavailable")}</strong>
+          <span>{t("common.retryLater")}</span>
         </div>
       ) : (
         <>
@@ -83,7 +87,7 @@ export default function StatisticsPage() {
                 className={`chip${active === c.name ? " active" : ""}`}
                 onClick={() => setActive(c.name)}
               >
-                <i className={c.icon}></i> {c.label}
+                <i className={c.icon}></i> {t(c.key)}
               </button>
             ))}
           </div>

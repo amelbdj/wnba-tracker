@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getGamesByDate } from "../services/api";
 import GameCard from "../components/GameCard";
 import HeroGame from "../components/HeroGame";
 import Standings from "../components/Standings";
+import { toLocale } from "../utils/locale";
 
 function formatDate(date) {
   return date.toISOString().slice(0, 10).replace(/-/g, "");
@@ -31,6 +33,7 @@ function getFeaturedGame(games) {
 }
 
 export default function Home() {
+  const { t, i18n } = useTranslation();
   const { league } = useParams();
   const [date, setDate] = useState(new Date());
   const [games, setGames] = useState([]);
@@ -81,23 +84,27 @@ export default function Home() {
 
       <div className="section">
         <div className="date-nav">
-          <button className="icon-btn" onClick={prevDay} aria-label="Jour précédent">
+          <button className="icon-btn" onClick={prevDay} aria-label={t("home.prevDay")}>
             <i className="fa-solid fa-chevron-left"></i>
           </button>
 
           <div className="date-nav-label">
             <span className="day">
-              {date.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
+              {date.toLocaleDateString(toLocale(i18n.language), {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+              })}
             </span>
             {!today && (
               <button className="date-today-btn" onClick={() => setDate(new Date())}>
-                Revenir à aujourd'hui
+                {t("home.backToToday")}
               </button>
             )}
-            {today && <span className="sub">Aujourd'hui</span>}
+            {today && <span className="sub">{t("home.today")}</span>}
           </div>
 
-          <button className="icon-btn" onClick={nextDay} aria-label="Jour suivant">
+          <button className="icon-btn" onClick={nextDay} aria-label={t("home.nextDay")}>
             <i className="fa-solid fa-chevron-right"></i>
           </button>
         </div>
@@ -105,7 +112,7 @@ export default function Home() {
         <div className="section-head">
           <div>
             <span className="section-eyebrow">
-              <i className="fa-solid fa-basketball"></i> Matchs du jour
+              <i className="fa-solid fa-basketball"></i> {t("home.gamesToday")}
             </span>
           </div>
         </div>
@@ -119,8 +126,8 @@ export default function Home() {
         ) : games.length === 0 ? (
           <div className="empty-state">
             <i className="fa-solid fa-basketball"></i>
-            <strong>Aucun match ce jour-là</strong>
-            <span>Essaie une autre date pour voir le calendrier de la ligue.</span>
+            <strong>{t("home.noGamesTitle")}</strong>
+            <span>{t("home.noGamesSubtitle")}</span>
           </div>
         ) : (
           <div className="games-grid">
@@ -135,12 +142,12 @@ export default function Home() {
         <div className="section-head">
           <div>
             <span className="section-eyebrow">
-              <i className="fa-solid fa-ranking-star"></i> Classement
+              <i className="fa-solid fa-ranking-star"></i> {t("nav.standings")}
             </span>
-            <div className="section-title">Le top de la ligue</div>
+            <div className="section-title">{t("home.topOfLeague")}</div>
           </div>
           <Link to={`/${league}/standings`} className="section-link">
-            Classement complet <i className="fa-solid fa-arrow-right"></i>
+            {t("home.fullStandings")} <i className="fa-solid fa-arrow-right"></i>
           </Link>
         </div>
 

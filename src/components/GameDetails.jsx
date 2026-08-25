@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getGameDetails } from "../services/api";
 
 function parseNumeric(displayValue) {
@@ -13,6 +14,7 @@ function formatStatName(name) {
 }
 
 export default function GameDetails({ gameId, league, onClose }) {
+  const { t } = useTranslation();
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function GameDetails({ gameId, league, onClose }) {
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div className="modal-loading">
             <div className="spinner"></div>
-            <span>Chargement des stats...</span>
+            <span>{t("common.loadingStats")}</span>
           </div>
         </div>
       </div>
@@ -50,8 +52,8 @@ export default function GameDetails({ gameId, league, onClose }) {
     <div className="modal" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-head">
-          <span className="modal-title">Statistiques du match</span>
-          <button className="close-btn" onClick={onClose} aria-label="Fermer">
+          <span className="modal-title">{t("modal.gameStats")}</span>
+          <button className="close-btn" onClick={onClose} aria-label={t("common.close")}>
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>
