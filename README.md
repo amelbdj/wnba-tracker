@@ -1,61 +1,30 @@
-# 🏀 WNBA Tracker
+# 🏀 FRONTROW
 
-Une application web moderne qui affiche les matchs de la WNBA en temps réel avec scores, statut des matchs et navigation par jour.
-
----
-
-## 🚀 Démo
-
-👉 https://wnba-tracker.vercel.app (à remplacer avec ton lien)
-
----
-
-## 📸 Aperçu
-
-- Liste des matchs du jour
-- Scores en direct
-- Statut du match (LIVE / FINISHED / UPCOMING)
-- Navigation par date
-- Affichage des logos d’équipes
-
----
-
-## ⚙️ Stack utilisée
-
-- React (Vite)
-- JavaScript (ES6+)
-- CSS moderne (dark UI)
-- API ESPN (données sportives)
-- Font Awesome (icônes)
-
----
-
-## 📡 API utilisée
-
-Les données viennent de l’API ESPN : https://site.api.espn.com/apis/site/v2/sports/basketball/wnba/scoreboard
+Une application web moderne pour suivre le sport en temps réel : scores, classements, équipes et statistiques joueurs.
 
 ---
 
 ## ✨ Fonctionnalités
 
-- 📅 Navigation par jour
-- 🏀 Affichage des matchs WNBA
-- 📊 Scores en direct
-- 🔴 Indication LIVE
-- 🕒 Heure des matchs
-- 🖼️ Logos des équipes
-- 🎨 Interface moderne type app sportive
+- 🏠 Page d'accueil (landing) avec présentation de l'app
+- 📅 Suivi des matchs du jour (scores, statut LIVE / FINISHED / UPCOMING)
+- 🏆 Classements par ligue
+- 👥 Liste des équipes et fiche détaillée par équipe
+- 🧑‍🤝‍🧑 Liste des joueurs et profil détaillé par joueur
+- 📊 Statistiques
+- 🌍 Multilingue : Français / Anglais / Espagnol
+- 🎨 Interface moderne (typo Bebas Neue + Inter, palette bleu foncé + violet)
 
 ---
 
-## 🧠 Ce que j’ai appris
+## ⚙️ Stack utilisée
 
-- Utilisation de React (useState, useEffect)
-- Consommation d’API REST
-- Gestion de données dynamiques
-- Structuration de composants React
-- UI moderne avec CSS
-- Déploiement d’une app web
+- React 19 (Vite)
+- React Router
+- i18next / react-i18next (internationalisation)
+- JavaScript (ES6+)
+- CSS moderne (dark UI)
+- ESLint
 
 ---
 
@@ -67,3 +36,10 @@ cd wnba-tracker
 npm install
 npm run dev
 ```
+
+## 🛠️ Scripts disponibles
+
+- `npm run dev` — lance le serveur de développement
+- `npm run build` — build de production
+- `npm run preview` — prévisualise le build de production
+- `npm run lint` — vérifie le code avec ESLint

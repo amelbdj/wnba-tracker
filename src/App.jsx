@@ -8,6 +8,7 @@ import TeamDetailPage from "./pages/TeamDetailPage";
 import PlayersPage from "./pages/PlayersPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
 import StatisticsPage from "./pages/StatisticsPage";
+import PlayoffsPage from "./pages/PlayoffsPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/:league" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="standings" element={<StandingsPage />} />
+        <Route path="playoffs" element={<PlayoffsPage />} />
         <Route path="teams" element={<TeamsPage />} />
         <Route path="teams/:teamId" element={<TeamDetailPage />} />
         <Route path="players" element={<PlayersPage />} />

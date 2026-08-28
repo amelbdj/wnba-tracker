@@ -9,6 +9,89 @@ export async function getGamesByDate(league, date) {
   return data.events;
 }
 
+function formatYYYYMMDD(date) {
+  return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(
+    date.getDate(),
+  ).padStart(2, "0")}`;
+}
+
+// The core standings endpoint's `seasons` list carries the exact
+// pre/regular/postseason date windows for the most recent season that has
+// real standings data — including a season that has already finished, since
+// ESPN keeps serving its final standings until the next season's games
+// actually start being recorded. This is far more precise than guessing a
+// trailing window off the "current" season's nominal end date, and it's
+// what lets the bracket know exactly where to look for real playoff games
+// (or that a just-finished tournament should still be shown as final).
+export async function getSeasonWindows(league) {
+  const res = await fetch(`${CORE_API_ROOT}/${league}/standings`);
+  const data = await res.json();
+  const latest = data?.seasons?.[0];
+  if (!latest) return null;
+
+  const findWindow = (abbr) => {
+    const type = latest.types?.find((t) => t.abbreviation === abbr);
+    return type ? { startDate: type.startDate, endDate: type.endDate } : null;
+  };
+
+  return {
+    year: latest.year,
+    displayName: latest.displayName,
+    regular: findWindow("reg"),
+    postseason: findWindow("post"),
+  };
+}
+
+function eachDay(startDate, endDate) {
+  const days = [];
+  const cursor = new Date(startDate);
+  cursor.setUTCHours(0, 0, 0, 0);
+  const end = new Date(endDate);
+  while (cursor <= end) {
+    days.push(new Date(cursor));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return days;
+}
+
+// Fetches every scoreboard event across a date window, one day at a time in
+// parallel. The scoreboard's `dates=start-end` range syntax silently returns
+// nothing for some leagues (e.g. NCAA), so day-by-day is what actually works
+// everywhere — the windows involved are only a few weeks long either way.
+async function getGamesInWindow(league, window) {
+  if (!window?.startDate || !window?.endDate) return [];
+
+  const days = eachDay(window.startDate, window.endDate);
+  const perDay = await Promise.all(
+    days.map(async (day) => {
+      const res = await fetch(`${SITE_API_ROOT}/${league}/scoreboard?dates=${formatYYYYMMDD(day)}`);
+      const data = await res.json();
+      return data.events || [];
+    }),
+  );
+
+  const byId = new Map();
+  for (const event of perDay.flat()) byId.set(event.id, event);
+  return [...byId.values()];
+}
+
+// ESPN has no dedicated "bracket" endpoint — postseason games are just
+// regular scoreboard events tagged `season.type === 3`, fetched here across
+// the exact postseason date window from getSeasonWindows().
+export async function getPostseasonGames(league, window) {
+  const events = await getGamesInWindow(league, window);
+  return events.filter((e) => e.season?.type === 3);
+}
+
+// Some competitions (FIBA World Cup, Olympics) run as a single short
+// tournament with no separate "postseason" season type at all — group stage
+// and knockout games are both tagged as one "regular season". For those,
+// every game in the tournament window is returned so the caller can split
+// knockout-stage games from group-stage ones itself (by round label).
+export async function getTournamentGames(league, window) {
+  return getGamesInWindow(league, window);
+}
+
 // ESPN doesn't guarantee standings entries arrive in rank order (WNBA does,
 // but NCAA's conferences come back in an arbitrary order) — sort explicitly
 // by seed, falling back to win percentage when no seed is reported.

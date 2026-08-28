@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "standings": "Standings",
+    "playoffs": "Playoffs",
     "teams": "Teams",
     "players": "Players",
     "stats": "Stats",
@@ -11,7 +12,7 @@
   "league": {
     "wnba": "WNBA",
     "ncaa": "NCAA Women's",
-    "fiba": "FIBA",
+    "fiba": "FIBA World Cup",
     "olympics": "Olympics"
   },
   "common": {
@@ -64,6 +65,17 @@
     "streak": "Streak",
     "subtitle": "The league's full standings, updated live.",
     "unavailable": "Standings unavailable"
+  },
+  "playoffs": {
+    "subtitle": "The league's top 8 teams and the playoff bracket.",
+    "seedingNote": "Seeds are computed from the current regular-season standings — the bracket will update automatically once real playoff games begin.",
+    "liveNote": "Playoffs underway — live results.",
+    "completedNote": "Last tournament complete — the bracket will reset at the start of next season.",
+    "round1": "Round 1",
+    "semis": "Semifinals",
+    "final": "Final",
+    "tbd": "TBD",
+    "unavailable": "Playoff bracket unavailable"
   },
   "teams": {
     "subtitle": "All the league's teams, by conference.",
@@ -151,7 +163,7 @@
   "leagueBlurb": {
     "wnba": "North America's pro league",
     "ncaa": "American college basketball",
-    "fiba": "International competitions",
+    "fiba": "The world tournament, every 4 years",
     "olympics": "The women's Olympic tournament"
   },
   "futureSports": {
