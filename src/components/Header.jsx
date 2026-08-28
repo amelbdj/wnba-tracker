@@ -5,6 +5,7 @@ import { LEAGUES, getLeague } from "../leagues";
 import { LANGUAGES } from "../i18n";
 import Logo from "./Logo";
 import LanguageSwitcher, { MobileLangChip } from "./LanguageSwitcher";
+import InstagramLink from "./InstagramLink";
 
 function isActive(pathname, league, section) {
   const to = section ? `/${league}/${section}` : `/${league}`;
@@ -22,6 +23,7 @@ function NavLinks({ pathname, league }) {
   const NAV_ITEMS = [
     { section: "", label: t("nav.dashboard"), icon: "fa-solid fa-house" },
     { section: "standings", label: t("nav.standings"), icon: "fa-solid fa-ranking-star" },
+    { section: "playoffs", label: t("nav.playoffs"), icon: "fa-solid fa-trophy" },
     { section: "teams", label: t("nav.teams"), icon: "fa-solid fa-people-group" },
     { section: "players", label: t("nav.players"), icon: "fa-solid fa-star" },
     { section: "statistics", label: t("nav.stats"), icon: "fa-solid fa-chart-simple" },
@@ -120,6 +122,7 @@ export default function Header() {
         </nav>
 
         <div className="header-right">
+          <InstagramLink />
           <LanguageSwitcher />
 
           <button

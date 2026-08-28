@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "standings": "Clasificación",
+    "playoffs": "Playoffs",
     "teams": "Equipos",
     "players": "Jugadoras",
     "stats": "Stats",
@@ -11,7 +12,7 @@
   "league": {
     "wnba": "WNBA",
     "ncaa": "NCAA Femenino",
-    "fiba": "FIBA",
+    "fiba": "Copa del Mundo FIBA",
     "olympics": "Juegos Olímpicos"
   },
   "common": {
@@ -64,6 +65,17 @@
     "streak": "Racha",
     "subtitle": "La clasificación completa de la liga, actualizada en directo.",
     "unavailable": "Clasificación no disponible"
+  },
+  "playoffs": {
+    "subtitle": "Los 8 mejores equipos de la liga y el cuadro de playoffs.",
+    "seedingNote": "Las cabezas de serie se calculan según la clasificación actual de la temporada regular — el cuadro se actualizará automáticamente cuando comiencen los partidos reales de playoffs.",
+    "liveNote": "Playoffs en curso — resultados en directo.",
+    "completedNote": "Último torneo finalizado — el cuadro se reiniciará al comienzo de la próxima temporada.",
+    "round1": "1.ª ronda",
+    "semis": "Semifinales",
+    "final": "Final",
+    "tbd": "Por determinar",
+    "unavailable": "Cuadro de playoffs no disponible"
   },
   "teams": {
     "subtitle": "Todos los equipos de la liga, por conferencia.",
@@ -151,7 +163,7 @@
   "leagueBlurb": {
     "wnba": "La liga profesional norteamericana",
     "ncaa": "El baloncesto universitario estadounidense",
-    "fiba": "Las competiciones internacionales",
+    "fiba": "El torneo mundial, cada 4 años",
     "olympics": "El torneo olímpico femenino"
   },
   "futureSports": {
