@@ -6,6 +6,7 @@ import { formatDateParam, getFeaturedGame } from "../utils/games";
 import { LEAGUES } from "../leagues";
 import Logo from "../components/Logo";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import InstagramLink from "../components/InstagramLink";
 import HeroGame from "../components/HeroGame";
 import GameCard from "../components/GameCard";
 import PlayerCard from "../components/PlayerCard";
@@ -61,6 +62,7 @@ export default function Landing() {
           </Link>
 
           <div className="header-right">
+            <InstagramLink />
             <LanguageSwitcher />
             <Link to="/wnba" className="btn btn-primary landing-enter-btn">
               {t("landing.enter")} <i className="fa-solid fa-arrow-right"></i>
@@ -219,6 +221,7 @@ export default function Landing() {
             <div className="landing-footer-brand">FRONTROW</div>
             <div className="landing-footer-note">{t("landing.footerNote")}</div>
           </div>
+          <InstagramLink className="landing-footer-social" />
         </footer>
       </div>
     </>
