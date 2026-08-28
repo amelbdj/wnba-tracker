@@ -2603,13 +2603,30 @@ img {
 }
 
 .bracket-rounds {
+  position: relative;
   display: flex;
-  gap: 28px;
+  gap: 40px;
   overflow-x: auto;
   padding-bottom: 12px;
 }
 
+.bracket-connectors {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bracket-connectors path {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
 .bracket-round {
+  position: relative;
+  z-index: 1;
   flex: 1 0 220px;
   min-width: 220px;
 }

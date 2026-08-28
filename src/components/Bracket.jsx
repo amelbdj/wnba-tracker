@@ -1,8 +1,87 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getPostseasonGames, getSeasonWindows, getStandings, getTournamentGames } from "../services/api";
 import { getStat as stat } from "../utils/stats";
+
+// Draws the connector lines between rounds (which matchup feeds into which)
+// by measuring the actual rendered position of every `.bracket-matchup`
+// inside `children` and drawing an SVG bracket-shape line between each pair
+// of matchups and the single one they feed into next round. Pure DOM
+// measurement rather than CSS math because card heights vary (a live
+// matchup with a series summary line is taller than a TBD placeholder), so
+// there's no fixed spacing to calculate the lines from.
+function BracketRoundsShell({ children }) {
+  const containerRef = useRef(null);
+  const [paths, setPaths] = useState([]);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    function recompute() {
+      const containerRect = container.getBoundingClientRect();
+      const roundEls = Array.from(container.querySelectorAll(".bracket-round"));
+      const roundBoxes = roundEls.map((roundEl) =>
+        Array.from(roundEl.querySelectorAll(".bracket-matchup")).map((el) => {
+          const r = el.getBoundingClientRect();
+          return {
+            top: r.top - containerRect.top + container.scrollTop,
+            bottom: r.bottom - containerRect.top + container.scrollTop,
+            left: r.left - containerRect.left + container.scrollLeft,
+            right: r.right - containerRect.left + container.scrollLeft,
+          };
+        }),
+      );
+
+      const nextPaths = [];
+      for (let i = 0; i < roundBoxes.length - 1; i++) {
+        const current = roundBoxes[i];
+        const next = roundBoxes[i + 1];
+        // Only draw connectors where every next-round matchup is fed by
+        // exactly two matchups in this round — a plain 2:1 elimination
+        // step. Rounds that don't halve cleanly (e.g. NCAA's First Four
+        // feeding just 4 of the Round of 64's 32 slots) are left unconnected
+        // rather than drawing a misleading line.
+        if (current.length !== next.length * 2) continue;
+
+        for (let k = 0; k < next.length; k++) {
+          const a = current[2 * k];
+          const b = current[2 * k + 1];
+          const target = next[k];
+          const midX = a.right + (target.left - a.right) / 2;
+          const aY = (a.top + a.bottom) / 2;
+          const bY = (b.top + b.bottom) / 2;
+          const targetY = (target.top + target.bottom) / 2;
+
+          nextPaths.push(
+            `M ${a.right} ${aY} H ${midX} M ${b.right} ${bY} H ${midX} M ${midX} ${aY} V ${bY} M ${midX} ${targetY} H ${target.left}`,
+          );
+        }
+      }
+
+      setPaths(nextPaths);
+      setSize({ width: container.scrollWidth, height: container.scrollHeight });
+    }
+
+    recompute();
+    const observer = new ResizeObserver(recompute);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [children]);
+
+  return (
+    <div className="bracket-rounds" ref={containerRef}>
+      <svg className="bracket-connectors" width={size.width} height={size.height}>
+        {paths.map((d, i) => (
+          <path key={i} d={d} />
+        ))}
+      </svg>
+      {children}
+    </div>
+  );
+}
 
 // ---- Projected bracket (used until real playoff games exist) --------------
 // ESPN doesn't expose real bracket data until the postseason actually
@@ -70,7 +149,7 @@ function ProjectedBracket({ league, seeds }) {
         <i className="fa-solid fa-circle-info"></i> {t("playoffs.seedingNote")}
       </p>
 
-      <div className="bracket-rounds">
+      <BracketRoundsShell>
         <div className="bracket-round">
           <div className="bracket-round-title">{t("playoffs.round1")}</div>
           <div className="bracket-round-matchups">
@@ -95,7 +174,7 @@ function ProjectedBracket({ league, seeds }) {
             <SeedMatchup league={league} />
           </div>
         </div>
-      </div>
+      </BracketRoundsShell>
     </div>
   );
 }
@@ -136,6 +215,52 @@ function isGroupStageLabel(label) {
   return /^(group|pool)\b/i.test(label);
 }
 
+// ESPN returns postseason games in whatever order the API feels like (mostly
+// by date/time), not in bracket left-to-right order — so two matchups that
+// happen to sit side by side in a round often have nothing to do with each
+// other. This walks backward from the final, and for every matchup places
+// its two "parent" matchups (the earlier-round games its two teams actually
+// won to get there) next to each other — so array-adjacent matchups really
+// do feed the same next-round game, which is what both the reading order
+// and the connector lines rely on.
+function reorderRoundsByLineage(rounds) {
+  const ordered = rounds.map((round) => ({ ...round }));
+
+  for (let i = ordered.length - 1; i > 0; i--) {
+    const parents = ordered[i].matchups;
+    const children = ordered[i - 1].matchups;
+
+    const childByTeamId = new Map();
+    for (const child of children) {
+      for (const c of child.competitions[0].competitors || []) {
+        if (c.team?.id) childByTeamId.set(c.team.id, child);
+      }
+    }
+
+    const placed = new Set();
+    const reordered = [];
+    for (const parentMatchup of parents) {
+      for (const c of parentMatchup.competitions[0].competitors || []) {
+        const child = c.team?.id != null ? childByTeamId.get(c.team.id) : null;
+        if (child && !placed.has(child)) {
+          reordered.push(child);
+          placed.add(child);
+        }
+      }
+    }
+    // Matchups that didn't feed a known team into the next round (e.g.
+    // NCAA's First Four only fills some of the Round of 64 slots) keep
+    // their original relative order, appended at the end.
+    for (const child of children) {
+      if (!placed.has(child)) reordered.push(child);
+    }
+
+    ordered[i - 1] = { ...ordered[i - 1], matchups: reordered };
+  }
+
+  return ordered;
+}
+
 // Groups postseason events into rounds, keeping only the latest game of
 // each team-pair series so every matchup shows the current series state.
 function buildLiveRounds(events) {
@@ -161,13 +286,15 @@ function buildLiveRounds(events) {
     }
   }
 
-  return [...roundMap.values()]
+  const rounds = [...roundMap.values()]
     .map(({ label, seriesMap }) => {
       const matchups = [...seriesMap.values()];
       const earliest = Math.min(...matchups.map((e) => new Date(e.date).getTime()));
       return { label, matchups, earliest };
     })
     .sort((a, b) => a.earliest - b.earliest);
+
+  return reorderRoundsByLineage(rounds);
 }
 
 function LiveSlot({ league, competitor, seriesInfo }) {
@@ -217,7 +344,7 @@ function LiveBracket({ league, rounds, completed }) {
         {t(completed ? "playoffs.completedNote" : "playoffs.liveNote")}
       </p>
 
-      <div className="bracket-rounds">
+      <BracketRoundsShell>
         {rounds.map((round) => (
           <div className="bracket-round" key={round.label}>
             <div className="bracket-round-title">{localizeRoundLabel(round.label, t)}</div>
@@ -228,7 +355,7 @@ function LiveBracket({ league, rounds, completed }) {
             </div>
           </div>
         ))}
-      </div>
+      </BracketRoundsShell>
     </div>
   );
 }
