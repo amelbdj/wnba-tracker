@@ -6,7 +6,7 @@ Une application web moderne qui affiche les matchs de la WNBA en temps réel ave
 
 ## 🚀 Démo
 
-👉 https://wnba-tracker.vercel.app (à remplacer avec ton lien)
+👉 https://thefrontrow.fr/
 
 ---
 
