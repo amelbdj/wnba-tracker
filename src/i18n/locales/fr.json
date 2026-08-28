@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "standings": "Classement",
+    "playoffs": "Playoffs",
     "teams": "Équipes",
     "players": "Joueuses",
     "stats": "Stats",
@@ -11,7 +12,7 @@
   "league": {
     "wnba": "WNBA",
     "ncaa": "NCAA Femmes",
-    "fiba": "FIBA",
+    "fiba": "Coupe du monde FIBA",
     "olympics": "Jeux Olympiques"
   },
   "common": {
@@ -64,6 +65,17 @@
     "streak": "Série",
     "subtitle": "Le classement complet de la ligue, mis à jour en direct.",
     "unavailable": "Classement indisponible"
+  },
+  "playoffs": {
+    "subtitle": "Les 8 meilleures équipes de la ligue et le tableau des playoffs.",
+    "seedingNote": "Têtes de série calculées d'après le classement actuel de la saison régulière — le tableau se mettra à jour automatiquement une fois les vrais matchs de playoffs lancés.",
+    "liveNote": "Playoffs en cours — résultats en direct.",
+    "completedNote": "Dernier tournoi terminé — le tableau se réinitialisera au début de la prochaine saison.",
+    "round1": "1er tour",
+    "semis": "Demi-finales",
+    "final": "Finale",
+    "tbd": "À déterminer",
+    "unavailable": "Tableau des playoffs indisponible"
   },
   "teams": {
     "subtitle": "Toutes les équipes de la ligue, par conférence.",
@@ -151,7 +163,7 @@
   "leagueBlurb": {
     "wnba": "La ligue professionnelle nord-américaine",
     "ncaa": "Le basketball universitaire américain",
-    "fiba": "Les compétitions internationales",
+    "fiba": "Le tournoi mondial, tous les 4 ans",
     "olympics": "Le tournoi olympique féminin"
   },
   "futureSports": {
