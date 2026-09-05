@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Logo from "./Logo";
 import InstagramLink from "./InstagramLink";
+import TikTokLink from "./TikTokLink";
 
 export default function SiteFooter() {
   const { t } = useTranslation();
@@ -19,7 +20,10 @@ export default function SiteFooter() {
         <Link to="/terms">{t("footer.terms")}</Link>
       </nav>
 
-      <InstagramLink className="landing-footer-social" />
+      <div className="footer-social-links">
+        <InstagramLink />
+        <TikTokLink />
+      </div>
     </footer>
   );
 }

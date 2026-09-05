@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import InstagramLink from "./InstagramLink";
+import TikTokLink from "./TikTokLink";
 
 export default function SiteHeader({ cta }) {
   return (
@@ -17,6 +18,7 @@ export default function SiteHeader({ cta }) {
 
         <div className="header-right">
           <InstagramLink />
+          <TikTokLink />
           <LanguageSwitcher />
           {cta}
         </div>
