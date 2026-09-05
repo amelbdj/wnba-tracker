@@ -2596,7 +2596,10 @@ img {
   color: var(--text);
 }
 
-.landing-footer-social {
+.footer-social-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-left: 20px;
 }
 
@@ -2950,8 +2953,9 @@ img {
     margin-left: 0;
   }
 
-  .landing-footer-social {
+  .footer-social-links {
     margin-left: 0;
+    justify-content: center;
   }
 }
 

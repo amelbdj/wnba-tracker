@@ -6,6 +6,7 @@ import { LANGUAGES } from "../i18n";
 import Logo from "./Logo";
 import LanguageSwitcher, { MobileLangChip } from "./LanguageSwitcher";
 import InstagramLink from "./InstagramLink";
+import TikTokLink from "./TikTokLink";
 
 function isActive(pathname, league, section) {
   const to = section ? `/${league}/${section}` : `/${league}`;
@@ -123,6 +124,7 @@ export default function Header() {
 
         <div className="header-right">
           <InstagramLink />
+          <TikTokLink />
           <LanguageSwitcher />
 
           <button
