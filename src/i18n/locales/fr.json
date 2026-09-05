@@ -22,6 +22,7 @@
     "retryLater": "Réessaie un peu plus tard.",
     "tryAnotherSearch": "Essaie une autre recherche.",
     "backToDashboard": "Retour au dashboard",
+    "backToHome": "Retour à l'accueil",
     "allTeams": "Toutes les équipes",
     "allPlayers": "Toutes les joueuses",
     "loadingStats": "Chargement des stats...",
@@ -171,5 +172,87 @@
     "tennis": "Tennis",
     "volleyball": "Volleyball",
     "athletics": "Athlétisme"
+  },
+  "footer": {
+    "privacy": "Confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "updated": "Dernière mise à jour : 29 août 2026",
+    "intro": "FRONTROW est un projet indépendant, réalisé par un fan, qui agrège des données publiques sur le sport féminin. Cette page explique simplement ce qu'on fait — et surtout ce qu'on ne fait pas — avec tes données.",
+    "sections": [
+      {
+        "title": "Ce que nous collectons",
+        "body": "FRONTROW ne demande pas de compte, pas d'e-mail, pas de mot de passe. La seule information conservée est ta langue d'affichage préférée (français, anglais ou espagnol), stockée localement sur ton appareil et jamais transmise à nos serveurs — puisque nous n'en avons pas."
+      },
+      {
+        "title": "Cookies et stockage local",
+        "body": "Le site n'utilise aucun cookie publicitaire ou de suivi. Il utilise uniquement le stockage local de ton navigateur (localStorage) pour retenir ta langue d'une visite à l'autre. Tu peux l'effacer à tout moment depuis les réglages de ton navigateur."
+      },
+      {
+        "title": "Services tiers",
+        "body": "Pour afficher les scores, classements et statistiques, ton navigateur interroge directement l'API publique d'ESPN — comme pour n'importe quel site qui charge une ressource externe, cela expose ton adresse IP à ESPN. Le site charge aussi des polices (Google Fonts) et des icônes (Font Awesome via Cloudflare) depuis des CDN externes. Les liens vers nos comptes Instagram et TikTok pointent vers ces plateformes mais ne déposent aucun traceur sur nos pages."
+      },
+      {
+        "title": "Sécurité",
+        "body": "Le site est servi en HTTPS, ce qui chiffre les échanges entre ton navigateur et nos serveurs."
+      },
+      {
+        "title": "Tes droits",
+        "body": "Comme nous ne conservons quasiment aucune donnée, il n'y a en pratique rien à supprimer côté serveur. Pour toute question sur la confidentialité, tu peux nous contacter via notre compte Instagram @frontrow.sport."
+      },
+      {
+        "title": "Mineurs",
+        "body": "FRONTROW est un site d'information sportive à destination du grand public. Nous ne collectons pas sciemment de données personnelles concernant des mineurs."
+      },
+      {
+        "title": "Modifications de cette politique",
+        "body": "Cette politique peut évoluer si le site change (nouvelles fonctionnalités, nouveaux partenaires). La date de mise à jour en haut de cette page reflète la dernière version."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Conditions d'utilisation",
+    "updated": "Dernière mise à jour : 29 août 2026",
+    "intro": "En utilisant FRONTROW, tu acceptes les conditions ci-dessous. Si quelque chose ne te convient pas, le mieux est de ne pas utiliser le site et de nous le faire savoir.",
+    "sections": [
+      {
+        "title": "Le service",
+        "body": "FRONTROW est un projet indépendant et non officiel, réalisé par un fan de sport féminin. Il n'est affilié, associé ou approuvé par aucune des ligues ou instances présentées (WNBA, NCAA, FIBA, Comité International Olympique) ni par ESPN, dont les données publiques sont utilisées à titre informatif."
+      },
+      {
+        "title": "Exactitude des données",
+        "body": "Les scores, classements, statistiques et calendriers proviennent de l'API publique d'ESPN et sont affichés « en l'état », sans garantie d'exactitude, de complétude ou de mise à jour en temps réel. Ne t'appuie pas sur FRONTROW pour des paris sportifs ou toute décision nécessitant une source officielle."
+      },
+      {
+        "title": "Propriété intellectuelle",
+        "body": "Les noms d'équipes, logos, marques et visuels affichés appartiennent à leurs propriétaires respectifs (ligues, fédérations, clubs) et sont utilisés uniquement à titre d'identification et d'information, sans intention de revendiquer un quelconque droit sur ces éléments."
+      },
+      {
+        "title": "Utilisation autorisée",
+        "body": "FRONTROW est destiné à un usage personnel et non commercial. Toute tentative d'extraction massive du contenu, de perturbation du service ou d'usage détourné du site n'est pas autorisée."
+      },
+      {
+        "title": "Liens externes",
+        "body": "Le site contient des liens vers des services tiers (ESPN, Instagram, TikTok). FRONTROW n'est pas responsable du contenu, des politiques ou des pratiques de ces sites externes."
+      },
+      {
+        "title": "Limitation de responsabilité",
+        "body": "Le service est fourni « tel quel », sans garantie d'aucune sorte. Dans la mesure permise par la loi, FRONTROW ne pourra être tenu responsable des dommages résultant de l'utilisation ou de l'impossibilité d'utiliser le site."
+      },
+      {
+        "title": "Modifications des conditions",
+        "body": "Ces conditions peuvent être mises à jour à mesure que le site évolue. La poursuite de l'utilisation du site après une modification vaut acceptation des nouvelles conditions."
+      },
+      {
+        "title": "Droit applicable",
+        "body": "Ces conditions sont régies par le droit français."
+      },
+      {
+        "title": "Contact",
+        "body": "Pour toute question concernant ces conditions, tu peux nous contacter via notre compte Instagram @frontrow.sport."
+      }
+    ]
   }
 }
