@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useParams } from "react-router-dom";
 import Header from "./Header";
+import SiteFooter from "./SiteFooter";
 import { DEFAULT_LEAGUE, LEAGUES } from "../leagues";
 
 export default function Layout() {
@@ -15,6 +16,7 @@ export default function Layout() {
       <Header />
       <div className="page">
         <Outlet />
+        <SiteFooter />
       </div>
     </>
   );

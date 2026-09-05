@@ -9,11 +9,15 @@ import PlayersPage from "./pages/PlayersPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
 import StatisticsPage from "./pages/StatisticsPage";
 import PlayoffsPage from "./pages/PlayoffsPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
+      <Route path="/privacy" element={<PrivacyPolicyPage />} />
+      <Route path="/terms" element={<TermsOfServicePage />} />
       <Route path="/:league" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="standings" element={<StandingsPage />} />

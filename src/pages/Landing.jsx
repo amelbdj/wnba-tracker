@@ -5,8 +5,8 @@ import { getGamesByDate, getLeagueLeaders } from "../services/api";
 import { formatDateParam, getFeaturedGame } from "../utils/games";
 import { LEAGUES } from "../leagues";
 import Logo from "../components/Logo";
-import LanguageSwitcher from "../components/LanguageSwitcher";
-import InstagramLink from "../components/InstagramLink";
+import SiteHeader from "../components/SiteHeader";
+import SiteFooter from "../components/SiteFooter";
 import HeroGame from "../components/HeroGame";
 import GameCard from "../components/GameCard";
 import PlayerCard from "../components/PlayerCard";
@@ -51,25 +51,13 @@ export default function Landing() {
 
   return (
     <>
-      <header className="site-header landing-header">
-        <div className="header-inner">
-          <Link to="/" className="brand">
-            <Logo size={30} />
-            <span className="brand-text">
-              FRONTROW
-              <small>The home of women's sports.</small>
-            </span>
+      <SiteHeader
+        cta={
+          <Link to="/wnba" className="btn btn-primary landing-enter-btn">
+            {t("landing.enter")} <i className="fa-solid fa-arrow-right"></i>
           </Link>
-
-          <div className="header-right">
-            <InstagramLink />
-            <LanguageSwitcher />
-            <Link to="/wnba" className="btn btn-primary landing-enter-btn">
-              {t("landing.enter")} <i className="fa-solid fa-arrow-right"></i>
-            </Link>
-          </div>
-        </div>
-      </header>
+        }
+      />
 
       <div className="page">
         <section className="landing-hero">
@@ -215,14 +203,7 @@ export default function Landing() {
           </div>
         </div>
 
-        <footer className="landing-footer">
-          <Logo size={26} />
-          <div>
-            <div className="landing-footer-brand">FRONTROW</div>
-            <div className="landing-footer-note">{t("landing.footerNote")}</div>
-          </div>
-          <InstagramLink className="landing-footer-social" />
-        </footer>
+        <SiteFooter />
       </div>
     </>
   );
