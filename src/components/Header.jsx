@@ -125,6 +125,9 @@ export default function Header() {
         <div className="header-right">
           <InstagramLink />
           <TikTokLink />
+          <Link to="/settings" className="icon-btn" aria-label={t("nav.settings")}>
+            <i className="fa-solid fa-gear"></i>
+          </Link>
           <LanguageSwitcher />
 
           <button

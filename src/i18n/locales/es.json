@@ -7,7 +7,8 @@
     "players": "Jugadoras",
     "stats": "Stats",
     "comingSoon": "Próximamente",
-    "openMenu": "Abrir el menú"
+    "openMenu": "Abrir el menú",
+    "settings": "Configuración"
   },
   "league": {
     "wnba": "WNBA",
@@ -179,20 +180,24 @@
   },
   "privacy": {
     "title": "Política de privacidad",
-    "updated": "Última actualización: 29 de agosto de 2026",
+    "updated": "Última actualización: 28 de septiembre de 2026",
     "intro": "FRONTROW es un proyecto independiente, creado por una persona fan, que recopila datos públicos sobre el deporte femenino. Esta página explica de forma sencilla qué hacemos — y sobre todo qué no hacemos — con tus datos.",
     "sections": [
       {
         "title": "Qué recopilamos",
-        "body": "FRONTROW no pide cuenta, correo electrónico ni contraseña. El único dato que se conserva es tu idioma de visualización preferido (francés, inglés o español), guardado localmente en tu dispositivo y que nunca se envía a ningún servidor nuestro — porque no tenemos ninguno."
+        "body": "FRONTROW no pide cuenta, correo electrónico ni contraseña. Tu idioma de visualización preferido (francés, inglés o español) se guarda localmente en tu dispositivo. Si conectas tu cuenta de TikTok para publicar un vídeo, conservamos un identificador de sesión anónimo (una cookie técnica, sin datos personales) y, cifrados en nuestros servidores, los tokens de acceso de TikTok necesarios para publicar en tu nombre — nunca tu contraseña de TikTok, que jamás vemos."
       },
       {
         "title": "Cookies y almacenamiento local",
-        "body": "El sitio no utiliza cookies publicitarias ni de seguimiento. Solo usa el almacenamiento local de tu navegador (localStorage) para recordar tu idioma entre visitas. Puedes borrarlo en cualquier momento desde la configuración de tu navegador."
+        "body": "El sitio no utiliza cookies publicitarias ni de seguimiento. Usa el almacenamiento local de tu navegador (localStorage) para recordar tu idioma, y, solo si conectas TikTok, una cookie técnica (httpOnly, segura) que identifica tu sesión mientras usas esa función."
+      },
+      {
+        "title": "Conexión con TikTok",
+        "body": "Si eliges conectar tu cuenta de TikTok, FRONTROW usa TikTok Login Kit (OAuth): te autenticas directamente en tiktok.com, nunca en nuestro sitio. Los tokens de acceso y de actualización que devuelve TikTok se cifran (AES-256) antes de guardarse, y solo se usan para las acciones que tú mismo inicias (publicar un vídeo, consultar la información de tu cuenta). Puedes desconectar tu cuenta en cualquier momento desde la página de Configuración, lo que revoca el acceso y elimina esos tokens."
       },
       {
         "title": "Servicios de terceros",
-        "body": "Para mostrar marcadores, clasificaciones y estadísticas, tu navegador consulta directamente la API pública de ESPN — como con cualquier sitio que carga un recurso externo, esto expone tu dirección IP a ESPN. El sitio también carga fuentes (Google Fonts) e iconos (Font Awesome vía Cloudflare) desde CDN externas. Los enlaces a nuestras cuentas de Instagram y TikTok apuntan a esas plataformas, pero no colocan ningún rastreador en nuestras páginas."
+        "body": "Para mostrar marcadores, clasificaciones y estadísticas, tu navegador consulta directamente la API pública de ESPN — como con cualquier sitio que carga un recurso externo, esto expone tu dirección IP a ESPN. El sitio también carga fuentes (Google Fonts) e iconos (Font Awesome vía Cloudflare) desde CDN externas, y usa Upstash (alojamiento de base de datos) para guardar las conexiones activas con TikTok. Los enlaces a nuestras cuentas de Instagram y TikTok apuntan a esas plataformas, pero no colocan ningún rastreador en nuestras páginas."
       },
       {
         "title": "Seguridad",
@@ -200,7 +205,7 @@
       },
       {
         "title": "Tus derechos",
-        "body": "Como apenas conservamos datos, en la práctica no hay nada que eliminar del lado del servidor. Para cualquier duda sobre privacidad, puedes contactarnos a través de nuestra cuenta de Instagram @frontrow.sport."
+        "body": "Si nunca has conectado TikTok, apenas conservamos datos del lado del servidor. Si lo has hecho, puedes eliminar los tokens guardados en cualquier momento pulsando \"Desconectar\" en Configuración. Para cualquier otra duda sobre privacidad, puedes contactarnos a través de nuestra cuenta de Instagram @frontrow.sport."
       },
       {
         "title": "Menores",
@@ -214,7 +219,7 @@
   },
   "terms": {
     "title": "Condiciones de uso",
-    "updated": "Última actualización: 29 de agosto de 2026",
+    "updated": "Última actualización: 28 de septiembre de 2026",
     "intro": "Al usar FRONTROW, aceptas las condiciones siguientes. Si algo no te convence, lo mejor es no usar el sitio y hacérnoslo saber.",
     "sections": [
       {
@@ -238,6 +243,10 @@
         "body": "El sitio contiene enlaces a servicios de terceros (ESPN, Instagram, TikTok). FRONTROW no es responsable del contenido, las políticas ni las prácticas de esos sitios externos."
       },
       {
+        "title": "Conexión y publicación en TikTok",
+        "body": "Conectar TikTok y publicar vídeos son funciones opcionales, que solo tú activas. Al usarlas, confirmas que tienes todos los derechos necesarios sobre el contenido publicado y sigues sujeto a las Condiciones de Servicio y las Normas de la Comunidad de TikTok. FRONTROW no es responsable de la moderación, difusión o disponibilidad de tu contenido una vez publicado en TikTok."
+      },
+      {
         "title": "Limitación de responsabilidad",
         "body": "El servicio se ofrece \"tal cual\", sin garantía de ningún tipo. En la medida permitida por la ley, FRONTROW no será responsable de los daños derivados del uso, o de la imposibilidad de uso, del sitio."
       },
@@ -254,5 +263,89 @@
         "body": "Para cualquier pregunta sobre estas condiciones, puedes contactarnos a través de nuestra cuenta de Instagram @frontrow.sport."
       }
     ]
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Gestiona las cuentas conectadas a tu perfil de FRONTROW.",
+    "connectedAccounts": "Cuentas conectadas",
+    "postVideo": "Publicar un vídeo en TikTok"
+  },
+  "tiktokConnect": {
+    "checking": "Comprobando la conexión...",
+    "notConnected": "Cuenta de TikTok no conectada",
+    "connected": "Conectada",
+    "connectedAs": "Conectado como {{name}}",
+    "loadingAccount": "Cargando cuenta...",
+    "connect": "Conectar TikTok",
+    "disconnect": "Desconectar",
+    "oauthNotice": {
+      "connected": "Cuenta de TikTok conectada correctamente.",
+      "denied": "Conexión con TikTok cancelada.",
+      "error": "La conexión con TikTok ha fallado. Inténtalo de nuevo."
+    }
+  },
+  "postToTikTok": {
+    "title": "Publicar en TikTok",
+    "subtitle": "Elige un vídeo, ajusta los parámetros y publícalo directamente en tu cuenta de TikTok conectada.",
+    "connectPrompt": "Conecta tu cuenta de TikTok para poder publicar un vídeo.",
+    "postingAs": "Este vídeo se publicará en la cuenta de TikTok: {{name}}",
+    "sandboxNotice": "Modo sandbox: hasta que la app sea auditada por TikTok, las publicaciones se mantienen privadas (visibles solo para ti), sea cual sea la opción elegida.",
+    "chooseVideo": "Elegir un vídeo",
+    "videoFormats": "MP4, MOV o WebM",
+    "changeVideo": "Cambiar de vídeo",
+    "videoTooLong": "Este vídeo supera la duración máxima permitida por TikTok para esta cuenta ({{max}} segundos).",
+    "maxDurationNote": "Duración máxima permitida para esta cuenta: {{max}} segundos.",
+    "captionLabel": "Descripción",
+    "captionPlaceholder": "Escribe una descripción para tu vídeo...",
+    "captionCount": "{{count}}/2200",
+    "privacyLabel": "Privacidad",
+    "privacyPlaceholder": "-- Elige una opción --",
+    "privacyLevel": {
+      "PUBLIC_TO_EVERYONE": "Todo el mundo",
+      "MUTUAL_FOLLOW_FRIENDS": "Amigos (seguimiento mutuo)",
+      "FOLLOWER_OF_CREATOR": "Seguidores",
+      "SELF_ONLY": "Solo yo (privado)"
+    },
+    "interactionsLabel": "Interacciones",
+    "disableComment": "Desactivar comentarios",
+    "disableDuet": "Desactivar Dueto",
+    "disableStitch": "Desactivar Stitch",
+    "disabledByAccount": "Desactivado en la configuración de tu cuenta de TikTok",
+    "commercialLabel": "Contenido comercial",
+    "commercialToggle": "Este contenido promociona una marca o un producto",
+    "commercialYourBrand": "Tu propia marca",
+    "commercialBrandedContent": "Contenido de marca (patrocinado)",
+    "commercialRequireOne": "Selecciona al menos una opción para continuar.",
+    "commercialPrivacyConflict": "El contenido de marca no se puede publicar de forma privada — elige otra opción de privacidad.",
+    "declarationBrandOnly": "Al publicar, aceptas la confirmación de uso musical de TikTok.",
+    "declarationBrandedContent": "Al publicar contenido de marca, aceptas la política de contenido de marca y la confirmación de uso musical de TikTok.",
+    "declarationDefault": "Al publicar, confirmas que tienes los derechos necesarios sobre este vídeo y aceptas las normas de TikTok sobre el uso compartido de contenido.",
+    "musicUsageLink": "Confirmación de uso musical",
+    "brandedContentPolicyLink": "Política de contenido de marca",
+    "consentLabel": "He leído y acepto las condiciones anteriores.",
+    "publish": "Publicar en TikTok",
+    "uploading": "Subiendo el vídeo... {{percent}}%",
+    "processing": "Publicando...",
+    "processingHint": "TikTok está procesando tu vídeo, puede tardar unos minutos.",
+    "stillProcessing": "TikTok está tardando más de lo habitual en procesar este vídeo. Revísalo más tarde directamente en TikTok.",
+    "published": "¡Vídeo publicado en TikTok!",
+    "publishedHint": "Tu vídeo ya está disponible en tu cuenta de TikTok.",
+    "sentToInbox": "Vídeo enviado a tu bandeja de entrada de TikTok",
+    "sentToInboxHint": "Abre la app de TikTok para finalizar la publicación.",
+    "failed": "La publicación ha fallado",
+    "postAnother": "Publicar otro vídeo"
+  },
+  "tiktokErrors": {
+    "not_connected": "Tu cuenta de TikTok ya no está conectada — vuelve a conectarla para continuar.",
+    "access_token_invalid": "Tu conexión con TikTok ha caducado — vuelve a conectar tu cuenta.",
+    "scope_not_authorized": "La autorización de TikTok no cubre la publicación de vídeos — vuelve a conectar tu cuenta.",
+    "spam_risk_too_many_posts": "Has alcanzado el límite de publicaciones de TikTok para hoy.",
+    "spam_risk_user_banned_from_posting": "Esta cuenta de TikTok no puede publicar en este momento.",
+    "reached_active_user_cap": "FRONTROW ha alcanzado su cuota de publicaciones en TikTok por hoy — inténtalo de nuevo mañana.",
+    "unaudited_client_can_only_post_to_private_accounts": "En modo sandbox, TikTok obliga a que las publicaciones sean privadas.",
+    "privacy_level_option_mismatch": "Esa opción de privacidad ya no está disponible para esta cuenta — inténtalo de nuevo.",
+    "rate_limit_exceeded": "Se han enviado demasiadas solicitudes a TikTok — inténtalo de nuevo dentro de un minuto.",
+    "invalid_param": "Uno de los parámetros enviados a TikTok no es válido.",
+    "generic": "Ha ocurrido un error con TikTok. Inténtalo de nuevo en un momento."
   }
 }
