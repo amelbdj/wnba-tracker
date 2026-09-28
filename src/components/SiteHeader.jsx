@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import InstagramLink from "./InstagramLink";
 import TikTokLink from "./TikTokLink";
 
 export default function SiteHeader({ cta }) {
+  const { t } = useTranslation();
+
   return (
     <header className="site-header landing-header">
       <div className="header-inner">
@@ -19,6 +22,9 @@ export default function SiteHeader({ cta }) {
         <div className="header-right">
           <InstagramLink />
           <TikTokLink />
+          <Link to="/settings" className="icon-btn" aria-label={t("nav.settings")}>
+            <i className="fa-solid fa-gear"></i>
+          </Link>
           <LanguageSwitcher />
           {cta}
         </div>

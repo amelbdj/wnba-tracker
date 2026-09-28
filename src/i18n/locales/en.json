@@ -7,7 +7,8 @@
     "players": "Players",
     "stats": "Stats",
     "comingSoon": "Coming soon",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "settings": "Settings"
   },
   "league": {
     "wnba": "WNBA",
@@ -179,20 +180,24 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "updated": "Last updated: August 29, 2026",
+    "updated": "Last updated: September 28, 2026",
     "intro": "FRONTROW is an independent, fan-made project that aggregates public women's sports data. This page explains simply what we do — and mostly don't do — with your data.",
     "sections": [
       {
         "title": "What we collect",
-        "body": "FRONTROW doesn't require an account, an email, or a password. The only piece of information kept is your preferred display language (French, English, or Spanish), stored locally on your device and never sent to any server of ours — since we don't have one."
+        "body": "FRONTROW doesn't require an account, an email, or a password. Your preferred display language (French, English, or Spanish) is stored locally on your device. If you connect your TikTok account to post a video, we keep an anonymous session identifier (a technical cookie, no personal data) and, encrypted on our servers, the TikTok access tokens needed to post on your behalf — never your TikTok password, which we never see."
       },
       {
         "title": "Cookies and local storage",
-        "body": "The site doesn't use any advertising or tracking cookies. It only uses your browser's local storage (localStorage) to remember your language from one visit to the next. You can clear it at any time from your browser settings."
+        "body": "The site doesn't use any advertising or tracking cookies. It uses your browser's local storage (localStorage) to remember your language, and, only if you connect TikTok, a technical cookie (httpOnly, secure) that identifies your session for as long as you use that feature."
+      },
+      {
+        "title": "TikTok connection",
+        "body": "If you choose to connect your TikTok account, FRONTROW uses TikTok Login Kit (OAuth): you authenticate directly on tiktok.com, never on our site. The access and refresh tokens TikTok returns are encrypted (AES-256) before being stored, and are only used for actions you trigger yourself (posting a video, checking your account info). You can disconnect your account at any time from the Settings page, which revokes access and deletes those tokens."
       },
       {
         "title": "Third-party services",
-        "body": "To show scores, standings, and stats, your browser queries ESPN's public API directly — as with any site loading an external resource, this exposes your IP address to ESPN. The site also loads fonts (Google Fonts) and icons (Font Awesome via Cloudflare) from external CDNs. Links to our Instagram and TikTok accounts point to those platforms but don't drop any tracker on our pages."
+        "body": "To show scores, standings, and stats, your browser queries ESPN's public API directly — as with any site loading an external resource, this exposes your IP address to ESPN. The site also loads fonts (Google Fonts) and icons (Font Awesome via Cloudflare) from external CDNs, and uses Upstash (database hosting) to store active TikTok connections. Links to our Instagram and TikTok accounts point to those platforms but don't drop any tracker on our pages."
       },
       {
         "title": "Security",
@@ -200,7 +205,7 @@
       },
       {
         "title": "Your rights",
-        "body": "Since we keep almost no data at all, there's practically nothing to delete server-side. For any privacy question, you can reach us via our Instagram account @frontrow.sport."
+        "body": "If you've never connected TikTok, we keep almost no data server-side. If you have, you can delete the stored tokens at any time by clicking \"Disconnect\" in Settings. For any other privacy question, you can reach us via our Instagram account @frontrow.sport."
       },
       {
         "title": "Children",
@@ -214,7 +219,7 @@
   },
   "terms": {
     "title": "Terms of Service",
-    "updated": "Last updated: August 29, 2026",
+    "updated": "Last updated: September 28, 2026",
     "intro": "By using FRONTROW, you agree to the terms below. If something here doesn't work for you, the best move is not to use the site and to let us know.",
     "sections": [
       {
@@ -238,6 +243,10 @@
         "body": "The site contains links to third-party services (ESPN, Instagram, TikTok). FRONTROW isn't responsible for the content, policies, or practices of those external sites."
       },
       {
+        "title": "TikTok connection and posting",
+        "body": "Connecting TikTok and posting videos are optional features, triggered only by you. By using them, you confirm you hold all necessary rights to the content posted and remain subject to TikTok's own Terms of Service and Community Guidelines. FRONTROW isn't responsible for the moderation, distribution, or availability of your content once posted to TikTok."
+      },
+      {
         "title": "Limitation of liability",
         "body": "The service is provided \"as is\", without warranty of any kind. To the extent permitted by law, FRONTROW isn't liable for damages resulting from the use, or inability to use, the site."
       },
@@ -254,5 +263,89 @@
         "body": "For any question about these terms, you can reach us via our Instagram account @frontrow.sport."
       }
     ]
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage the accounts connected to your FRONTROW profile.",
+    "connectedAccounts": "Connected accounts",
+    "postVideo": "Post a video to TikTok"
+  },
+  "tiktokConnect": {
+    "checking": "Checking connection...",
+    "notConnected": "TikTok account not connected",
+    "connected": "Connected",
+    "connectedAs": "Connected as {{name}}",
+    "loadingAccount": "Loading account...",
+    "connect": "Connect TikTok",
+    "disconnect": "Disconnect",
+    "oauthNotice": {
+      "connected": "TikTok account connected successfully.",
+      "denied": "TikTok connection cancelled.",
+      "error": "Connecting to TikTok failed. Try again."
+    }
+  },
+  "postToTikTok": {
+    "title": "Post to TikTok",
+    "subtitle": "Pick a video, choose your settings, and post it straight to your connected TikTok account.",
+    "connectPrompt": "Connect your TikTok account to post a video.",
+    "postingAs": "This video will be posted to the TikTok account: {{name}}",
+    "sandboxNotice": "Sandbox mode: until the app is audited by TikTok, posts stay private (visible only to you), whatever setting you choose.",
+    "chooseVideo": "Choose a video",
+    "videoFormats": "MP4, MOV, or WebM",
+    "changeVideo": "Change video",
+    "videoTooLong": "This video is longer than TikTok's maximum allowed duration for this account ({{max}} seconds).",
+    "maxDurationNote": "Maximum duration allowed for this account: {{max}} seconds.",
+    "captionLabel": "Caption",
+    "captionPlaceholder": "Write a caption for your video...",
+    "captionCount": "{{count}}/2200",
+    "privacyLabel": "Privacy",
+    "privacyPlaceholder": "-- Choose an option --",
+    "privacyLevel": {
+      "PUBLIC_TO_EVERYONE": "Everyone",
+      "MUTUAL_FOLLOW_FRIENDS": "Friends (mutual follows)",
+      "FOLLOWER_OF_CREATOR": "Followers",
+      "SELF_ONLY": "Only me (private)"
+    },
+    "interactionsLabel": "Interactions",
+    "disableComment": "Disable comments",
+    "disableDuet": "Disable Duet",
+    "disableStitch": "Disable Stitch",
+    "disabledByAccount": "Disabled in your TikTok account settings",
+    "commercialLabel": "Commercial content",
+    "commercialToggle": "This content promotes a brand or product",
+    "commercialYourBrand": "Your own brand",
+    "commercialBrandedContent": "Branded content (sponsored)",
+    "commercialRequireOne": "Select at least one option to continue.",
+    "commercialPrivacyConflict": "Branded content can't be posted privately — choose a different privacy option.",
+    "declarationBrandOnly": "By posting, you agree to TikTok's Music Usage Confirmation.",
+    "declarationBrandedContent": "By posting branded content, you agree to TikTok's Branded Content Policy and Music Usage Confirmation.",
+    "declarationDefault": "By posting, you confirm you have the necessary rights to this video and agree to TikTok's content sharing rules.",
+    "musicUsageLink": "Music Usage Confirmation",
+    "brandedContentPolicyLink": "Branded Content Policy",
+    "consentLabel": "I have read and agree to the terms above.",
+    "publish": "Post to TikTok",
+    "uploading": "Uploading video... {{percent}}%",
+    "processing": "Publishing...",
+    "processingHint": "TikTok is processing your video, this can take a few minutes.",
+    "stillProcessing": "TikTok is taking longer than usual to process this video. Check back on TikTok later.",
+    "published": "Video posted to TikTok!",
+    "publishedHint": "Your video is live on your TikTok account.",
+    "sentToInbox": "Video sent to your TikTok inbox",
+    "sentToInboxHint": "Open the TikTok app to finish posting it.",
+    "failed": "Posting failed",
+    "postAnother": "Post another video"
+  },
+  "tiktokErrors": {
+    "not_connected": "Your TikTok account is no longer connected — reconnect it to continue.",
+    "access_token_invalid": "Your TikTok connection expired — reconnect your account.",
+    "scope_not_authorized": "The TikTok authorization doesn't cover posting videos — reconnect your account.",
+    "spam_risk_too_many_posts": "You've reached TikTok's posting limit for today.",
+    "spam_risk_user_banned_from_posting": "This TikTok account can't post right now.",
+    "reached_active_user_cap": "FRONTROW has reached its TikTok posting quota for today — try again tomorrow.",
+    "unaudited_client_can_only_post_to_private_accounts": "In sandbox mode, TikTok forces posts to be private.",
+    "privacy_level_option_mismatch": "That privacy option is no longer available for this account — try again.",
+    "rate_limit_exceeded": "Too many requests sent to TikTok — try again in a minute.",
+    "invalid_param": "One of the parameters sent to TikTok was invalid.",
+    "generic": "Something went wrong with TikTok. Try again in a moment."
   }
 }
