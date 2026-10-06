@@ -123,9 +123,9 @@ export default function Header() {
         </nav>
 
         <div className="header-right">
-          <InstagramLink />
-          <TikTokLink />
-          <Link to="/settings" className="icon-btn" aria-label={t("nav.settings")}>
+          <InstagramLink className="header-extra" />
+          <TikTokLink className="header-extra" />
+          <Link to="/settings" className="icon-btn header-extra" aria-label={t("nav.settings")}>
             <i className="fa-solid fa-gear"></i>
           </Link>
           <LanguageSwitcher />
@@ -160,6 +160,14 @@ export default function Header() {
             ))}
           </div>
           <NavLinks pathname={location.pathname} league={league} />
+          {/* Hidden from the header bar on small screens (no room), so they live here instead. */}
+          <div className="mobile-nav-extras">
+            <InstagramLink />
+            <TikTokLink />
+            <Link to="/settings" className="icon-btn" aria-label={t("nav.settings")}>
+              <i className="fa-solid fa-gear"></i>
+            </Link>
+          </div>
         </nav>
       )}
     </header>

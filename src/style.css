@@ -2616,113 +2616,11 @@ img {
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   padding: 12px 16px;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .bracket-note i {
   color: var(--indigo);
-}
-
-.bracket-rounds {
-  position: relative;
-  display: flex;
-  gap: 40px;
-  overflow-x: auto;
-  padding-bottom: 12px;
-}
-
-.bracket-connectors {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.bracket-connectors path {
-  fill: none;
-  stroke: var(--border-strong);
-  stroke-width: 1.5;
-}
-
-.bracket-round {
-  position: relative;
-  z-index: 1;
-  flex: 1 0 220px;
-  min-width: 220px;
-}
-
-.bracket-round-title {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--indigo);
-  margin-bottom: 16px;
-}
-
-.bracket-round-matchups {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  gap: 28px;
-  height: 100%;
-}
-
-.bracket-matchup {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--surface);
-  overflow: hidden;
-}
-
-.bracket-slot {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  color: var(--text);
-  text-decoration: none;
-  transition: background 0.2s ease;
-}
-
-.bracket-slot:hover {
-  background: var(--surface-hover);
-}
-
-.bracket-slot img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.bracket-seed {
-  width: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--muted);
-  flex-shrink: 0;
-}
-
-.bracket-team-name {
-  font-size: 13.5px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bracket-slot-tbd {
-  color: var(--muted);
-}
-
-.bracket-tbd-label {
-  font-size: 13px;
-  font-weight: 600;
 }
 
 .bracket-note-live {
@@ -2746,33 +2644,251 @@ img {
     opacity: 1;
   }
   50% {
-    opacity: 0.45;
+    opacity: 0.4;
   }
 }
 
-.bracket-live-score {
-  margin-left: auto;
+/* Rounds sit side by side, centered when the bracket fits and scrollable
+   (snapping column by column) when it doesn't. */
+.bracket-rounds {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  justify-content: safe center;
+  gap: 64px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 4px 18px;
+  scroll-snap-type: x proximity;
+}
+
+.bracket-connectors {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bracket-connectors path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.bracket-round {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 236px;
+  width: 236px;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+}
+
+.bracket-round-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.bracket-round-title::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  flex-shrink: 0;
+}
+
+.bracket-round-matchups {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 24px;
+  flex: 1;
+}
+
+/* One matchup = a card with a row per team (+ a footer line for series
+   status / live badge). */
+.bracket-matchup {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.bracket-matchup:hover {
+  border-color: var(--border-strong);
+}
+
+.bracket-matchup-live {
+  border-color: rgba(251, 61, 92, 0.5);
+  box-shadow: 0 0 0 1px rgba(251, 61, 92, 0.15), var(--shadow-md);
+}
+
+.bracket-slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 10px 12px 10px 14px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.bracket-slot + .bracket-slot {
+  border-top: 1px solid var(--border);
+}
+
+.bracket-slot:hover {
+  background: var(--surface-hover);
+}
+
+.bracket-slot img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.bracket-seed {
+  width: 14px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--muted);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.bracket-team-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Series wins (best-of-N) or final/live score (single game). */
+.bracket-score {
+  min-width: 26px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  background: var(--surface-hover);
   color: var(--text-secondary);
   flex-shrink: 0;
 }
 
-.bracket-slot-winner {
-  background: rgba(52, 211, 153, 0.08);
+.bracket-slot.is-winner {
+  background: rgba(52, 211, 153, 0.07);
 }
 
-.bracket-slot-winner .bracket-team-name,
-.bracket-slot-winner .bracket-live-score {
-  color: var(--win);
+.bracket-slot.is-winner::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--win);
 }
 
-.bracket-series-summary {
-  padding: 8px 12px;
+.bracket-slot.is-winner .bracket-team-name {
+  font-weight: 800;
+}
+
+.bracket-slot.is-winner .bracket-score {
+  background: var(--win);
+  color: #04130c;
+}
+
+.bracket-slot.is-loser {
+  opacity: 0.5;
+}
+
+.bracket-slot.is-loser:hover {
+  opacity: 0.85;
+}
+
+.bracket-slot-tbd {
+  color: var(--muted);
+}
+
+.bracket-slot-tbd:hover {
+  background: none;
+}
+
+.bracket-tbd-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--border-strong);
+  flex-shrink: 0;
+}
+
+.bracket-tbd-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.bracket-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 7px 14px;
   font-size: 11.5px;
   font-weight: 600;
   color: var(--muted);
+  background: rgba(255, 255, 255, 0.025);
   border-top: 1px solid var(--border);
+}
+
+.bracket-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--live);
+}
+
+.bracket-live-badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulseLive 1.2s ease-in-out infinite;
 }
 
 /* =========================================================
@@ -2957,6 +3073,21 @@ img {
     margin-left: 0;
     justify-content: center;
   }
+
+  /* Not enough room for Instagram/TikTok/Settings next to the logo, league
+     switcher and menu button — they move into the mobile menu (and stay in
+     the footer). */
+  .header-extra {
+    display: none;
+  }
+}
+
+.mobile-nav-extras {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
 }
 
 /* =========================================================

@@ -77,7 +77,12 @@
     "semis": "Semifinals",
     "final": "Final",
     "tbd": "TBD",
-    "unavailable": "Playoff bracket unavailable"
+    "unavailable": "Playoff bracket unavailable",
+    "seriesWins": "{{team}} wins series {{a}}-{{b}}",
+    "seriesLeads": "{{team}} leads series {{a}}-{{b}}",
+    "seriesTied": "Series tied {{a}}-{{b}}",
+    "seriesStarts": "Series starts {{date}}",
+    "gameOn": "Game on {{date}}"
   },
   "teams": {
     "subtitle": "All the league's teams, by conference.",

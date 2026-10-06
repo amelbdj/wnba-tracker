@@ -77,7 +77,12 @@
     "semis": "Demi-finales",
     "final": "Finale",
     "tbd": "À déterminer",
-    "unavailable": "Tableau des playoffs indisponible"
+    "unavailable": "Tableau des playoffs indisponible",
+    "seriesWins": "{{team}} remporte la série {{a}}-{{b}}",
+    "seriesLeads": "{{team}} mène la série {{a}}-{{b}}",
+    "seriesTied": "Série à égalité {{a}}-{{b}}",
+    "seriesStarts": "Début de la série le {{date}}",
+    "gameOn": "Match le {{date}}"
   },
   "teams": {
     "subtitle": "Toutes les équipes de la ligue, par conférence.",

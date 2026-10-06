@@ -20,9 +20,9 @@ export default function SiteHeader({ cta }) {
         </Link>
 
         <div className="header-right">
-          <InstagramLink />
-          <TikTokLink />
-          <Link to="/settings" className="icon-btn" aria-label={t("nav.settings")}>
+          <InstagramLink className="header-extra" />
+          <TikTokLink className="header-extra" />
+          <Link to="/settings" className="icon-btn header-extra" aria-label={t("nav.settings")}>
             <i className="fa-solid fa-gear"></i>
           </Link>
           <LanguageSwitcher />
