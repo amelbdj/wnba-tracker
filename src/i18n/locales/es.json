@@ -77,7 +77,12 @@
     "semis": "Semifinales",
     "final": "Final",
     "tbd": "Por determinar",
-    "unavailable": "Cuadro de playoffs no disponible"
+    "unavailable": "Cuadro de playoffs no disponible",
+    "seriesWins": "{{team}} gana la serie {{a}}-{{b}}",
+    "seriesLeads": "{{team}} lidera la serie {{a}}-{{b}}",
+    "seriesTied": "Serie empatada {{a}}-{{b}}",
+    "seriesStarts": "La serie empieza el {{date}}",
+    "gameOn": "Partido el {{date}}"
   },
   "teams": {
     "subtitle": "Todos los equipos de la liga, por conferencia.",

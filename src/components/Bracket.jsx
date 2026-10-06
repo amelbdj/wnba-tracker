@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getPostseasonGames, getSeasonWindows, getStandings, getTournamentGames } from "../services/api";
 import { getStat as stat } from "../utils/stats";
+import { toLocale } from "../utils/locale";
 
 // Draws the connector lines between rounds (which matchup feeds into which)
 // by measuring the actual rendered position of every `.bracket-matchup`
 // inside `children` and drawing an SVG bracket-shape line between each pair
 // of matchups and the single one they feed into next round. Pure DOM
 // measurement rather than CSS math because card heights vary (a live
-// matchup with a series summary line is taller than a TBD placeholder), so
+// matchup with a footer line is taller than a TBD placeholder), so
 // there's no fixed spacing to calculate the lines from.
 function BracketRoundsShell({ children }) {
   const containerRef = useRef(null);
@@ -96,17 +97,18 @@ function winPct(entry) {
   return wins + losses > 0 ? wins / (wins + losses) : 0;
 }
 
-function SeedSlot({ league, entry, seed }) {
+function TbdSlot() {
   const { t } = useTranslation();
+  return (
+    <div className="bracket-slot bracket-slot-tbd">
+      <span className="bracket-tbd-mark"></span>
+      <span className="bracket-tbd-label">{t("playoffs.tbd")}</span>
+    </div>
+  );
+}
 
-  if (!entry) {
-    return (
-      <div className="bracket-slot bracket-slot-tbd">
-        <span className="bracket-seed">–</span>
-        <span className="bracket-tbd-label">{t("playoffs.tbd")}</span>
-      </div>
-    );
-  }
+function SeedSlot({ league, entry, seed }) {
+  if (!entry) return <TbdSlot />;
 
   return (
     <Link to={`/${league}/teams/${entry.team?.id}`} className="bracket-slot">
@@ -180,17 +182,21 @@ function ProjectedBracket({ league, seeds }) {
 }
 
 // ---- Live bracket (real playoff games, once ESPN publishes them) ---------
-// ESPN's round headlines aren't formatted the same way across leagues:
-// WNBA appends a trailing game number ("First Round - Game 1"), while NCAA
-// buries the round name after a regional/city segment ("... Championship -
-// Regional 2 in Sacramento - First Four"). Stripping any trailing game
-// number and then keeping only the last " - "-separated segment handles
-// both shapes with one rule.
-function extractRoundLabel(headline) {
+// ESPN's round headlines aren't formatted consistently — not across
+// leagues, and not even within one league's postseason:
+//   WNBA:  "First Round - Game 1", "Semifinals - Game 1", then
+//          "WNBA Semifinals - Game 4 If Necessary", "WNBA Finals - Game 1"
+//   NCAA:  "NCAA Women's Basketball Championship - Regional 2 in
+//          Sacramento - First Four"
+// So: drop everything from "- Game N" onward (including "If Necessary"),
+// keep only the last " - "-separated segment, and drop a leading league
+// name so "Semifinals" and "WNBA Semifinals" land in the same round.
+function normalizeRoundLabel(headline) {
   if (!headline) return "Playoffs";
-  const withoutGameNumber = headline.replace(/\s*-\s*game\s*\d+\s*$/i, "").trim();
-  const segments = withoutGameNumber.split(" - ").map((s) => s.trim());
-  return segments[segments.length - 1] || withoutGameNumber;
+  const withoutGame = headline.replace(/\s*-\s*game\s*\d+.*$/i, "").trim();
+  const segments = withoutGame.split(" - ").map((s) => s.trim()).filter(Boolean);
+  const last = segments[segments.length - 1] || withoutGame;
+  return last.replace(/^(wnba|nba|ncaa|fiba)\s+/i, "") || last;
 }
 
 function localizeRoundLabel(label, t) {
@@ -215,11 +221,72 @@ function isGroupStageLabel(label) {
   return /^(group|pool)\b/i.test(label);
 }
 
+// Collapses every game between the same two teams in a round (a best-of-N
+// series, or just one game in a single-elimination tournament) into ONE
+// matchup, so the bracket shows the series — not each game — and its state
+// comes from the most recent game actually played.
+function buildMatchup(key, events) {
+  const sorted = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const first = sorted[0];
+  const statusOf = (e) => e.competitions[0].status?.type;
+
+  const completedGames = sorted.filter((e) => statusOf(e)?.completed);
+  const liveGame = sorted.find((e) => statusOf(e)?.state === "in");
+  // Series wins/summary are a snapshot as of each game, so the latest
+  // *completed* game is the one that reflects the current state.
+  const state = completedGames.length ? completedGames[completedGames.length - 1] : first;
+  const scoreEvent = liveGame || state;
+  const series = state.competitions[0].series;
+  const started = completedGames.length > 0 || Boolean(liveGame);
+
+  // Team order comes from the first game (home team there = higher seed), so
+  // it stays stable instead of flipping with each game's home/away.
+  const teams = first.competitions[0].competitors.map((c) => {
+    const id = c.team.id;
+    const findIn = (event) => event.competitions[0].competitors.find((x) => x.team.id === id);
+    const seriesEntry = series?.competitors?.find((s) => s.id === id);
+    return {
+      id,
+      isTbd: Number(id) < 0 || c.team.displayName === "TBD",
+      name: c.team.shortDisplayName || c.team.displayName,
+      abbreviation: c.team.abbreviation,
+      logo: c.team.logo,
+      wins: seriesEntry?.wins ?? 0,
+      score: findIn(scoreEvent)?.score ?? null,
+      wonLastGame: Boolean(findIn(state)?.winner),
+    };
+  });
+
+  // The winner is the winner of the *series*, not of the latest game — a
+  // team that just won game 2 of a best-of-5 hasn't won anything yet.
+  let winnerId = null;
+  if (series) {
+    const done = series.completed || /wins series/i.test(series.summary || "");
+    if (done) {
+      winnerId = teams.reduce((best, team) => (team.wins > best.wins ? team : best), teams[0]).id;
+    }
+  } else if (completedGames.length) {
+    winnerId = teams.find((team) => team.wonLastGame)?.id ?? null;
+  }
+
+  return {
+    key,
+    teams,
+    // Real teams only — "TBD" placeholders (negative ids) have no lineage.
+    teamIds: teams.filter((team) => !team.isTbd).map((team) => team.id),
+    hasSeries: Boolean(series),
+    started,
+    isLive: Boolean(liveGame),
+    winnerId,
+    firstDate: new Date(first.date).getTime(),
+  };
+}
+
 // ESPN returns postseason games in whatever order the API feels like (mostly
 // by date/time), not in bracket left-to-right order — so two matchups that
 // happen to sit side by side in a round often have nothing to do with each
 // other. This walks backward from the final, and for every matchup places
-// its two "parent" matchups (the earlier-round games its two teams actually
+// its two "parent" matchups (the earlier-round series its two teams actually
 // won to get there) next to each other — so array-adjacent matchups really
 // do feed the same next-round game, which is what both the reading order
 // and the connector lines rely on.
@@ -232,16 +299,14 @@ function reorderRoundsByLineage(rounds) {
 
     const childByTeamId = new Map();
     for (const child of children) {
-      for (const c of child.competitions[0].competitors || []) {
-        if (c.team?.id) childByTeamId.set(c.team.id, child);
-      }
+      for (const id of child.teamIds) childByTeamId.set(id, child);
     }
 
     const placed = new Set();
     const reordered = [];
-    for (const parentMatchup of parents) {
-      for (const c of parentMatchup.competitions[0].competitors || []) {
-        const child = c.team?.id != null ? childByTeamId.get(c.team.id) : null;
+    for (const parent of parents) {
+      for (const id of parent.teamIds) {
+        const child = childByTeamId.get(id);
         if (child && !placed.has(child)) {
           reordered.push(child);
           placed.add(child);
@@ -249,8 +314,9 @@ function reorderRoundsByLineage(rounds) {
       }
     }
     // Matchups that didn't feed a known team into the next round (e.g.
-    // NCAA's First Four only fills some of the Round of 64 slots) keep
-    // their original relative order, appended at the end.
+    // NCAA's First Four only fills some of the Round of 64 slots, or a
+    // next round that's still all "TBD") keep their original relative
+    // order, appended at the end.
     for (const child of children) {
       if (!placed.has(child)) reordered.push(child);
     }
@@ -261,8 +327,6 @@ function reorderRoundsByLineage(rounds) {
   return ordered;
 }
 
-// Groups postseason events into rounds, keeping only the latest game of
-// each team-pair series so every matchup shows the current series state.
 function buildLiveRounds(events) {
   // Keyed by a lowercased label since ESPN isn't consistent about casing
   // for the same round (e.g. "WNBA Finals" vs "WNBA FINALS" across games).
@@ -270,26 +334,24 @@ function buildLiveRounds(events) {
 
   for (const event of events) {
     const comp = event.competitions?.[0];
-    if (!comp) continue;
-    const roundLabel = extractRoundLabel(comp.notes?.[0]?.headline);
-    const roundKey = roundLabel.toLowerCase();
-    const seriesKey = [...(comp.competitors || [])]
+    if (!comp?.competitors?.length) continue;
+    const label = normalizeRoundLabel(comp.notes?.[0]?.headline);
+    const roundKey = label.toLowerCase();
+    const seriesKey = comp.competitors
       .map((c) => c.team?.id)
       .sort()
       .join("-");
 
-    if (!roundMap.has(roundKey)) roundMap.set(roundKey, { label: roundLabel, seriesMap: new Map() });
+    if (!roundMap.has(roundKey)) roundMap.set(roundKey, { label, seriesMap: new Map() });
     const { seriesMap } = roundMap.get(roundKey);
-    const existing = seriesMap.get(seriesKey);
-    if (!existing || new Date(event.date) > new Date(existing.date)) {
-      seriesMap.set(seriesKey, event);
-    }
+    if (!seriesMap.has(seriesKey)) seriesMap.set(seriesKey, []);
+    seriesMap.get(seriesKey).push(event);
   }
 
   const rounds = [...roundMap.values()]
     .map(({ label, seriesMap }) => {
-      const matchups = [...seriesMap.values()];
-      const earliest = Math.min(...matchups.map((e) => new Date(e.date).getTime()));
+      const matchups = [...seriesMap.entries()].map(([key, evs]) => buildMatchup(key, evs));
+      const earliest = Math.min(...matchups.map((m) => m.firstDate));
       return { label, matchups, earliest };
     })
     .sort((a, b) => a.earliest - b.earliest);
@@ -297,35 +359,61 @@ function buildLiveRounds(events) {
   return reorderRoundsByLineage(rounds);
 }
 
-function LiveSlot({ league, competitor, seriesInfo }) {
-  const team = competitor.team;
+function LiveSlot({ league, team, matchup }) {
+  if (team.isTbd) return <TbdSlot />;
+
+  const isWinner = matchup.winnerId === team.id;
+  const isLoser = matchup.winnerId != null && !isWinner;
+  const value = matchup.started ? (matchup.hasSeries ? team.wins : team.score) : null;
+
   return (
     <Link
       to={`/${league}/teams/${team.id}`}
-      className={`bracket-slot${competitor.winner ? " bracket-slot-winner" : ""}`}
+      className={`bracket-slot${isWinner ? " is-winner" : ""}${isLoser ? " is-loser" : ""}`}
     >
-      <img src={team.logo} alt="" />
-      <span className="bracket-team-name">{team.shortDisplayName || team.displayName}</span>
-      <span className="bracket-live-score">{seriesInfo?.wins ?? competitor.score ?? "–"}</span>
+      {team.logo ? <img src={team.logo} alt="" /> : <span className="bracket-tbd-mark"></span>}
+      <span className="bracket-team-name">{team.name}</span>
+      {value != null && <span className="bracket-score">{value}</span>}
     </Link>
   );
 }
 
-function LiveMatchup({ league, event }) {
-  const comp = event.competitions[0];
-  const series = comp.series;
+function footerText(matchup, t, lang) {
+  const formatDate = (ms) =>
+    new Date(ms).toLocaleDateString(toLocale(lang), { day: "numeric", month: "short" });
+
+  if (matchup.hasSeries) {
+    const [a, b] = matchup.teams;
+    if (matchup.winnerId) {
+      const winner = a.id === matchup.winnerId ? a : b;
+      const loser = winner === a ? b : a;
+      return t("playoffs.seriesWins", { team: winner.abbreviation, a: winner.wins, b: loser.wins });
+    }
+    if (!matchup.started) return t("playoffs.seriesStarts", { date: formatDate(matchup.firstDate) });
+    if (a.wins === b.wins) return t("playoffs.seriesTied", { a: a.wins, b: b.wins });
+    const lead = a.wins > b.wins ? a : b;
+    const trail = lead === a ? b : a;
+    return t("playoffs.seriesLeads", { team: lead.abbreviation, a: lead.wins, b: trail.wins });
+  }
+
+  return matchup.started ? null : t("playoffs.gameOn", { date: formatDate(matchup.firstDate) });
+}
+
+function LiveMatchup({ league, matchup }) {
+  const { t, i18n } = useTranslation();
+  const text = footerText(matchup, t, i18n.language);
 
   return (
-    <div className="bracket-matchup bracket-matchup-live">
-      {comp.competitors.map((c) => (
-        <LiveSlot
-          key={c.team.id}
-          league={league}
-          competitor={c}
-          seriesInfo={series?.competitors?.find((s) => s.id === c.team.id)}
-        />
+    <div className={`bracket-matchup${matchup.isLive ? " bracket-matchup-live" : ""}`}>
+      {matchup.teams.map((team) => (
+        <LiveSlot key={team.id} league={league} team={team} matchup={matchup} />
       ))}
-      {series?.summary && <div className="bracket-series-summary">{series.summary}</div>}
+      {(text || matchup.isLive) && (
+        <div className="bracket-footer">
+          {matchup.isLive && <span className="bracket-live-badge">{t("game.live")}</span>}
+          {text && <span>{text}</span>}
+        </div>
+      )}
     </div>
   );
 }
@@ -349,8 +437,8 @@ function LiveBracket({ league, rounds, completed }) {
           <div className="bracket-round" key={round.label}>
             <div className="bracket-round-title">{localizeRoundLabel(round.label, t)}</div>
             <div className="bracket-round-matchups">
-              {round.matchups.map((event) => (
-                <LiveMatchup key={event.id} league={league} event={event} />
+              {round.matchups.map((matchup) => (
+                <LiveMatchup key={matchup.key} league={league} matchup={matchup} />
               ))}
             </div>
           </div>
@@ -401,7 +489,7 @@ export default function Bracket({ league }) {
         // so the knockout bracket is whatever isn't labeled a group game.
         const allGames = await getTournamentGames(league, windows.regular);
         const knockoutGames = allGames.filter((e) => {
-          const label = extractRoundLabel(e.competitions?.[0]?.notes?.[0]?.headline);
+          const label = normalizeRoundLabel(e.competitions?.[0]?.notes?.[0]?.headline);
           return !isGroupStageLabel(label);
         });
         if (knockoutGames.length > 0) {
