@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getTeamDetails, getTeamRoster } from "../services/api";
+import { getSport, hasFeature } from "../leagues";
 import PlayerCard from "../components/PlayerCard";
 
 function findStat(items, description, name) {
@@ -15,33 +16,43 @@ export default function TeamDetailPage() {
   const [team, setTeam] = useState(null);
   const [roster, setRoster] = useState([]);
   const [loading, setLoading] = useState(true);
+  // ESPN publishes no rosters for some leagues (NCAA volleyball) — skip the
+  // request and the roster section instead of showing an empty "unavailable".
+  const showRoster = hasFeature(league, "players");
+  const isVolleyball = getSport(league) === "volleyball";
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     async function load() {
-      const [teamData, rosterData] = await Promise.all([
-        getTeamDetails(league, teamId),
-        getTeamRoster(league, teamId),
-      ]);
-      setTeam(teamData);
-      setRoster(rosterData);
+      try {
+        const [teamData, rosterData] = await Promise.all([
+          getTeamDetails(league, teamId),
+          showRoster ? getTeamRoster(league, teamId).catch(() => []) : Promise.resolve([]),
+        ]);
+        setTeam(teamData);
+        setRoster(rosterData);
+      } catch {
+        setTeam(null);
+      }
       setLoading(false);
     }
     load();
-  }, [league, teamId]);
+  }, [league, teamId, showRoster]);
 
   if (loading) {
     return (
       <div className="container-wide">
         <div className="skeleton skeleton-card" style={{ height: 220 }}></div>
-        <div className="section">
-          <div className="player-grid">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="skeleton skeleton-card"></div>
-            ))}
+        {showRoster && (
+          <div className="section">
+            <div className="player-grid">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="skeleton skeleton-card"></div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -66,9 +77,11 @@ export default function TeamDetailPage() {
   const pointsForValue = findStat(items, "Overall Record", "avgPointsFor")?.value;
   const pointsAgainstValue = findStat(items, "Overall Record", "avgPointsAgainst")?.value;
   const diffValue = findStat(items, "Overall Record", "differential")?.value;
-  const pointsFor = pointsForValue != null ? pointsForValue.toFixed(1) : null;
-  const pointsAgainst = pointsAgainstValue != null ? pointsAgainstValue.toFixed(1) : null;
-  const diff = diffValue != null ? `${diffValue >= 0 ? "+" : ""}${diffValue.toFixed(1)}` : null;
+  // Points per game / allowed / differential are basketball stats; for
+  // volleyball ESPN reports them per set, which would read as nonsense here.
+  const pointsFor = !isVolleyball && pointsForValue != null ? pointsForValue.toFixed(1) : null;
+  const pointsAgainst = !isVolleyball && pointsAgainstValue != null ? pointsAgainstValue.toFixed(1) : null;
+  const diff = !isVolleyball && diffValue != null ? `${diffValue >= 0 ? "+" : ""}${diffValue.toFixed(1)}` : null;
 
   const nextEvent = team.nextEvent?.[0];
   const nextComp = nextEvent?.competitions?.[0];
@@ -146,30 +159,32 @@ export default function TeamDetailPage() {
         </div>
       </section>
 
-      <div className="section">
-        <div className="section-head">
-          <div>
-            <span className="section-eyebrow">
-              <i className="fa-solid fa-people-group"></i> {t("team.roster")}
-            </span>
-            <div className="section-title">{t("team.rosterCount", { count: roster.length })}</div>
+      {showRoster && (
+        <div className="section">
+          <div className="section-head">
+            <div>
+              <span className="section-eyebrow">
+                <i className="fa-solid fa-people-group"></i> {t("team.roster")}
+              </span>
+              <div className="section-title">{t("team.rosterCount", { count: roster.length })}</div>
+            </div>
           </div>
-        </div>
 
-        {roster.length === 0 ? (
-          <div className="empty-state">
-            <i className="fa-solid fa-person"></i>
-            <strong>{t("team.rosterUnavailable")}</strong>
-            <span>{t("common.retryLater")}</span>
-          </div>
-        ) : (
-          <div className="player-grid">
-            {roster.map((player) => (
-              <PlayerCard key={player.id} player={player} league={league} showTeam={false} />
-            ))}
-          </div>
-        )}
-      </div>
+          {roster.length === 0 ? (
+            <div className="empty-state">
+              <i className="fa-solid fa-person"></i>
+              <strong>{t("team.rosterUnavailable")}</strong>
+              <span>{t("common.retryLater")}</span>
+            </div>
+          ) : (
+            <div className="player-grid">
+              {roster.map((player) => (
+                <PlayerCard key={player.id} player={player} league={league} showTeam={false} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

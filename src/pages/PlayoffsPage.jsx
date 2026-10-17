@@ -22,7 +22,11 @@ export default function PlayoffsPage() {
           {t("nav.playoffs")} {leagueLabel}
         </h1>
       </div>
-      <p className="page-subtitle">{t("playoffs.subtitle")}</p>
+      <p className="page-subtitle">
+        {getLeague(league).bracket?.projected === false
+          ? t("playoffs.subtitleTournament")
+          : t("playoffs.subtitle")}
+      </p>
 
       <Bracket league={league} />
     </div>

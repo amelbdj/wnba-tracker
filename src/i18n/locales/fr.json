@@ -14,7 +14,8 @@
     "wnba": "WNBA",
     "ncaa": "NCAA Femmes",
     "fiba": "Coupe du monde FIBA",
-    "olympics": "Jeux Olympiques"
+    "olympics": "Jeux Olympiques",
+    "ncaaVolleyball": "NCAA Volley Femmes"
   },
   "common": {
     "viewStats": "Voir les statistiques",
@@ -42,7 +43,8 @@
     "noGamesTitle": "Aucun match ce jour-là",
     "noGamesSubtitle": "Essaie une autre date pour voir le calendrier de la ligue.",
     "topOfLeague": "Le top de la ligue",
-    "fullStandings": "Classement complet"
+    "fullStandings": "Classement complet",
+    "autoRefresh": "Mise à jour automatique"
   },
   "hero": {
     "live": "En direct",
@@ -56,10 +58,13 @@
   "game": {
     "live": "LIVE",
     "final": "Final",
-    "scheduled": "Programmé"
+    "scheduled": "Programmé",
+    "set": "Set {{number}}"
   },
   "modal": {
-    "gameStats": "Statistiques du match"
+    "gameStats": "Statistiques du match",
+    "setScores": "Score par set",
+    "setsWon": "Sets"
   },
   "standings": {
     "rank": "#",
@@ -82,7 +87,13 @@
     "seriesLeads": "{{team}} mène la série {{a}}-{{b}}",
     "seriesTied": "Série à égalité {{a}}-{{b}}",
     "seriesStarts": "Début de la série le {{date}}",
-    "gameOn": "Match le {{date}}"
+    "gameOn": "Match le {{date}}",
+    "subtitleTournament": "Le tournoi national NCAA, tour par tour.",
+    "notStartedTitle": "Le tournoi n'a pas encore commencé",
+    "notStartedSubtitle": "Le tableau apparaîtra ici dès que les premiers matchs du tournoi NCAA seront programmés (généralement début décembre).",
+    "round2": "2e tour",
+    "regionalSemis": "Demi-finales régionales",
+    "regionalFinal": "Finales régionales"
   },
   "teams": {
     "subtitle": "Toutes les équipes de la ligue, par conférence.",
@@ -101,7 +112,8 @@
     "roster": "Effectif",
     "rosterCount_one": "{{count}} joueuse",
     "rosterCount_other": "{{count}} joueuses",
-    "rosterUnavailable": "Effectif indisponible"
+    "rosterUnavailable": "Effectif indisponible",
+    "noRosterData": "ESPN ne fournit pas les effectifs de cette ligue."
   },
   "players": {
     "subtitle": "Recherche et explore les effectifs de la ligue.",
@@ -171,7 +183,8 @@
     "wnba": "La ligue professionnelle nord-américaine",
     "ncaa": "Le basketball universitaire américain",
     "fiba": "Le tournoi mondial, tous les 4 ans",
-    "olympics": "Le tournoi olympique féminin"
+    "olympics": "Le tournoi olympique féminin",
+    "ncaaVolleyball": "Le volley universitaire américain"
   },
   "futureSports": {
     "soccer": "Football",

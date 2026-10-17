@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import GameDetails from "./GameDetails";
+import SetScores from "./SetScores";
+import { getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
+import { getLiveDetail } from "../utils/games";
 
 export default function GameCard({ game, league }) {
   const { t, i18n } = useTranslation();
@@ -26,10 +29,8 @@ export default function GameCard({ game, league }) {
     minute: "2-digit",
   });
 
-  const liveDetail =
-    game.status?.displayClock && game.status?.period
-      ? `Q${game.status.period} · ${game.status.displayClock}`
-      : statusType.shortDetail || description;
+  const sport = getSport(league);
+  const liveDetail = getLiveDetail(game, sport, t);
 
   let statusLabel = description;
   if (isFinal) statusLabel = t("game.final");
@@ -76,6 +77,8 @@ export default function GameCard({ game, league }) {
             <span className="card-team-score">{team2.score}</span>
           </div>
         </div>
+
+        {sport === "volleyball" && <SetScores competition={comp} live={isLive} />}
       </div>
 
       {open && <GameDetails gameId={game.id} league={league} onClose={() => setOpen(false)} />}

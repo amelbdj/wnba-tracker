@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getGamesByDate } from "../services/api";
+import { useLiveGames } from "../hooks/useLiveGames";
 import GameCard from "../components/GameCard";
 import HeroGame from "../components/HeroGame";
 import Standings from "../components/Standings";
@@ -16,22 +16,7 @@ export default function Home() {
   const { t, i18n } = useTranslation();
   const { league } = useParams();
   const [date, setDate] = useState(new Date());
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  async function loadGames() {
-    setLoading(true);
-    const formatted = formatDateParam(date);
-    const data = await getGamesByDate(league, formatted);
-    setGames(data || []);
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadGames();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date, league]);
+  const { games, loading, hasLive } = useLiveGames(league, date);
 
   function prevDay() {
     const newDate = new Date(date);
@@ -95,6 +80,11 @@ export default function Home() {
               <i className="fa-solid fa-basketball"></i> {t("home.gamesToday")}
             </span>
           </div>
+          {hasLive && (
+            <span className="live-refresh-hint">
+              <span className="bracket-live-dot"></span> {t("home.autoRefresh")}
+            </span>
+          )}
         </div>
 
         {loading ? (
