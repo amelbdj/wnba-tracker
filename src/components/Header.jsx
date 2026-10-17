@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LEAGUES, getLeague, hasFeature } from "../leagues";
+import { LEAGUES, SPORTS, getLeague, hasFeature } from "../leagues";
 import { LANGUAGES } from "../i18n";
 import Logo from "./Logo";
 import LanguageSwitcher, { MobileLangChip } from "./LanguageSwitcher";
@@ -76,19 +76,30 @@ function LeagueSwitcher({ league, pathname }) {
         <>
           <div className="league-menu-backdrop" onClick={() => setOpen(false)}></div>
           <div className="league-menu" role="listbox">
-            {LEAGUES.map((l) => (
-              <button
-                key={l.slug}
-                className={`league-option${l.slug === league ? " active" : ""}`}
-                onClick={() => goTo(l.slug)}
-                role="option"
-                aria-selected={l.slug === league}
-              >
-                <i className={l.icon}></i>
-                {t(l.labelKey)}
-                {l.slug === league && <i className="fa-solid fa-check check"></i>}
-              </button>
-            ))}
+            {SPORTS.map((sport) => {
+              const leagues = LEAGUES.filter((l) => l.sport === sport.key);
+              if (leagues.length === 0) return null;
+              return (
+                <div key={sport.key} role="group" aria-label={t(sport.labelKey)}>
+                  <div className="league-menu-heading">
+                    <i className={sport.icon}></i> {t(sport.labelKey)}
+                  </div>
+                  {leagues.map((l) => (
+                    <button
+                      key={l.slug}
+                      className={`league-option${l.slug === league ? " active" : ""}`}
+                      onClick={() => goTo(l.slug)}
+                      role="option"
+                      aria-selected={l.slug === league}
+                    >
+                      <i className={l.icon}></i>
+                      {t(l.labelKey)}
+                      {l.slug === league && <i className="fa-solid fa-check check"></i>}
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
           </div>
         </>
       )}

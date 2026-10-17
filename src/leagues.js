@@ -10,6 +10,14 @@
 //                returns one flat list unless asked for conference level (3).
 //  - bracket:    how to find the league's playoff games when ESPN doesn't tag
 //                them as a postseason (see Bracket.jsx).
+
+// The sports the app covers, in the order the league selector groups them.
+// Adding a sport = one entry here + leagues below that point at its key.
+export const SPORTS = [
+  { key: "basketball", labelKey: "sport.basketball", icon: "fa-solid fa-basketball" },
+  { key: "volleyball", labelKey: "sport.volleyball", icon: "fa-solid fa-volleyball" },
+];
+
 export const LEAGUES = [
   {
     slug: "wnba",
@@ -23,7 +31,7 @@ export const LEAGUES = [
     slug: "womens-college-basketball",
     sport: "basketball",
     labelKey: "league.ncaa",
-    shortLabel: "NCAA",
+    shortLabel: "NCAA Basket",
     icon: "fa-solid fa-graduation-cap",
     playersMode: "search",
   },
@@ -31,7 +39,7 @@ export const LEAGUES = [
     slug: "womens-college-volleyball",
     sport: "volleyball",
     labelKey: "league.ncaaVolleyball",
-    shortLabel: "Volley",
+    shortLabel: "NCAA Volley",
     icon: "fa-solid fa-volleyball",
     features: { players: false, statistics: false },
     standingsLevel: 3,

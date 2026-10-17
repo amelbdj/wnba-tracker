@@ -12,7 +12,7 @@
   },
   "league": {
     "wnba": "WNBA",
-    "ncaa": "NCAA Femmes",
+    "ncaa": "NCAA Basket Femmes",
     "fiba": "Coupe du monde FIBA",
     "olympics": "Jeux Olympiques",
     "ncaaVolleyball": "NCAA Volley Femmes"
@@ -365,5 +365,9 @@
     "rate_limit_exceeded": "Trop de requêtes envoyées à TikTok — réessaie dans une minute.",
     "invalid_param": "Un des paramètres envoyés à TikTok est invalide.",
     "generic": "Une erreur est survenue avec TikTok. Réessaie dans un instant."
+  },
+  "sport": {
+    "basketball": "Basketball",
+    "volleyball": "Volleyball"
   }
 }
