@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getGamesByDate, getLeagueLeaders } from "../services/api";
-import { formatDateParam, getFeaturedGame } from "../utils/games";
+import { getLeagueLeaders } from "../services/api";
+import { useLiveGames } from "../hooks/useLiveGames";
+import { getFeaturedGame } from "../utils/games";
 import { LEAGUES } from "../leagues";
 import Logo from "../components/Logo";
 import SiteHeader from "../components/SiteHeader";
@@ -15,25 +16,14 @@ import Standings from "../components/Standings";
 const FUTURE_SPORTS = [
   { key: "soccer", icon: "fa-solid fa-futbol" },
   { key: "tennis", icon: "fa-solid fa-table-tennis-paddle-ball" },
-  { key: "volleyball", icon: "fa-solid fa-volleyball" },
   { key: "athletics", icon: "fa-solid fa-person-running" },
 ];
 
 export default function Landing() {
   const { t } = useTranslation();
-  const [games, setGames] = useState([]);
-  const [loadingGames, setLoadingGames] = useState(true);
+  const { games, loading: loadingGames } = useLiveGames("wnba", new Date());
   const [leaders, setLeaders] = useState([]);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
-
-  useEffect(() => {
-    async function load() {
-      const data = await getGamesByDate("wnba", formatDateParam(new Date()));
-      setGames(data || []);
-      setLoadingGames(false);
-    }
-    load();
-  }, []);
 
   useEffect(() => {
     async function load() {

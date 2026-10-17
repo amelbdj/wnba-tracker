@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import GameDetails from "./GameDetails";
-import { getLeague } from "../leagues";
+import SetScores from "./SetScores";
+import { getLeague, getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
+import { getLiveDetail } from "../utils/games";
 
 export default function HeroGame({ game, league }) {
   const { t, i18n } = useTranslation();
@@ -42,10 +44,8 @@ export default function HeroGame({ game, league }) {
   const time = dateObj.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
   const day = dateObj.toLocaleDateString(locale, { weekday: "long", day: "numeric", month: "long" });
 
-  const liveDetail =
-    game.status?.displayClock && game.status?.period
-      ? `Q${game.status.period} · ${game.status.displayClock}`
-      : statusType.shortDetail || description;
+  const sport = getSport(league);
+  const liveDetail = getLiveDetail(game, sport, t);
 
   let headline = t("hero.nextGame");
   if (isLive) headline = t("hero.liveGame");
@@ -95,6 +95,10 @@ export default function HeroGame({ game, league }) {
               )}
             </div>
           </div>
+
+          {sport === "volleyball" && (isLive || isFinal) && (
+            <SetScores competition={comp} live={isLive} size="hero" />
+          )}
 
           <div className="hero-bottom">
             <button className="btn btn-primary" onClick={() => setOpen(true)}>

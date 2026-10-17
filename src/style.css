@@ -2603,6 +2603,120 @@ img {
   margin-left: 20px;
 }
 
+/* Small "auto-updating" tag shown next to a games list while a game is live. */
+.live-refresh-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Volleyball: points per set under a match, and the set table in the match detail. */
+.set-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.set-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: var(--surface-hover);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.set-pill .set-won {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.set-pill .set-sep {
+  color: var(--muted);
+}
+
+.set-pill.is-current {
+  background: rgba(251, 61, 92, 0.14);
+  color: var(--text);
+}
+
+.set-scores-hero {
+  justify-content: center;
+  margin-top: 18px;
+  border-top: none;
+  padding-top: 0;
+}
+
+.set-scores-hero .set-pill {
+  font-size: 13.5px;
+  padding: 5px 11px;
+}
+
+.set-table-wrap {
+  overflow-x: auto;
+}
+
+.set-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.set-table th,
+.set-table td {
+  padding: 12px 10px;
+  text-align: center;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.set-table th {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.set-table-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.set-table-team img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.set-table td.set-won {
+  color: var(--win);
+  font-weight: 800;
+}
+
+.set-table-total {
+  font-weight: 800;
+  font-size: 16px !important;
+}
+
+.set-table tr.is-winner .set-table-total {
+  color: var(--win);
+}
+
 /* =========================================================
    PLAYOFF BRACKET
    ========================================================= */
@@ -2858,8 +2972,10 @@ img {
 
 .bracket-footer {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
   min-height: 32px;
   padding: 7px 14px;
   font-size: 11.5px;
@@ -2867,6 +2983,19 @@ img {
   color: var(--muted);
   background: rgba(255, 255, 255, 0.025);
   border-top: 1px solid var(--border);
+}
+
+.bracket-live-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bracket-live-score {
+  font-size: 12.5px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
 }
 
 .bracket-live-badge {

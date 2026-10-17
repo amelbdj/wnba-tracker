@@ -1,10 +1,15 @@
-const SITE_API_ROOT = "https://site.api.espn.com/apis/site/v2/sports/basketball";
-const CORE_API_ROOT = "https://site.api.espn.com/apis/v2/sports/basketball";
-const WEB_API_ROOT = "https://site.web.api.espn.com/apis/common/v3/sports/basketball";
+import { getLeague, getSport } from "../leagues";
+
+// ESPN's URLs embed the sport (…/sports/basketball/wnba/…,
+// …/sports/volleyball/womens-college-volleyball/…), so every root is derived
+// from the league being asked about rather than fixed to one sport.
+const siteRoot = (league) => `https://site.api.espn.com/apis/site/v2/sports/${getSport(league)}`;
+const coreRoot = (league) => `https://site.api.espn.com/apis/v2/sports/${getSport(league)}`;
+const webRoot = (league) => `https://site.web.api.espn.com/apis/common/v3/sports/${getSport(league)}`;
 const SEARCH_API = "https://site.api.espn.com/apis/search/v2";
 
 export async function getGamesByDate(league, date) {
-  const res = await fetch(`${SITE_API_ROOT}/${league}/scoreboard?dates=${date}`);
+  const res = await fetch(`${siteRoot(league)}/${league}/scoreboard?dates=${date}`);
   const data = await res.json();
   return data.events;
 }
@@ -24,7 +29,7 @@ function formatYYYYMMDD(date) {
 // what lets the bracket know exactly where to look for real playoff games
 // (or that a just-finished tournament should still be shown as final).
 export async function getSeasonWindows(league) {
-  const res = await fetch(`${CORE_API_ROOT}/${league}/standings`);
+  const res = await fetch(`${coreRoot(league)}/${league}/standings`);
   const data = await res.json();
   const latest = data?.seasons?.[0];
   if (!latest) return null;
@@ -64,7 +69,7 @@ async function getGamesInWindow(league, window) {
   const days = eachDay(window.startDate, window.endDate);
   const perDay = await Promise.all(
     days.map(async (day) => {
-      const res = await fetch(`${SITE_API_ROOT}/${league}/scoreboard?dates=${formatYYYYMMDD(day)}`);
+      const res = await fetch(`${siteRoot(league)}/${league}/scoreboard?dates=${formatYYYYMMDD(day)}`);
       const data = await res.json();
       return data.events || [];
     }),
@@ -107,18 +112,28 @@ function sortEntriesByRank(entries) {
   });
 }
 
+// ESPN nests standings groups by depth (division -> conference -> ...) and
+// only some nodes carry entries. This flattens to the groups that actually
+// list teams — the conferences, for NCAA volleyball.
+function collectGroups(node, out = []) {
+  if (node.standings?.entries?.length) out.push(node);
+  for (const child of node.children || []) collectGroups(child, out);
+  return out;
+}
+
 export async function getStandings(league) {
-  const res = await fetch(`${CORE_API_ROOT}/${league}/standings`);
+  const level = getLeague(league).standingsLevel;
+  const url = `${coreRoot(league)}/${league}/standings${level ? `?level=${level}` : ""}`;
+  const res = await fetch(url);
   const data = await res.json();
 
-  const groups = data?.children;
-
-  if (groups && groups.length > 0) {
+  const groups = (data?.children || []).flatMap((child) => collectGroups(child));
+  if (groups.length > 0) {
     return groups.map((g) => ({
       id: g.id,
       name: g.name,
       abbreviation: g.abbreviation,
-      entries: sortEntriesByRank(g.standings?.entries || []),
+      entries: sortEntriesByRank(g.standings.entries),
     }));
   }
 
@@ -126,37 +141,52 @@ export async function getStandings(league) {
 }
 
 export async function getGameDetails(league, id) {
-  const res = await fetch(`${SITE_API_ROOT}/${league}/summary?event=${id}`);
+  const res = await fetch(`${siteRoot(league)}/${league}/summary?event=${id}`);
   const data = await res.json();
   return data;
 }
 
+// ESPN's `teams/{id}` endpoint sends no CORS headers (for any origin), so a
+// browser can't read it — the request fails outright. When that happens the
+// team is rebuilt from the standings entry instead, which has the same
+// record stats the page uses (just no next game or team colour).
 export async function getTeamDetails(league, teamId) {
-  const res = await fetch(`${SITE_API_ROOT}/${league}/teams/${teamId}`);
-  const data = await res.json();
-  return data.team;
+  try {
+    const res = await fetch(`${siteRoot(league)}/${league}/teams/${teamId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.team) return data.team;
+    }
+  } catch {
+    // fall through to the standings-based fallback
+  }
+
+  const groups = await getStandings(league);
+  const entry = groups.flatMap((g) => g.entries).find((e) => String(e.team?.id) === String(teamId));
+  if (!entry) return null;
+  return { ...entry.team, record: { items: [{ description: "Overall Record", stats: entry.stats }] } };
 }
 
 export async function getTeamRoster(league, teamId) {
-  const res = await fetch(`${SITE_API_ROOT}/${league}/teams/${teamId}/roster`);
+  const res = await fetch(`${siteRoot(league)}/${league}/teams/${teamId}/roster`);
   const data = await res.json();
   return data.athletes || [];
 }
 
 export async function getPlayerProfile(league, playerId) {
-  const res = await fetch(`${WEB_API_ROOT}/${league}/athletes/${playerId}`);
+  const res = await fetch(`${webRoot(league)}/${league}/athletes/${playerId}`);
   const data = await res.json();
   return data.athlete;
 }
 
 export async function getPlayerGameLog(league, playerId) {
-  const res = await fetch(`${WEB_API_ROOT}/${league}/athletes/${playerId}/gamelog`);
+  const res = await fetch(`${webRoot(league)}/${league}/athletes/${playerId}/gamelog`);
   if (!res.ok) return null;
   return res.json();
 }
 
 export async function getLeagueLeaders(league) {
-  const res = await fetch(`${SITE_API_ROOT}/${league}/statistics`);
+  const res = await fetch(`${siteRoot(league)}/${league}/statistics`);
   const data = await res.json();
   return data?.stats?.categories || [];
 }

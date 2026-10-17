@@ -13,7 +13,8 @@ Une application web moderne pour suivre le sport en temps réel : scores, classe
 ## ✨ Fonctionnalités
 
 - 🏠 Page d'accueil (landing) avec présentation de l'app
-- 📅 Suivi des matchs du jour (scores, statut LIVE / FINISHED / UPCOMING)
+- 📅 Suivi des matchs du jour (scores, statut LIVE / FINISHED / UPCOMING), mis à jour automatiquement pendant les matchs en direct
+- 🏐 Volley féminin NCAA : scores en sets avec le détail point par set, classement par conférence, tableau du tournoi national (pas d'effectifs ni de stats joueuses : ESPN ne les fournit pas pour cette ligue)
 - 🏆 Classements par ligue
 - 🥇 Tableau des playoffs (têtes de série projetées, résultats en direct puis dernier tournoi terminé, selon la saison)
 - 👥 Liste des équipes et fiche détaillée par équipe

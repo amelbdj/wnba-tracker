@@ -14,7 +14,8 @@
     "wnba": "WNBA",
     "ncaa": "NCAA Femenino",
     "fiba": "Copa del Mundo FIBA",
-    "olympics": "Juegos Olímpicos"
+    "olympics": "Juegos Olímpicos",
+    "ncaaVolleyball": "Voleibol femenino NCAA"
   },
   "common": {
     "viewStats": "Ver estadísticas",
@@ -42,7 +43,8 @@
     "noGamesTitle": "No hay partidos ese día",
     "noGamesSubtitle": "Prueba otra fecha para ver el calendario de la liga.",
     "topOfLeague": "Lo mejor de la liga",
-    "fullStandings": "Clasificación completa"
+    "fullStandings": "Clasificación completa",
+    "autoRefresh": "Actualización automática"
   },
   "hero": {
     "live": "En directo",
@@ -56,10 +58,13 @@
   "game": {
     "live": "EN VIVO",
     "final": "Final",
-    "scheduled": "Programado"
+    "scheduled": "Programado",
+    "set": "Set {{number}}"
   },
   "modal": {
-    "gameStats": "Estadísticas del partido"
+    "gameStats": "Estadísticas del partido",
+    "setScores": "Marcador por set",
+    "setsWon": "Sets"
   },
   "standings": {
     "rank": "#",
@@ -82,7 +87,13 @@
     "seriesLeads": "{{team}} lidera la serie {{a}}-{{b}}",
     "seriesTied": "Serie empatada {{a}}-{{b}}",
     "seriesStarts": "La serie empieza el {{date}}",
-    "gameOn": "Partido el {{date}}"
+    "gameOn": "Partido el {{date}}",
+    "subtitleTournament": "El torneo nacional de la NCAA, ronda por ronda.",
+    "notStartedTitle": "El torneo aún no ha comenzado",
+    "notStartedSubtitle": "El cuadro aparecerá aquí en cuanto se programen los primeros partidos del torneo de la NCAA (normalmente a principios de diciembre).",
+    "round2": "2.ª ronda",
+    "regionalSemis": "Semifinales regionales",
+    "regionalFinal": "Finales regionales"
   },
   "teams": {
     "subtitle": "Todos los equipos de la liga, por conferencia.",
@@ -101,7 +112,8 @@
     "roster": "Plantilla",
     "rosterCount_one": "{{count}} jugadora",
     "rosterCount_other": "{{count}} jugadoras",
-    "rosterUnavailable": "Plantilla no disponible"
+    "rosterUnavailable": "Plantilla no disponible",
+    "noRosterData": "ESPN no ofrece las plantillas de esta liga."
   },
   "players": {
     "subtitle": "Busca y explora las plantillas de la liga.",
@@ -171,7 +183,8 @@
     "wnba": "La liga profesional norteamericana",
     "ncaa": "El baloncesto universitario estadounidense",
     "fiba": "El torneo mundial, cada 4 años",
-    "olympics": "El torneo olímpico femenino"
+    "olympics": "El torneo olímpico femenino",
+    "ncaaVolleyball": "El voleibol universitario estadounidense"
   },
   "futureSports": {
     "soccer": "Fútbol",

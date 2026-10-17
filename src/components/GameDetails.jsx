@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getGameDetails } from "../services/api";
+import { getSport } from "../leagues";
+import { getSetScores } from "../utils/games";
+
+const LIVE_REFRESH_MS = 20 * 1000;
 
 function parseNumeric(displayValue) {
   const match = String(displayValue).match(/-?\d+(\.\d+)?/);
@@ -13,17 +17,106 @@ function formatStatName(name) {
     .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
 }
 
+function VolleyballScoreboard({ competition, onClose }) {
+  const { t } = useTranslation();
+  const sets = getSetScores(competition);
+  const [a, b] = competition.competitors;
+  const live = competition.status?.type?.state === "in";
+
+  return (
+    <div className="modal" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-head">
+          <span className="modal-title">{t("modal.setScores")}</span>
+          <button className="close-btn" onClick={onClose} aria-label={t("common.close")}>
+            <i className="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div className="set-table-wrap">
+          <table className="set-table">
+            <thead>
+              <tr>
+                <th></th>
+                {sets.map((_, i) => (
+                  <th key={i}>{i + 1}</th>
+                ))}
+                <th>{t("modal.setsWon")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[a, b].map((team, side) => {
+                const opponent = side === 0 ? b : a;
+                return (
+                  <tr key={team.team.id} className={team.winner ? "is-winner" : ""}>
+                    <td className="set-table-team">
+                      <img src={team.team.logos?.[0]?.href || team.team.logo} alt="" />
+                      <span>{team.team.displayName}</span>
+                    </td>
+                    {sets.map((pair, i) => {
+                      const mine = pair[side];
+                      const theirs = pair[1 - side];
+                      const current = live && i === sets.length - 1;
+                      return (
+                        <td key={i} className={!current && mine > theirs ? "set-won" : ""}>
+                          {mine}
+                        </td>
+                      );
+                    })}
+                    <td className="set-table-total">{team.score ?? opponent.score}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function GameDetails({ gameId, league, onClose }) {
   const { t } = useTranslation();
   const [data, setData] = useState(null);
 
+  // Loads the box score, then keeps refreshing it every 20s for as long as
+  // the game is in progress (and the tab is visible), so the open modal
+  // follows the game live instead of freezing at the moment it was opened.
   useEffect(() => {
+    let cancelled = false;
+    let timer = null;
+
     async function load() {
-      const res = await getGameDetails(league, gameId);
-      setData(res);
+      if (document.hidden) {
+        timer = setTimeout(load, LIVE_REFRESH_MS);
+        return;
+      }
+      try {
+        const res = await getGameDetails(league, gameId);
+        if (cancelled) return;
+        setData(res);
+        const state = res?.header?.competitions?.[0]?.status?.type?.state;
+        if (state === "in") timer = setTimeout(load, LIVE_REFRESH_MS);
+      } catch {
+        // Keep whatever is on screen and try again shortly.
+        if (!cancelled) timer = setTimeout(load, LIVE_REFRESH_MS);
+      }
     }
+
     load();
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [gameId, league]);
+
+  const isVolleyball = getSport(league) === "volleyball";
+
+  // ESPN's volleyball box score carries no team stats at all, only the
+  // header — so volleyball shows the set-by-set scoreboard instead.
+  if (isVolleyball && data?.header?.competitions?.[0]?.competitors) {
+    return <VolleyballScoreboard competition={data.header.competitions[0]} onClose={onClose} />;
+  }
 
   if (!data || !data.boxscore || !data.boxscore.teams) {
     return (

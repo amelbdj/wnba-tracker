@@ -1,9 +1,17 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getPostseasonGames, getSeasonWindows, getStandings, getTournamentGames } from "../services/api";
+import {
+  getGamesByDate,
+  getPostseasonGames,
+  getSeasonWindows,
+  getStandings,
+  getTournamentGames,
+} from "../services/api";
 import { getStat as stat } from "../utils/stats";
 import { toLocale } from "../utils/locale";
+import { formatDateParam, getPollInterval } from "../utils/games";
+import { getLeague } from "../leagues";
 
 // Draws the connector lines between rounds (which matchup feeds into which)
 // by measuring the actual rendered position of every `.bracket-matchup`
@@ -201,6 +209,12 @@ function normalizeRoundLabel(headline) {
 
 function localizeRoundLabel(label, t) {
   const lower = label.toLowerCase();
+  // NCAA volleyball: each "<City> Regional" holds a semifinal round and a
+  // final, relabeled by labelEvents() below.
+  if (lower.includes("regional")) {
+    return lower.includes("semi") ? t("playoffs.regionalSemis") : t("playoffs.regionalFinal");
+  }
+  if (/\b(2nd|second) round\b/.test(lower)) return t("playoffs.round2");
   // NCAA's "Final Four" is a semifinal-stage round, not the championship —
   // keep ESPN's own name rather than mislabeling it as the final.
   if (lower.includes("final four")) return label;
@@ -219,6 +233,51 @@ function localizeRoundLabel(label, t) {
 
 function isGroupStageLabel(label) {
   return /^(group|pool)\b/i.test(label);
+}
+
+// A game belongs to the knockout bracket only if ESPN gave it a round
+// headline that isn't a group-stage one — and, for leagues whose tournament
+// shares headlines with other competitions (NCAA volleyball conference
+// tournaments), one that matches the league's own championship.
+function isBracketEvent(event, bracketConfig) {
+  const headline = event.competitions?.[0]?.notes?.[0]?.headline;
+  if (!headline) return false;
+  if (bracketConfig?.headlinePrefix && !bracketConfig.headlinePrefix.test(headline)) return false;
+  return !isGroupStageLabel(normalizeRoundLabel(headline));
+}
+
+// Round label per event. Almost always straight from the headline, except
+// NCAA volleyball's regionals: ESPN names both the regional semifinals and
+// the regional final just "<City> Regional". Within a region the games are
+// played in order, so the final is the one whose teams already played earlier
+// in that region (or, once a region lists all 3 games, simply the last one).
+function labelEvents(events) {
+  const labels = new Map();
+  const regions = new Map();
+
+  for (const event of events) {
+    const label = normalizeRoundLabel(event.competitions?.[0]?.notes?.[0]?.headline);
+    if (/\bregional$/i.test(label)) {
+      if (!regions.has(label)) regions.set(label, []);
+      regions.get(label).push(event);
+    } else {
+      labels.set(event.id, label);
+    }
+  }
+
+  for (const regionEvents of regions.values()) {
+    const sorted = [...regionEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const seen = new Set();
+    sorted.forEach((event, i) => {
+      const ids = event.competitions[0].competitors.map((c) => c.team?.id);
+      const allSeen = seen.size > 0 && ids.every((id) => seen.has(id));
+      const isFinal = allSeen || (sorted.length >= 3 && i === sorted.length - 1);
+      labels.set(event.id, isFinal ? "Regional Final" : "Regional Semifinals");
+      ids.forEach((id) => seen.add(id));
+    });
+  }
+
+  return labels;
 }
 
 // Collapses every game between the same two teams in a round (a best-of-N
@@ -331,11 +390,12 @@ function buildLiveRounds(events) {
   // Keyed by a lowercased label since ESPN isn't consistent about casing
   // for the same round (e.g. "WNBA Finals" vs "WNBA FINALS" across games).
   const roundMap = new Map();
+  const labels = labelEvents(events);
 
   for (const event of events) {
     const comp = event.competitions?.[0];
     if (!comp?.competitors?.length) continue;
-    const label = normalizeRoundLabel(comp.notes?.[0]?.headline);
+    const label = labels.get(event.id) ?? "Playoffs";
     const roundKey = label.toLowerCase();
     const seriesKey = comp.competitors
       .map((c) => c.team?.id)
@@ -410,7 +470,15 @@ function LiveMatchup({ league, matchup }) {
       ))}
       {(text || matchup.isLive) && (
         <div className="bracket-footer">
-          {matchup.isLive && <span className="bracket-live-badge">{t("game.live")}</span>}
+          {matchup.isLive && (
+            <div className="bracket-live-line">
+              <span className="bracket-live-badge">{t("game.live")}</span>
+              {/* The card's chips show series wins, so the game in progress gets its own score line. */}
+              <span className="bracket-live-score">
+                {matchup.teams.map((team) => `${team.abbreviation} ${team.score ?? 0}`).join(" – ")}
+              </span>
+            </div>
+          )}
           {text && <span>{text}</span>}
         </div>
       )}
@@ -448,6 +516,35 @@ function LiveBracket({ league, rounds, completed }) {
   );
 }
 
+// Limits a long window (NCAA volleyball's runs August -> January) to its
+// last `days` days, since that's where the knockout games are.
+function trailingWindow(range, days) {
+  if (!days) return range;
+  const end = new Date(range.endDate).getTime();
+  const start = Math.max(new Date(range.startDate).getTime(), end - days * 24 * 60 * 60 * 1000);
+  return { startDate: new Date(start).toISOString(), endDate: range.endDate };
+}
+
+function NotStartedBracket() {
+  const { t } = useTranslation();
+  return (
+    <div className="empty-state">
+      <i className="fa-solid fa-trophy"></i>
+      <strong>{t("playoffs.notStartedTitle")}</strong>
+      <span>{t("playoffs.notStartedSubtitle")}</span>
+    </div>
+  );
+}
+
+// The title is decided once the last round is a single matchup with a winner
+// (WNBA Finals / the NCAA championship match) — from then on the bracket is
+// a finished tournament even though the season window hasn't closed yet.
+function isChampionshipDecided(events) {
+  const rounds = buildLiveRounds(events);
+  const last = rounds[rounds.length - 1];
+  return rounds.length >= 2 && last.matchups.length === 1 && last.matchups[0].winnerId != null;
+}
+
 // ---- Entry point -----------------------------------------------------------
 // A league's bracket moves through three states, detected automatically
 // with no manual switch:
@@ -460,8 +557,13 @@ function LiveBracket({ league, rounds, completed }) {
 export default function Bracket({ league }) {
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState("projected");
-  const [rounds, setRounds] = useState(null);
+  // Raw ESPN events behind the live/completed bracket. Kept (instead of only
+  // the derived rounds) so a background refresh can merge fresh scores in.
+  const [events, setEvents] = useState(null);
+  const [eventSource, setEventSource] = useState("postseason"); // | "tournament"
   const [seeds, setSeeds] = useState([]);
+  const [retryTick, setRetryTick] = useState(0);
+  const rounds = useMemo(() => (events ? buildLiveRounds(events) : null), [events]);
 
   useEffect(() => {
     let cancelled = false;
@@ -475,32 +577,47 @@ export default function Bracket({ league }) {
         // Leagues with a clean regular-season/postseason split (WNBA, NCAA).
         const postseasonGames = await getPostseasonGames(league, windows.postseason);
         if (postseasonGames.length > 0) {
-          const isComplete = new Date() > new Date(windows.postseason.endDate);
+          const isComplete =
+            new Date() > new Date(windows.postseason.endDate) || isChampionshipDecided(postseasonGames);
           if (!cancelled) {
             setMode(isComplete ? "completed" : "live");
-            setRounds(buildLiveRounds(postseasonGames));
+            setEventSource("postseason");
+            setEvents(postseasonGames);
             setLoading(false);
           }
           return;
         }
       } else if (windows?.regular) {
-        // Short tournaments with no postseason split at all (FIBA World Cup,
-        // Olympics) — group stage and knockout games share one season type,
-        // so the knockout bracket is whatever isn't labeled a group game.
-        const allGames = await getTournamentGames(league, windows.regular);
-        const knockoutGames = allGames.filter((e) => {
-          const label = normalizeRoundLabel(e.competitions?.[0]?.notes?.[0]?.headline);
-          return !isGroupStageLabel(label);
-        });
+        // Competitions with no postseason split at all (FIBA World Cup,
+        // Olympics, NCAA volleyball) — every game shares one season type, so
+        // the knockout bracket is whichever games carry a knockout headline.
+        const bracketConfig = getLeague(league).bracket;
+        const scanWindow = trailingWindow(windows.regular, bracketConfig?.scanLastDays);
+        const allGames = await getTournamentGames(league, scanWindow);
+        const knockoutGames = allGames.filter((e) => isBracketEvent(e, bracketConfig));
         if (knockoutGames.length > 0) {
-          const isComplete = new Date() > new Date(windows.regular.endDate);
+          const isComplete =
+            new Date() > new Date(windows.regular.endDate) || isChampionshipDecided(knockoutGames);
           if (!cancelled) {
             setMode(isComplete ? "completed" : "live");
-            setRounds(buildLiveRounds(knockoutGames));
+            setEventSource("tournament");
+            setEvents(knockoutGames);
             setLoading(false);
           }
           return;
         }
+      }
+
+      // Nothing to show yet. An 8-team playoff can be projected from the
+      // standings; a 64-team single-elimination field (NCAA volleyball)
+      // can't, so there we just say the tournament hasn't started.
+      if (getLeague(league).bracket?.projected === false) {
+        if (!cancelled) {
+          setMode("notStarted");
+          setEvents(null);
+          setLoading(false);
+        }
+        return;
       }
 
       const groups = await getStandings(league);
@@ -508,6 +625,7 @@ export default function Bracket({ league }) {
       const sorted = [...all].sort((a, b) => winPct(b) - winPct(a));
       if (!cancelled) {
         setMode("projected");
+        setEvents(null);
         setSeeds(sorted.slice(0, 8));
         setLoading(false);
       }
@@ -519,12 +637,55 @@ export default function Bracket({ league }) {
     };
   }, [league]);
 
+  // Live scores: while a playoff game is in progress (or about to start),
+  // re-fetch just today's and yesterday's scoreboards — not the whole
+  // postseason window — and merge them into the events already loaded.
+  useEffect(() => {
+    if (mode !== "live" || !events) return;
+    const delay = getPollInterval(events);
+    if (delay == null) return;
+
+    let cancelled = false;
+    const id = setTimeout(async () => {
+      if (!document.hidden) {
+        try {
+          const now = new Date();
+          const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+          const days = await Promise.all([
+            getGamesByDate(league, formatDateParam(now)),
+            getGamesByDate(league, formatDateParam(yesterday)),
+          ]);
+          const bracketConfig = getLeague(league).bracket;
+          const keep = (e) =>
+            eventSource === "postseason" ? e.season?.type === 3 : isBracketEvent(e, bracketConfig);
+
+          const byId = new Map(events.map((e) => [e.id, e]));
+          for (const e of days.flat().filter((x) => x && keep(x))) byId.set(e.id, e);
+          if (!cancelled) setEvents([...byId.values()]);
+          return;
+        } catch {
+          // Keep showing the last known scores; try again next cycle.
+        }
+      }
+      if (!cancelled) setRetryTick((n) => n + 1);
+    }, delay);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(id);
+    };
+  }, [mode, events, eventSource, league, retryTick]);
+
   if (loading) {
     return (
       <div className="bracket">
         <div className="skeleton skeleton-card"></div>
       </div>
     );
+  }
+
+  if (mode === "notStarted") {
+    return <NotStartedBracket />;
   }
 
   if (mode === "live" || mode === "completed") {

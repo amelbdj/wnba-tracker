@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LEAGUES, getLeague } from "../leagues";
+import { LEAGUES, getLeague, hasFeature } from "../leagues";
 import { LANGUAGES } from "../i18n";
 import Logo from "./Logo";
 import LanguageSwitcher, { MobileLangChip } from "./LanguageSwitcher";
@@ -26,9 +26,9 @@ function NavLinks({ pathname, league }) {
     { section: "standings", label: t("nav.standings"), icon: "fa-solid fa-ranking-star" },
     { section: "playoffs", label: t("nav.playoffs"), icon: "fa-solid fa-trophy" },
     { section: "teams", label: t("nav.teams"), icon: "fa-solid fa-people-group" },
-    { section: "players", label: t("nav.players"), icon: "fa-solid fa-star" },
-    { section: "statistics", label: t("nav.stats"), icon: "fa-solid fa-chart-simple" },
-  ];
+    { section: "players", label: t("nav.players"), icon: "fa-solid fa-star", feature: "players" },
+    { section: "statistics", label: t("nav.stats"), icon: "fa-solid fa-chart-simple", feature: "statistics" },
+  ].filter((item) => !item.feature || hasFeature(league, item.feature));
 
   return NAV_ITEMS.map((item) => (
     <Link
@@ -51,8 +51,12 @@ function LeagueSwitcher({ league, pathname }) {
   function goTo(newLeague) {
     setOpen(false);
     if (newLeague === league) return;
+    // Keep the same section when the new league has it (standings -> standings),
+    // otherwise land on its dashboard (players -> nothing to show for volleyball).
     const section = currentSection(pathname, league);
-    navigate(section ? `/${newLeague}/${section}` : `/${newLeague}`);
+    const feature = section === "players" || section === "statistics" ? section : null;
+    const keepSection = section && (!feature || hasFeature(newLeague, feature));
+    navigate(keepSection ? `/${newLeague}/${section}` : `/${newLeague}`);
   }
 
   return (

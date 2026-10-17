@@ -14,7 +14,8 @@
     "wnba": "WNBA",
     "ncaa": "NCAA Women's",
     "fiba": "FIBA World Cup",
-    "olympics": "Olympics"
+    "olympics": "Olympics",
+    "ncaaVolleyball": "NCAA Women's Volleyball"
   },
   "common": {
     "viewStats": "View stats",
@@ -42,7 +43,8 @@
     "noGamesTitle": "No games that day",
     "noGamesSubtitle": "Try another date to see the league's schedule.",
     "topOfLeague": "Top of the league",
-    "fullStandings": "Full standings"
+    "fullStandings": "Full standings",
+    "autoRefresh": "Updating automatically"
   },
   "hero": {
     "live": "Live",
@@ -56,10 +58,13 @@
   "game": {
     "live": "LIVE",
     "final": "Final",
-    "scheduled": "Scheduled"
+    "scheduled": "Scheduled",
+    "set": "Set {{number}}"
   },
   "modal": {
-    "gameStats": "Game statistics"
+    "gameStats": "Game statistics",
+    "setScores": "Score by set",
+    "setsWon": "Sets"
   },
   "standings": {
     "rank": "#",
@@ -82,7 +87,13 @@
     "seriesLeads": "{{team}} leads series {{a}}-{{b}}",
     "seriesTied": "Series tied {{a}}-{{b}}",
     "seriesStarts": "Series starts {{date}}",
-    "gameOn": "Game on {{date}}"
+    "gameOn": "Game on {{date}}",
+    "subtitleTournament": "The NCAA national tournament, round by round.",
+    "notStartedTitle": "The tournament hasn't started yet",
+    "notStartedSubtitle": "The bracket will appear here as soon as the first NCAA tournament matches are scheduled (usually early December).",
+    "round2": "Round 2",
+    "regionalSemis": "Regional semifinals",
+    "regionalFinal": "Regional finals"
   },
   "teams": {
     "subtitle": "All the league's teams, by conference.",
@@ -101,7 +112,8 @@
     "roster": "Roster",
     "rosterCount_one": "{{count}} player",
     "rosterCount_other": "{{count}} players",
-    "rosterUnavailable": "Roster unavailable"
+    "rosterUnavailable": "Roster unavailable",
+    "noRosterData": "ESPN doesn't provide rosters for this league."
   },
   "players": {
     "subtitle": "Search and explore the league's rosters.",
@@ -171,7 +183,8 @@
     "wnba": "North America's pro league",
     "ncaa": "American college basketball",
     "fiba": "The world tournament, every 4 years",
-    "olympics": "The women's Olympic tournament"
+    "olympics": "The women's Olympic tournament",
+    "ncaaVolleyball": "American college volleyball"
   },
   "futureSports": {
     "soccer": "Soccer",
