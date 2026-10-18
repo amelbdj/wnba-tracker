@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getVolleyballBoxscore } from "../services/api";
+import { playerSlug } from "../utils/volleyballBoxscore";
 
 const LIVE_REFRESH_MS = 20 * 1000;
 
@@ -18,7 +20,7 @@ const COLUMNS = [
 
 // Per-player stats for a volleyball match, from NCAA.com. Loads once, then
 // keeps refreshing while the match is live (and the tab is visible).
-export default function VolleyballBoxscore({ competition, live }) {
+export default function VolleyballBoxscore({ competition, league, live }) {
   const { t } = useTranslation();
   const [state, setState] = useState({ status: "loading", box: null });
   const [side, setSide] = useState(0);
@@ -97,7 +99,12 @@ export default function VolleyballBoxscore({ competition, live }) {
               <tr key={`${p.number}-${p.name}`}>
                 <td className="vb-rank">{p.number}</td>
                 <td className="vb-td-player">
-                  <span className="vb-player-name">{p.name}</span>
+                  <Link
+                    to={`/${league}/teams/${teams[side].id}/players/${playerSlug(p.name)}`}
+                    className="vb-player-name vb-player-link"
+                  >
+                    {p.name}
+                  </Link>
                   {p.position && <span className="vb-player-sub"> {p.position}</span>}
                 </td>
                 {COLUMNS.map((c) => (
