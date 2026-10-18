@@ -2736,6 +2736,172 @@ img {
   color: var(--win);
 }
 
+/* NCAA volleyball statistics (leaderboards from NCAA.com). */
+.vb-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.vb-search {
+  flex: 1;
+  min-width: 220px;
+  max-width: 420px;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.segmented-btn {
+  padding: 7px 16px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.segmented-btn:hover {
+  color: var(--text);
+}
+
+.segmented-btn.active {
+  background: var(--gradient-brand);
+  color: #fff;
+}
+
+.vb-table-wrap {
+  max-width: 1000px; /* keeps names and numbers close together on wide screens */
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.vb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.vb-table th,
+.vb-table td {
+  padding: 11px 14px;
+  text-align: right;
+  font-size: 13.5px;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.vb-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.vb-table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.vb-table th {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vb-table .vb-th-rank,
+.vb-table .vb-rank {
+  width: 52px;
+  text-align: center;
+}
+
+.vb-table .vb-th-player,
+.vb-table .vb-td-player {
+  text-align: left;
+  min-width: 220px;
+}
+
+.vb-table td.is-primary,
+.vb-table th.is-primary {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.vb-table td.is-primary {
+  font-size: 15px;
+}
+
+.vb-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.vb-player img,
+.vb-player-logo-fallback {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.vb-player-logo-fallback {
+  border-radius: 50%;
+  border: 1.5px dashed var(--border-strong);
+}
+
+.vb-player-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.vb-player-name {
+  font-weight: 700;
+}
+
+.vb-player-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+a.vb-player:hover .vb-player-name {
+  text-decoration: underline;
+}
+
+.vb-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.vb-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 2px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.vb-note-error {
+  color: var(--live);
+}
+
 /* =========================================================
    PLAYOFF BRACKET
    ========================================================= */
@@ -3677,4 +3843,80 @@ img {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Per-player box score inside the volleyball match modal */
+.vb-box {
+  margin-top: 22px;
+}
+
+.vb-box .modal-subtitle {
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.vb-box-wrap {
+  max-width: none;
+}
+
+.vb-box-table th,
+.vb-box-table td {
+  padding: 9px 7px;
+  font-size: 13px;
+}
+
+.vb-box-table .vb-td-player,
+.vb-box-table .vb-th-player {
+  min-width: 0;
+  padding-left: 4px;
+}
+
+.vb-box-table .vb-th-rank,
+.vb-box-table .vb-rank {
+  width: 36px;
+}
+
+.vb-box-total td {
+  font-weight: 800;
+  border-top: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Wide enough for the 11-column player table without sideways scrolling. */
+.modal-content-wide {
+  max-width: 780px;
+}
+
+@media (max-width: 640px) {
+  .vb-box-table th,
+  .vb-box-table td {
+    padding: 8px 6px;
+    font-size: 12.5px;
+  }
+
+  .vb-box-table .vb-td-player,
+  .vb-box-table .vb-th-player {
+    min-width: 128px;
+  }
+}
+
+/* Volleyball squad cards: no profile page to open, no photo to show. */
+.player-card-static {
+  cursor: default;
+}
+
+.player-card-static:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.player-initials {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  color: var(--text);
 }

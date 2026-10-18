@@ -3,9 +3,10 @@
 // checking league slugs.
 //
 //  - sport:      the ESPN sport segment in API URLs (…/sports/<sport>/<slug>/…)
-//  - features:   players / statistics default to true. ESPN has no rosters,
-//                player profiles or stat leaders for NCAA volleyball, so
-//                those screens are switched off for it rather than shown empty.
+//  - features:   players / statistics default to true. ESPN has no rosters or
+//                player profiles for NCAA volleyball, so the Players screens are
+//                switched off for it rather than shown empty. (Its Statistics
+//                page works: player leaderboards come from NCAA.com instead.)
 //  - standingsLevel: ESPN groups standings by depth; NCAA volleyball only
 //                returns one flat list unless asked for conference level (3).
 //  - bracket:    how to find the league's playoff games when ESPN doesn't tag
@@ -41,7 +42,7 @@ export const LEAGUES = [
     labelKey: "league.ncaaVolleyball",
     shortLabel: "NCAA Volley",
     icon: "fa-solid fa-volleyball",
-    features: { players: false, statistics: false },
+    features: { players: false },
     standingsLevel: 3,
     bracket: {
       // ESPN files the NCAA tournament under the regular season (type 2), and
