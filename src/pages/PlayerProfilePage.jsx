@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getPlayerProfile, getPlayerGameLog } from "../services/api";
 import { toLocale } from "../utils/locale";
+import TeamLink from "../components/TeamLink";
 
 function parseRecentGames(gamelog, limit = 8) {
   if (!gamelog?.seasonTypes?.length) return { games: [], ptsIndex: -1 };
@@ -99,10 +100,10 @@ export default function PlayerProfilePage() {
 
             <div className="profile-meta-row">
               {player.team && (
-                <span>
+                <TeamLink league={league} teamId={player.team.id}>
                   {teamLogo && <img src={teamLogo} alt="" />}
                   {player.team.displayName}
-                </span>
+                </TeamLink>
               )}
               {player.displayHeight && (
                 <span>
@@ -219,7 +220,10 @@ export default function PlayerProfilePage() {
                     {g.meta.gameResult}
                   </span>
                   <span className="games-log-opponent">
-                    {g.meta.atVs} {g.meta.opponent?.displayName}
+                    {g.meta.atVs}{" "}
+                    <TeamLink league={league} teamId={g.meta.opponent?.id}>
+                      {g.meta.opponent?.displayName}
+                    </TeamLink>
                   </span>
                   <span className="games-log-date">{date}</span>
                   <span className="games-log-pts">{t("player.pts", { count: pts })}</span>

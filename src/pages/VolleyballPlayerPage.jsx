@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { getTeamDetails, getVolleyballTeamMatches } from "../services/api";
 import { buildPlayerSeason } from "../utils/volleyballBoxscore";
 import { toLocale } from "../utils/locale";
+import TeamLink from "../components/TeamLink";
 
 const TREND_MATCHES = 8;
 
@@ -110,10 +111,10 @@ export default function VolleyballPlayerPage() {
             </h1>
             {team && (
               <div className="profile-meta-row">
-                <span>
+                <TeamLink league={league} teamId={teamId}>
                   {teamLogo && <img src={teamLogo} alt="" />}
                   {team.displayName}
-                </span>
+                </TeamLink>
               </div>
             )}
           </div>
@@ -218,7 +219,10 @@ export default function VolleyballPlayerPage() {
                       {match.won ? "W" : "L"}
                     </span>{" "}
                     <span className="vb-player-name">
-                      {match.home ? "vs" : "@"} {match.opponent.displayName}
+                      {match.home ? "vs" : "@"}{" "}
+                      <TeamLink league={league} teamId={match.opponent.id}>
+                        {match.opponent.displayName}
+                      </TeamLink>
                     </span>{" "}
                     <span className="vb-player-sub">
                       {match.score[0]}-{match.score[1]} · {formatDate(match.date)}

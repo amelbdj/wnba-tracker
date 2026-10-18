@@ -4,6 +4,7 @@ import { getGameDetails } from "../services/api";
 import { getSport } from "../leagues";
 import { getSetScores } from "../utils/games";
 import VolleyballBoxscore from "./VolleyballBoxscore";
+import TeamLink from "./TeamLink";
 
 const LIVE_REFRESH_MS = 20 * 1000;
 
@@ -51,8 +52,10 @@ function VolleyballScoreboard({ competition, league, onClose }) {
                 return (
                   <tr key={team.team.id} className={team.winner ? "is-winner" : ""}>
                     <td className="set-table-team">
-                      <img src={team.team.logos?.[0]?.href || team.team.logo} alt="" />
-                      <span>{team.team.displayName}</span>
+                      <TeamLink league={league} teamId={team.team.id} className="set-table-team-link">
+                        <img src={team.team.logos?.[0]?.href || team.team.logo} alt="" />
+                        <span>{team.team.displayName}</span>
+                      </TeamLink>
                     </td>
                     {sets.map((pair, i) => {
                       const mine = pair[side];
@@ -156,15 +159,15 @@ export default function GameDetails({ gameId, league, onClose }) {
 
         {teamA && teamB && (
           <div className="matchup-strip">
-            <div className="team-mini">
+            <TeamLink league={league} teamId={teamA.team.id} className="team-mini">
               <img src={teamA.team.logo} alt="" />
               <span className="team-mini-name">{teamA.team.displayName}</span>
-            </div>
+            </TeamLink>
             <span className="vs">VS</span>
-            <div className="team-mini">
+            <TeamLink league={league} teamId={teamB.team.id} className="team-mini">
               <img src={teamB.team.logo} alt="" />
               <span className="team-mini-name">{teamB.team.displayName}</span>
-            </div>
+            </TeamLink>
           </div>
         )}
 

@@ -3943,3 +3943,48 @@ a.vb-player:hover .vb-player-name {
   color: var(--indigo);
   text-decoration: underline;
 }
+
+/* Team names and logos that link to the team page. */
+.team-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.team-link:hover {
+  text-decoration: underline;
+}
+
+/* Block-style links (cards, hero, modal strip): underline just the name. */
+a.team-link.card-team-id:hover,
+a.team-link.hero-team:hover,
+a.team-link.team-mini:hover,
+a.team-link.set-table-team-link:hover {
+  text-decoration: none;
+}
+
+.team-link:hover .card-team-name,
+.team-link:hover .hero-team-name,
+.team-link:hover .team-mini-name,
+.set-table-team-link:hover span {
+  text-decoration: underline;
+}
+
+.set-table-team .set-table-team-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.team-link-nested {
+  cursor: pointer;
+}
+
+.team-link-nested:hover {
+  text-decoration: underline;
+}
+
+.vb-player-mark {
+  display: flex;
+  flex-shrink: 0;
+}

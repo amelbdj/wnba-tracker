@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import GameDetails from "./GameDetails";
 import SetScores from "./SetScores";
+import TeamLink from "./TeamLink";
 import { getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
 import { getLiveDetail } from "../utils/games";
@@ -60,20 +61,20 @@ export default function GameCard({ game, league }) {
 
         <div className="card-matchup">
           <div className={`card-team${team1Wins ? " is-winner" : ""}`}>
-            <div className="card-team-id">
+            <TeamLink league={league} teamId={team1.team.id} className="card-team-id">
               <img src={team1.team.logo} alt="" />
               <span className="card-team-name">{team1.team.displayName}</span>
-            </div>
+            </TeamLink>
             <span className="card-team-score">{team1.score}</span>
           </div>
 
           <div className="card-divider"></div>
 
           <div className={`card-team${team2Wins ? " is-winner" : ""}`}>
-            <div className="card-team-id">
+            <TeamLink league={league} teamId={team2.team.id} className="card-team-id">
               <img src={team2.team.logo} alt="" />
               <span className="card-team-name">{team2.team.displayName}</span>
-            </div>
+            </TeamLink>
             <span className="card-team-score">{team2.score}</span>
           </div>
         </div>
