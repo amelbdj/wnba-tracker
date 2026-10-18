@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import TeamLink from "./TeamLink";
 
 export default function PlayerCard({ player, league, showTeam = true, statValue, statLabel }) {
   const name = player.displayName || player.fullName;
@@ -24,10 +25,10 @@ export default function PlayerCard({ player, league, showTeam = true, statValue,
       </div>
 
       {showTeam && player.team && (
-        <div className="player-card-team">
+        <TeamLink league={league} teamId={player.team.id} className="player-card-team" nested>
           {teamLogo && <img src={teamLogo} alt="" />}
           <span>{player.team.abbreviation || player.team.displayName}</span>
-        </div>
+        </TeamLink>
       )}
 
       {statValue != null && (

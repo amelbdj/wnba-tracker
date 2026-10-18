@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import TeamLink from "../components/TeamLink";
 import { useTranslation } from "react-i18next";
 import { getLeagueLeaders } from "../services/api";
 import { getLeague, getSport } from "../leagues";
@@ -24,14 +25,14 @@ function rankClass(index) {
   return "rank-badge";
 }
 
-function LeaderTeam({ team }) {
+function LeaderTeam({ team, league }) {
   if (!team) return null;
   const logo = team.logos?.[0]?.href;
   return (
-    <span className="leader-team">
+    <TeamLink league={league} teamId={team.id} className="leader-team" nested>
       {logo && <img src={logo} alt="" />}
       {team.abbreviation || team.displayName}
-    </span>
+    </TeamLink>
   );
 }
 
@@ -108,7 +109,7 @@ function BasketballStatistics() {
 
               <div className="leader-spotlight-info">
                 <div className="leader-spotlight-name">{top.athlete.displayName}</div>
-                <LeaderTeam team={top.team} />
+                <LeaderTeam team={top.team} league={league} />
               </div>
 
               <div className="leader-spotlight-stat">
@@ -137,7 +138,7 @@ function BasketballStatistics() {
 
                 <div className="leader-info">
                   <div className="leader-name">{leader.athlete.displayName}</div>
-                  <LeaderTeam team={leader.team} />
+                  <LeaderTeam team={leader.team} league={league} />
                 </div>
 
                 <div className="leader-value">{leader.displayValue}</div>

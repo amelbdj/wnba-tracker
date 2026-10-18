@@ -5,6 +5,7 @@ import { getTeamDetails, getTeamRoster } from "../services/api";
 import { getSport, hasFeature } from "../leagues";
 import PlayerCard from "../components/PlayerCard";
 import VolleyballRoster from "../components/VolleyballRoster";
+import TeamLink from "../components/TeamLink";
 
 function findStat(items, description, name) {
   const group = items?.find((i) => i.description === description);
@@ -153,7 +154,11 @@ export default function TeamDetailPage() {
               <i className="fa-regular fa-calendar"></i>
               {t("team.nextGame")}
               {nextComp.competitors?.map((c) => (
-                <strong key={c.homeAway}>{c.team?.abbreviation || c.team?.displayName}</strong>
+                <strong key={c.homeAway}>
+                  <TeamLink league={league} teamId={c.team?.id}>
+                    {c.team?.abbreviation || c.team?.displayName}
+                  </TeamLink>
+                </strong>
               ))}
             </div>
           )}

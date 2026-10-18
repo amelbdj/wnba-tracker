@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import TeamLink from "./TeamLink";
 import { useTranslation } from "react-i18next";
 import { getStandings, getVolleyballLeaders } from "../services/api";
 import { getLeague } from "../leagues";
@@ -57,22 +58,33 @@ function PlayerCell({ row, team, league }) {
   const details = [teamName, row.Position, row.Cl].filter(Boolean).join(" · ");
   const logo = team?.logos?.[0]?.href;
 
-  const content = (
-    <>
-      {logo ? <img src={logo} alt="" /> : <span className="vb-player-logo-fallback"></span>}
-      <span className="vb-player-text">
-        <span className="vb-player-name">{row.Name}</span>
-        <span className="vb-player-sub">{details}</span>
-      </span>
-    </>
+  const mark = logo ? <img src={logo} alt="" /> : <span className="vb-player-logo-fallback"></span>;
+  const text = (
+    <span className="vb-player-text">
+      <span className="vb-player-name">{row.Name}</span>
+      <span className="vb-player-sub">{details}</span>
+    </span>
   );
 
-  return team ? (
-    <Link to={`/${league}/teams/${team.id}/players/${playerSlug(row.Name)}`} className="vb-player">
-      {content}
-    </Link>
-  ) : (
-    <div className="vb-player">{content}</div>
+  if (!team) {
+    return (
+      <div className="vb-player">
+        {mark}
+        {text}
+      </div>
+    );
+  }
+
+  // Logo -> team page, name -> player page (two links side by side).
+  return (
+    <div className="vb-player">
+      <TeamLink league={league} teamId={team.id} className="vb-player-mark">
+        {mark}
+      </TeamLink>
+      <Link to={`/${league}/teams/${team.id}/players/${playerSlug(row.Name)}`} className="vb-player-link">
+        {text}
+      </Link>
+    </div>
   );
 }
 

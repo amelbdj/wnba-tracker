@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import GameDetails from "./GameDetails";
 import SetScores from "./SetScores";
+import TeamLink from "./TeamLink";
 import { getLeague, getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
 import { getLiveDetail } from "../utils/games";
@@ -65,13 +66,13 @@ export default function HeroGame({ game, league }) {
           <h1 className="hero-headline">{headline}</h1>
 
           <div className="hero-matchup">
-            <div className="hero-team">
+            <TeamLink league={league} teamId={team1.team.id} className="hero-team">
               <img src={team1.team.logo} alt="" />
               <span className="hero-team-name">{team1.team.displayName}</span>
               {team1.records?.[0]?.summary && (
                 <span className="hero-team-record">{team1.records[0].summary}</span>
               )}
-            </div>
+            </TeamLink>
 
             <div className="hero-center">
               {isFinal || isLive ? (
@@ -87,13 +88,13 @@ export default function HeroGame({ game, league }) {
               </span>
             </div>
 
-            <div className="hero-team">
+            <TeamLink league={league} teamId={team2.team.id} className="hero-team">
               <img src={team2.team.logo} alt="" />
               <span className="hero-team-name">{team2.team.displayName}</span>
               {team2.records?.[0]?.summary && (
                 <span className="hero-team-record">{team2.records[0].summary}</span>
               )}
-            </div>
+            </TeamLink>
           </div>
 
           {sport === "volleyball" && (isLive || isFinal) && (
