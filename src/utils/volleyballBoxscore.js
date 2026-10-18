@@ -86,3 +86,60 @@ export function buildMatchBoxscore(box, aIsHome) {
     teams: [buildTeamBoxscore(statsFor(idA)), buildTeamBoxscore(statsFor(idB))],
   };
 }
+
+// "Gabby DiVita" -> "gabby-divita": the player's address inside a team's page.
+// NCAA spells the same player differently between matches (case, accents), so
+// players are matched on this rather than on the raw name.
+export function playerSlug(name) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+// Squad from a team's matches (newest first): everyone seen in them, with the
+// latest number/position/spelling, most-used players first.
+export function buildRoster(matches) {
+  const bySlug = new Map();
+  for (const match of matches) {
+    for (const p of match.players) {
+      const slug = playerSlug(p.name);
+      const known = bySlug.get(slug);
+      if (known) known.matches += 1;
+      else bySlug.set(slug, { slug, name: p.name, number: p.number, position: p.position, matches: 1 });
+    }
+  }
+  return [...bySlug.values()].sort(
+    (a, b) => b.matches - a.matches || Number(a.number) - Number(b.number),
+  );
+}
+
+const STAT_KEYS = ["points", "kills", "errors", "attempts", "assists", "aces", "digs", "blocks"];
+
+// One player's season out of a team's matches (newest first): their line in
+// each match they took part in, plus totals and per-set averages. Null when
+// the player appears in none.
+export function buildPlayerSeason(matches, slug) {
+  const games = [];
+  let identity = null;
+  for (const match of matches) {
+    const stats = match.players.find((p) => playerSlug(p.name) === slug);
+    if (!stats) continue;
+    identity ||= { name: stats.name, number: stats.number, position: stats.position };
+    games.push({ match, stats });
+  }
+  if (!identity) return null;
+
+  const totals = { matches: games.length, sets: games.reduce((n, g) => n + g.stats.sets, 0) };
+  for (const key of STAT_KEYS) totals[key] = games.reduce((n, g) => n + g.stats[key], 0);
+  totals.pct = formatHitting(totals.kills, totals.errors, totals.attempts);
+
+  const perSet = {};
+  for (const key of STAT_KEYS) {
+    perSet[key] = totals.sets > 0 ? (totals[key] / totals.sets).toFixed(2) : "0.00";
+  }
+
+  return { ...identity, games, totals, perSet };
+}
