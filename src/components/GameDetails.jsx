@@ -18,7 +18,7 @@ function formatStatName(name) {
     .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2");
 }
 
-function VolleyballScoreboard({ competition, onClose }) {
+function VolleyballScoreboard({ competition, league, onClose }) {
   const { t } = useTranslation();
   const sets = getSetScores(competition);
   const [a, b] = competition.competitors;
@@ -72,7 +72,7 @@ function VolleyballScoreboard({ competition, onClose }) {
           </table>
         </div>
 
-        <VolleyballBoxscore competition={competition} live={live} />
+        <VolleyballBoxscore competition={competition} league={league} live={live} />
       </div>
     </div>
   );
@@ -118,7 +118,7 @@ export default function GameDetails({ gameId, league, onClose }) {
   // ESPN's volleyball box score carries no team stats at all, only the
   // header — so volleyball shows the set-by-set scoreboard instead.
   if (isVolleyball && data?.header?.competitions?.[0]?.competitors) {
-    return <VolleyballScoreboard competition={data.header.competitions[0]} onClose={onClose} />;
+    return <VolleyballScoreboard competition={data.header.competitions[0]} league={league} onClose={onClose} />;
   }
 
   if (!data || !data.boxscore || !data.boxscore.teams) {
