@@ -64,7 +64,33 @@
   "modal": {
     "gameStats": "Game statistics",
     "setScores": "Score by set",
-    "setsWon": "Sets"
+    "setsWon": "Sets",
+    "playerStats": "Player stats",
+    "playerStatsMissing": "Detailed stats aren't available for this match.",
+    "playerStatsError": "Couldn't load player stats right now.",
+    "playerStatsPending": "Player stats will appear once the match starts.",
+    "playerStatsSource": "Source: NCAA.com",
+    "box": {
+      "pts": "Pts",
+      "ptsTitle": "Points",
+      "kills": "K",
+      "killsTitle": "Kills",
+      "errors": "E",
+      "errorsTitle": "Attack errors",
+      "attempts": "TA",
+      "attemptsTitle": "Total attacks",
+      "pct": "%",
+      "pctTitle": "Hitting percentage (K − E) / TA",
+      "assists": "Ast",
+      "assistsTitle": "Assists",
+      "aces": "SA",
+      "acesTitle": "Service aces",
+      "digs": "Dig",
+      "digsTitle": "Digs",
+      "blocks": "Blk",
+      "blocksTitle": "Blocks",
+      "total": "Total"
+    }
   },
   "standings": {
     "rank": "#",
@@ -113,7 +139,10 @@
     "rosterCount_one": "{{count}} player",
     "rosterCount_other": "{{count}} players",
     "rosterUnavailable": "Roster unavailable",
-    "noRosterData": "ESPN doesn't provide rosters for this league."
+    "noRosterData": "ESPN doesn't provide rosters for this league.",
+    "rosterNoMatches": "No finished match yet.",
+    "rosterFromMatches_one": "Players seen in the latest match played · Source: NCAA.com",
+    "rosterFromMatches_other": "Players seen in the last {{count}} matches played · Source: NCAA.com"
   },
   "players": {
     "subtitle": "Search and explore the league's rosters.",
@@ -369,5 +398,50 @@
   "sport": {
     "basketball": "Basketball",
     "volleyball": "Volleyball"
+  },
+  "volleyballStats": {
+    "subtitle": "The top NCAA (Division I) players, category by category. Official data from NCAA.com.",
+    "family": {
+      "kills": "Kills",
+      "hitting": "Hitting percentage",
+      "assists": "Assists",
+      "aces": "Aces",
+      "blocks": "Blocks",
+      "digs": "Digs",
+      "points": "Points",
+      "attacks": "Attacks",
+      "tripleDoubles": "Triple doubles"
+    },
+    "mode": "View",
+    "modePerSet": "Per set",
+    "modeTotal": "Total",
+    "searchPlaceholder": "Search for a player or a team...",
+    "searchingAll": "Searching all players...",
+    "player": "Player",
+    "loadMore": "Show more",
+    "loading": "Loading...",
+    "retry": "Try again",
+    "noResults": "No player found",
+    "unavailable": "Statistics unavailable",
+    "partialError": "Couldn't load more right now.",
+    "through": "Data through {{date}}",
+    "source": "Source: NCAA.com",
+    "col": {
+      "sets": "Sets",
+      "matches": "Matches",
+      "perSet": "Per set",
+      "pct": "Pct.",
+      "kills": "Kills",
+      "errors": "Errors",
+      "attacks": "Attempts",
+      "aces": "Aces",
+      "assists": "Assists",
+      "digs": "Digs",
+      "blockSolos": "Solo blocks",
+      "blockAssists": "Block assists",
+      "blocks": "Blocks",
+      "points": "Pts",
+      "tripleDoubles": "TD"
+    }
   }
 }

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getLeagueLeaders } from "../services/api";
-import { getLeague } from "../leagues";
+import { getLeague, getSport } from "../leagues";
+import VolleyballStatistics from "../components/VolleyballStatistics";
 
 const CATEGORIES = [
   { name: "pointsPerGame", key: "statCategories.points", short: "PPG", icon: "fa-solid fa-basketball" },
@@ -34,7 +35,7 @@ function LeaderTeam({ team }) {
   );
 }
 
-export default function StatisticsPage() {
+function BasketballStatistics() {
   const { t } = useTranslation();
   const { league } = useParams();
   const [categories, setCategories] = useState([]);
@@ -147,4 +148,10 @@ export default function StatisticsPage() {
       )}
     </div>
   );
+}
+
+// Basketball leaders come from ESPN; volleyball's from NCAA.com (ESPN has none).
+export default function StatisticsPage() {
+  const { league } = useParams();
+  return getSport(league) === "volleyball" ? <VolleyballStatistics league={league} /> : <BasketballStatistics />;
 }

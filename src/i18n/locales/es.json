@@ -64,7 +64,33 @@
   "modal": {
     "gameStats": "Estadísticas del partido",
     "setScores": "Marcador por set",
-    "setsWon": "Sets"
+    "setsWon": "Sets",
+    "playerStats": "Estadísticas de las jugadoras",
+    "playerStatsMissing": "Las estadísticas detalladas de este partido no están disponibles.",
+    "playerStatsError": "No se pudieron cargar las estadísticas ahora mismo.",
+    "playerStatsPending": "Las estadísticas aparecerán cuando empiece el partido.",
+    "playerStatsSource": "Fuente: NCAA.com",
+    "box": {
+      "pts": "Pts",
+      "ptsTitle": "Puntos",
+      "kills": "K",
+      "killsTitle": "Ataques ganadores (kills)",
+      "errors": "E",
+      "errorsTitle": "Errores de ataque",
+      "attempts": "TA",
+      "attemptsTitle": "Intentos de ataque",
+      "pct": "%",
+      "pctTitle": "Porcentaje de ataque (K − E) / TA",
+      "assists": "Ast",
+      "assistsTitle": "Asistencias",
+      "aces": "SA",
+      "acesTitle": "Aces de saque",
+      "digs": "Dig",
+      "digsTitle": "Defensas (digs)",
+      "blocks": "Blk",
+      "blocksTitle": "Bloqueos",
+      "total": "Total"
+    }
   },
   "standings": {
     "rank": "#",
@@ -113,7 +139,10 @@
     "rosterCount_one": "{{count}} jugadora",
     "rosterCount_other": "{{count}} jugadoras",
     "rosterUnavailable": "Plantilla no disponible",
-    "noRosterData": "ESPN no ofrece las plantillas de esta liga."
+    "noRosterData": "ESPN no ofrece las plantillas de esta liga.",
+    "rosterNoMatches": "Aún no hay partidos terminados.",
+    "rosterFromMatches_one": "Jugadoras vistas en el último partido jugado · Fuente: NCAA.com",
+    "rosterFromMatches_other": "Jugadoras vistas en los últimos {{count}} partidos jugados · Fuente: NCAA.com"
   },
   "players": {
     "subtitle": "Busca y explora las plantillas de la liga.",
@@ -369,5 +398,50 @@
   "sport": {
     "basketball": "Baloncesto",
     "volleyball": "Voleibol"
+  },
+  "volleyballStats": {
+    "subtitle": "Las mejores jugadoras de la NCAA (División I), categoría por categoría. Datos oficiales de NCAA.com.",
+    "family": {
+      "kills": "Kills",
+      "hitting": "Efectividad de ataque",
+      "assists": "Asistencias",
+      "aces": "Aces",
+      "blocks": "Bloqueos",
+      "digs": "Defensas (digs)",
+      "points": "Puntos",
+      "attacks": "Ataques",
+      "tripleDoubles": "Triples dobles"
+    },
+    "mode": "Vista",
+    "modePerSet": "Por set",
+    "modeTotal": "Total",
+    "searchPlaceholder": "Buscar una jugadora o un equipo...",
+    "searchingAll": "Buscando entre todas las jugadoras...",
+    "player": "Jugadora",
+    "loadMore": "Ver más",
+    "loading": "Cargando...",
+    "retry": "Reintentar",
+    "noResults": "No se encontró ninguna jugadora",
+    "unavailable": "Estadísticas no disponibles",
+    "partialError": "No se pudo cargar más por ahora.",
+    "through": "Datos hasta el {{date}}",
+    "source": "Fuente: NCAA.com",
+    "col": {
+      "sets": "Sets",
+      "matches": "Partidos",
+      "perSet": "Por set",
+      "pct": "%",
+      "kills": "Kills",
+      "errors": "Errores",
+      "attacks": "Intentos",
+      "aces": "Aces",
+      "assists": "Asistencias",
+      "digs": "Digs",
+      "blockSolos": "Bloqueos solos",
+      "blockAssists": "Bloqueos asistidos",
+      "blocks": "Bloqueos",
+      "points": "Pts",
+      "tripleDoubles": "TD"
+    }
   }
 }

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getGameDetails } from "../services/api";
 import { getSport } from "../leagues";
 import { getSetScores } from "../utils/games";
+import VolleyballBoxscore from "./VolleyballBoxscore";
 
 const LIVE_REFRESH_MS = 20 * 1000;
 
@@ -25,7 +26,7 @@ function VolleyballScoreboard({ competition, onClose }) {
 
   return (
     <div className="modal" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content modal-content-wide" onClick={(e) => e.stopPropagation()}>
         <div className="modal-head">
           <span className="modal-title">{t("modal.setScores")}</span>
           <button className="close-btn" onClick={onClose} aria-label={t("common.close")}>
@@ -70,6 +71,8 @@ function VolleyballScoreboard({ competition, onClose }) {
             </tbody>
           </table>
         </div>
+
+        <VolleyballBoxscore competition={competition} live={live} />
       </div>
     </div>
   );

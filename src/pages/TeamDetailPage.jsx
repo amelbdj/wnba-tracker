@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { getTeamDetails, getTeamRoster } from "../services/api";
 import { getSport, hasFeature } from "../leagues";
 import PlayerCard from "../components/PlayerCard";
+import VolleyballRoster from "../components/VolleyballRoster";
 
 function findStat(items, description, name) {
   const group = items?.find((i) => i.description === description);
@@ -158,6 +159,8 @@ export default function TeamDetailPage() {
           )}
         </div>
       </section>
+
+      {isVolleyball && <VolleyballRoster league={league} teamId={teamId} />}
 
       {showRoster && (
         <div className="section">
