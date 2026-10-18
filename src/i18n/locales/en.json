@@ -443,5 +443,15 @@
       "points": "Pts",
       "tripleDoubles": "TD"
     }
+  },
+  "volleyballPlayer": {
+    "loading": "Computing stats from the season's matches…",
+    "seasonTotals": "Season totals",
+    "perSet": "Per-set averages",
+    "matches": "Matches",
+    "sets": "Sets",
+    "matchLog": "Match by match",
+    "match": "Match",
+    "source": "Based on {{count}} finished matches · Source: NCAA.com"
   }
 }

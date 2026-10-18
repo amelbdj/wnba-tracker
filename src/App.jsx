@@ -7,6 +7,7 @@ import TeamsPage from "./pages/TeamsPage";
 import TeamDetailPage from "./pages/TeamDetailPage";
 import PlayersPage from "./pages/PlayersPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
+import VolleyballPlayerPage from "./pages/VolleyballPlayerPage";
 import StatisticsPage from "./pages/StatisticsPage";
 import PlayoffsPage from "./pages/PlayoffsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
@@ -28,6 +29,7 @@ function App() {
         <Route path="playoffs" element={<PlayoffsPage />} />
         <Route path="teams" element={<TeamsPage />} />
         <Route path="teams/:teamId" element={<TeamDetailPage />} />
+        <Route path="teams/:teamId/players/:slug" element={<VolleyballPlayerPage />} />
         <Route path="players" element={<PlayersPage />} />
         <Route path="players/:playerId" element={<PlayerProfilePage />} />
         <Route path="statistics" element={<StatisticsPage />} />

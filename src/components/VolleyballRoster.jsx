@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getVolleyballRoster } from "../services/api";
 
@@ -9,8 +10,7 @@ function initials(name) {
   return (first + last).toUpperCase();
 }
 
-// Volleyball squad as initials avatars: no photos exist for these players, and
-// there are no player profile pages to link to.
+// Volleyball squad as initials avatars: no photos exist for these players.
 export default function VolleyballRoster({ league, teamId }) {
   const { t } = useTranslation();
   const [state, setState] = useState({ status: "loading" });
@@ -60,7 +60,11 @@ export default function VolleyballRoster({ league, teamId }) {
         <>
           <div className="player-grid">
             {state.players.map((p) => (
-              <div key={p.name} className="player-card player-card-static">
+              <Link
+                key={p.slug}
+                to={`/${league}/teams/${teamId}/players/${p.slug}`}
+                className="player-card"
+              >
                 <div className="player-photo-wrap player-initials" aria-hidden="true">
                   {initials(p.name)}
                 </div>
@@ -69,7 +73,7 @@ export default function VolleyballRoster({ league, teamId }) {
                   {p.position && <span className="position-badge">{p.position}</span>}
                   {p.number && <span>#{p.number}</span>}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           <p className="vb-note">{t("team.rosterFromMatches", { count: state.matches })}</p>

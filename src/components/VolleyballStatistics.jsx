@@ -5,6 +5,7 @@ import { getStandings, getVolleyballLeaders } from "../services/api";
 import { getLeague } from "../leagues";
 import { buildTeamIndex, findTeam } from "../utils/ncaaTeams";
 import { toLocale } from "../utils/locale";
+import { playerSlug } from "../utils/volleyballBoxscore";
 import {
   COLUMN_KEYS,
   IDENTITY_FIELDS,
@@ -67,7 +68,7 @@ function PlayerCell({ row, team, league }) {
   );
 
   return team ? (
-    <Link to={`/${league}/teams/${team.id}`} className="vb-player">
+    <Link to={`/${league}/teams/${team.id}/players/${playerSlug(row.Name)}`} className="vb-player">
       {content}
     </Link>
   ) : (
