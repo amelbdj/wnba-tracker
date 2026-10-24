@@ -90,7 +90,9 @@
       "blocks": "Blk",
       "blocksTitle": "Blocks",
       "total": "Total"
-    }
+    },
+    "quarterScores": "Points by quarter",
+    "total": "Total"
   },
   "standings": {
     "rank": "#",
@@ -142,7 +144,20 @@
     "noRosterData": "ESPN doesn't provide rosters for this league.",
     "rosterNoMatches": "No finished match yet.",
     "rosterFromMatches_one": "Players seen in the latest match played · Source: NCAA.com",
-    "rosterFromMatches_other": "Players seen in the last {{count}} matches played · Source: NCAA.com"
+    "rosterFromMatches_other": "Players seen in the last {{count}} matches played · Source: NCAA.com",
+    "matches": "Matches",
+    "matchesResults": "Results ({{count}})",
+    "matchesUpcoming": "Upcoming ({{count}})",
+    "noResults": "No match played yet.",
+    "noUpcoming": "No upcoming match.",
+    "home": "Home",
+    "away": "Away",
+    "neutral": "Neutral site",
+    "pagination": "Match pages",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "preseason": "Preseason",
+    "postseason": "Playoffs"
   },
   "players": {
     "subtitle": "Search and explore the league's rosters.",

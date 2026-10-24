@@ -6,6 +6,7 @@ import { getSport, hasFeature } from "../leagues";
 import PlayerCard from "../components/PlayerCard";
 import VolleyballRoster from "../components/VolleyballRoster";
 import TeamLink from "../components/TeamLink";
+import TeamMatches from "../components/TeamMatches";
 
 function findStat(items, description, name) {
   const group = items?.find((i) => i.description === description);
@@ -164,6 +165,8 @@ export default function TeamDetailPage() {
           )}
         </div>
       </section>
+
+      <TeamMatches league={league} teamId={teamId} />
 
       {isVolleyball && <VolleyballRoster league={league} teamId={teamId} />}
 

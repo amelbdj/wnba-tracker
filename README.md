@@ -17,7 +17,7 @@ Une application web moderne pour suivre le sport en temps réel : scores, classe
 - 🏐 Volley féminin NCAA : scores en sets avec le détail point par set, classement par conférence, tableau du tournoi national, et classements des joueuses par catégorie (kills, aces, blocs, digs…) depuis NCAA.com via un petit proxy (`api/ncaa/volleyball`) — stats par joueuse dans le détail d'un match (box score NCAA.com, rafraîchi en direct), effectifs avec avatars à initiales et fiche par joueuse (totaux, moyennes par set, match par match) calculée à partir des box scores de la saison — ESPN ne fournit ni effectifs ni stats de joueuses pour cette ligue, donc pas de page Joueuses globale
 - 🏆 Classements par ligue
 - 🥇 Tableau des playoffs (têtes de série projetées, résultats en direct puis dernier tournoi terminé, selon la saison)
-- 👥 Liste des équipes et fiche détaillée par équipe
+- 👥 Liste des équipes et fiche détaillée par équipe, avec tous ses matchs (résultats et à venir, paginés)
 - 🧑‍🤝‍🧑 Liste des joueurs et profil détaillé par joueur
 - 📊 Statistiques
 - 🌍 Multilingue : Français / Anglais / Espagnol

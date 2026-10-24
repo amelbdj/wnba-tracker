@@ -90,7 +90,9 @@
       "blocks": "Blk",
       "blocksTitle": "Bloqueos",
       "total": "Total"
-    }
+    },
+    "quarterScores": "Puntos por cuarto",
+    "total": "Total"
   },
   "standings": {
     "rank": "#",
@@ -142,7 +144,20 @@
     "noRosterData": "ESPN no ofrece las plantillas de esta liga.",
     "rosterNoMatches": "Aún no hay partidos terminados.",
     "rosterFromMatches_one": "Jugadoras vistas en el último partido jugado · Fuente: NCAA.com",
-    "rosterFromMatches_other": "Jugadoras vistas en los últimos {{count}} partidos jugados · Fuente: NCAA.com"
+    "rosterFromMatches_other": "Jugadoras vistas en los últimos {{count}} partidos jugados · Fuente: NCAA.com",
+    "matches": "Partidos",
+    "matchesResults": "Resultados ({{count}})",
+    "matchesUpcoming": "Próximos ({{count}})",
+    "noResults": "Aún no se ha jugado ningún partido.",
+    "noUpcoming": "No hay partidos próximos.",
+    "home": "Local",
+    "away": "Visitante",
+    "neutral": "Campo neutral",
+    "pagination": "Paginación de partidos",
+    "previousPage": "Página anterior",
+    "nextPage": "Página siguiente",
+    "preseason": "Pretemporada",
+    "postseason": "Playoffs"
   },
   "players": {
     "subtitle": "Busca y explora las plantillas de la liga.",

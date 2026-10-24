@@ -69,6 +69,23 @@ export function getLiveDetail(game, sport, t) {
   return displayClock && period ? `Q${period} · ${displayClock}` : fallback;
 }
 
+// Points per period for a basketball game: [{ label, scores: [teamA, teamB] }],
+// where label is "Q1".."Q4" then "OT", "OT2"… (regulation is four periods in
+// every league the app covers). ESPN lists a period still being played with
+// its running score.
+export function getPeriodScores(competition) {
+  const [a, b] = competition?.competitors || [];
+  const aPeriods = a?.linescores || [];
+  const bPeriods = b?.linescores || [];
+  const count = Math.max(aPeriods.length, bPeriods.length);
+  const points = (line) => Math.round(Number(line?.displayValue ?? line?.value ?? 0)) || 0;
+
+  return Array.from({ length: count }, (_, i) => ({
+    label: i < 4 ? `Q${i + 1}` : i === 4 ? "OT" : `OT${i - 3}`,
+    scores: [points(aPeriods[i]), points(bPeriods[i])],
+  }));
+}
+
 // Points per set for a volleyball match, as [[teamA, teamB], ...]. In
 // volleyball ESPN's `score` is sets won and `linescores` holds each set's
 // points. A set still being played shows up as its running score.

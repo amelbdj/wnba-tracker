@@ -316,6 +316,15 @@ export function getVolleyballBoxscore(competition) {
   );
 }
 
+// A team's whole season as ESPN lists it (played and still to come), oldest
+// first. Each event is { id, date, competitions: [{ competitors, status }] }.
+export async function getTeamSchedule(league, teamId) {
+  const res = await fetch(`${siteRoot(league)}/${league}/teams/${teamId}/schedule`);
+  if (!res.ok) throw new Error(`Schedule unavailable (HTTP ${res.status})`);
+  const { events = [] } = await res.json();
+  return events;
+}
+
 // How many matches are fetched at once (the public NCAA.com wrapper allows
 // only a few requests per second).
 const MATCH_BATCH = 6;
@@ -330,9 +339,7 @@ const scoreOf = (c) => Number(c.score?.displayValue ?? c.score) || 0;
 // to are left out.
 export function getVolleyballTeamMatches(league, teamId, limit = Infinity) {
   return memoAsync(teamMatches, `${league}:${teamId}:${limit}`, async () => {
-    const res = await fetch(`${siteRoot(league)}/${league}/teams/${teamId}/schedule`);
-    if (!res.ok) throw new Error(`Schedule unavailable (HTTP ${res.status})`);
-    const { events = [] } = await res.json();
+    const events = await getTeamSchedule(league, teamId);
 
     const finished = events
       .map((e) => e.competitions?.[0])

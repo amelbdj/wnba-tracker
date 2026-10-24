@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getGameDetails } from "../services/api";
 import { getSport } from "../leagues";
-import { getSetScores } from "../utils/games";
+import { getPeriodScores, getSetScores } from "../utils/games";
 import VolleyballBoxscore from "./VolleyballBoxscore";
 import TeamLink from "./TeamLink";
 
@@ -76,6 +76,66 @@ function VolleyballScoreboard({ competition, league, onClose }) {
         </div>
 
         <VolleyballBoxscore competition={competition} league={league} live={live} />
+      </div>
+    </div>
+  );
+}
+
+// Points per quarter (and overtime) for a basketball game. `teamIds` is the
+// order the rest of the modal lists the teams in (the box score's), which can
+// differ from ESPN's header order.
+function PeriodScores({ competition, league, teamIds }) {
+  const { t } = useTranslation();
+  const ordered = teamIds
+    .map((id) => competition?.competitors?.find((c) => String(c.team.id) === String(id)))
+    .filter(Boolean);
+  const sorted =
+    ordered.length === 2 ? { ...competition, competitors: ordered } : competition;
+  const periods = getPeriodScores(sorted);
+  if (periods.length === 0) return null;
+
+  const live = sorted.status?.type?.state === "in";
+  const teams = sorted.competitors;
+
+  return (
+    <div className="period-scores">
+      <div className="modal-subtitle">{t("modal.quarterScores")}</div>
+      <div className="set-table-wrap">
+        <table className="set-table">
+          <thead>
+            <tr>
+              <th></th>
+              {periods.map((p) => (
+                <th key={p.label}>{p.label}</th>
+              ))}
+              <th>{t("modal.total")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {teams.map((c, side) => (
+              <tr key={c.team.id} className={c.winner ? "is-winner" : ""}>
+                <td className="set-table-team">
+                  <TeamLink league={league} teamId={c.team.id} className="set-table-team-link">
+                    <img src={c.team.logos?.[0]?.href || c.team.logo} alt="" />
+                    <span>{c.team.abbreviation || c.team.displayName}</span>
+                  </TeamLink>
+                </td>
+                {periods.map((p, i) => {
+                  const current = live && i === periods.length - 1;
+                  return (
+                    <td
+                      key={p.label}
+                      className={!current && p.scores[side] > p.scores[1 - side] ? "set-won" : ""}
+                    >
+                      {p.scores[side]}
+                    </td>
+                  );
+                })}
+                <td className="set-table-total">{c.score}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
@@ -170,6 +230,12 @@ export default function GameDetails({ gameId, league, onClose }) {
             </TeamLink>
           </div>
         )}
+
+        <PeriodScores
+          competition={data.header?.competitions?.[0]}
+          league={league}
+          teamIds={[teamA?.team?.id, teamB?.team?.id]}
+        />
 
         <div className="stat-block">
           {pairedStats.map((stat, idx) => {

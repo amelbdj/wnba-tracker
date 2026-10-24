@@ -90,7 +90,9 @@
       "blocks": "Blk",
       "blocksTitle": "Blocs",
       "total": "Total"
-    }
+    },
+    "quarterScores": "Points par quart-temps",
+    "total": "Total"
   },
   "standings": {
     "rank": "#",
@@ -142,7 +144,20 @@
     "noRosterData": "ESPN ne fournit pas les effectifs de cette ligue.",
     "rosterNoMatches": "Aucun match terminé pour le moment.",
     "rosterFromMatches_one": "Joueuses vues dans le dernier match joué · Source : NCAA.com",
-    "rosterFromMatches_other": "Joueuses vues dans les {{count}} derniers matchs joués · Source : NCAA.com"
+    "rosterFromMatches_other": "Joueuses vues dans les {{count}} derniers matchs joués · Source : NCAA.com",
+    "matches": "Matchs",
+    "matchesResults": "Résultats ({{count}})",
+    "matchesUpcoming": "À venir ({{count}})",
+    "noResults": "Aucun match joué pour le moment.",
+    "noUpcoming": "Aucun match à venir.",
+    "home": "Domicile",
+    "away": "Extérieur",
+    "neutral": "Terrain neutre",
+    "pagination": "Pagination des matchs",
+    "previousPage": "Page précédente",
+    "nextPage": "Page suivante",
+    "preseason": "Préparation",
+    "postseason": "Playoffs"
   },
   "players": {
     "subtitle": "Recherche et explore les effectifs de la ligue.",
