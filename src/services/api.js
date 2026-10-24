@@ -250,6 +250,93 @@ export async function searchPlayers(league, query) {
     .filter((p) => p.id);
 }
 
+// Every team of every league, for the quick search — one entry per team:
+// { league, id, displayName, shortDisplayName, abbreviation, location, logo }.
+// Built from the standings (already how team lists are loaded) and cached for
+// the session; a league whose standings fail is just left out.
+const searchTeamLoads = {};
+
+export function getSearchableTeams(leagues) {
+  return Promise.all(
+    leagues.map((league) => {
+      searchTeamLoads[league] ||= getStandings(league)
+        .then((groups) => {
+          const seen = new Set();
+          return groups
+            .flatMap((g) => g.entries.map((e) => e.team))
+            .filter((team) => team?.id != null && !seen.has(team.id) && seen.add(team.id))
+            .map((team) => ({
+              league,
+              id: String(team.id),
+              displayName: team.displayName,
+              shortDisplayName: team.shortDisplayName,
+              abbreviation: team.abbreviation,
+              location: team.location,
+              logo: team.logos?.[0]?.href || team.logo || "",
+            }));
+        })
+        .catch(() => {
+          delete searchTeamLoads[league];
+          return [];
+        });
+      return searchTeamLoads[league];
+    }),
+  ).then((lists) => lists.flat());
+}
+
+// ESPN's player search across the given leagues (one request, filtered down
+// to those leagues): [{ league, id, displayName, team, image }].
+export async function searchPlayersAcross(query, leagues) {
+  const q = query.trim();
+  if (q.length < 2) return [];
+
+  const res = await fetch(`${SEARCH_API}?query=${encodeURIComponent(q)}&type=player&limit=30`);
+  const data = await res.json();
+  const contents = data?.results?.find((r) => r.type === "player")?.contents || [];
+
+  return contents
+    .filter((p) => leagues.includes(p.defaultLeagueSlug))
+    .map((p) => ({
+      league: p.defaultLeagueSlug,
+      id: p.uid?.match(/a:(\d+)/)?.[1] || p.id,
+      displayName: p.displayName,
+      team: p.subtitle || "",
+      image: p.image?.default || "",
+    }))
+    .filter((p) => p.id);
+}
+
+// NCAA volleyball players, for the quick search: the players on the points
+// and digs leaderboards (about 350 — the ones worth finding by name; every
+// other player is reachable from their team page). Loaded once, in small
+// batches because NCAA.com's public wrapper allows only a few requests a
+// second. Resolves to [{ name, team, position }].
+const VOLLEYBALL_SEARCH_BOARDS = [553, 885];
+let volleyballPlayerLoad = null;
+
+export function getVolleyballSearchPlayers() {
+  volleyballPlayerLoad ||= (async () => {
+    const rows = [];
+    for (const stat of VOLLEYBALL_SEARCH_BOARDS) {
+      const first = await getVolleyballLeaders(stat, 1);
+      rows.push(...first.data);
+      const rest = Array.from({ length: Math.max(0, (first.pages || 1) - 1) }, (_, i) => i + 2);
+      for (let i = 0; i < rest.length; i += 3) {
+        const batch = await Promise.all(rest.slice(i, i + 3).map((page) => getVolleyballLeaders(stat, page)));
+        batch.forEach((b) => rows.push(...b.data));
+      }
+    }
+    const seen = new Set();
+    return rows
+      .filter((r) => r.Name && !seen.has(`${r.Name}|${r.Team}`) && seen.add(`${r.Name}|${r.Team}`))
+      .map((r) => ({ name: r.Name, team: r.Team, position: r.Position }));
+  })().catch(() => {
+    volleyballPlayerLoad = null;
+    return [];
+  });
+  return volleyballPlayerLoad;
+}
+
 const allPlayersPromises = {};
 
 // There is no single "all players" endpoint, so the directory is built by

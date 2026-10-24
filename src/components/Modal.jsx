@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -6,8 +6,10 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [ta
 // backdrop close it; Tab stays inside it; focus moves in when it opens and
 // goes back to whatever opened it (the match card, say) when it closes; and
 // the page behind doesn't scroll.
-export default function Modal({ onClose, label, className = "", children }) {
+export default function Modal({ onClose, label, className = "", overlayClassName = "", children }) {
   const panel = useRef(null);
+  // Read before any child autofocuses, so focus can go back to what opened it.
+  const [opener] = useState(() => document.activeElement);
   const closeRef = useRef(onClose);
 
   useEffect(() => {
@@ -15,9 +17,9 @@ export default function Modal({ onClose, label, className = "", children }) {
   });
 
   useEffect(() => {
-    const opener = document.activeElement;
     const node = panel.current;
-    node?.focus({ preventScroll: true });
+    // A child (the search field, say) may already have taken focus.
+    if (node && !node.contains(document.activeElement)) node.focus({ preventScroll: true });
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -52,10 +54,10 @@ export default function Modal({ onClose, label, className = "", children }) {
       document.body.style.overflow = previousOverflow;
       if (opener instanceof HTMLElement && document.contains(opener)) opener.focus({ preventScroll: true });
     };
-  }, []);
+  }, [opener]);
 
   return (
-    <div className="modal" onClick={onClose}>
+    <div className={`modal${overlayClassName ? ` ${overlayClassName}` : ""}`} onClick={onClose}>
       <div
         ref={panel}
         className={`modal-content${className ? ` ${className}` : ""}`}

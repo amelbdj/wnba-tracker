@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Landing from "./pages/Landing";
+import GlobalSearch from "./components/GlobalSearch";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import SettingsPage from "./pages/SettingsPage";
@@ -22,24 +23,27 @@ const PlayoffsPage = lazy(() => import("./pages/PlayoffsPage"));
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/privacy" element={<PrivacyPolicyPage />} />
-      <Route path="/terms" element={<TermsOfServicePage />} />
-      <Route path="/settings" element={<SettingsPage />} />
-      <Route path="/post-to-tiktok" element={<PostToTikTokPage />} />
-      <Route path="/:league" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="standings" element={<StandingsPage />} />
-        <Route path="playoffs" element={<PlayoffsPage />} />
-        <Route path="teams" element={<TeamsPage />} />
-        <Route path="teams/:teamId" element={<TeamDetailPage />} />
-        <Route path="teams/:teamId/players/:slug" element={<VolleyballPlayerPage />} />
-        <Route path="players" element={<PlayersPage />} />
-        <Route path="players/:playerId" element={<PlayerProfilePage />} />
-        <Route path="statistics" element={<StatisticsPage />} />
-      </Route>
-    </Routes>
+    <>
+      <GlobalSearch />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsOfServicePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/post-to-tiktok" element={<PostToTikTokPage />} />
+        <Route path="/:league" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="standings" element={<StandingsPage />} />
+          <Route path="playoffs" element={<PlayoffsPage />} />
+          <Route path="teams" element={<TeamsPage />} />
+          <Route path="teams/:teamId" element={<TeamDetailPage />} />
+          <Route path="teams/:teamId/players/:slug" element={<VolleyballPlayerPage />} />
+          <Route path="players" element={<PlayersPage />} />
+          <Route path="players/:playerId" element={<PlayerProfilePage />} />
+          <Route path="statistics" element={<StatisticsPage />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

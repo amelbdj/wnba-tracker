@@ -515,5 +515,18 @@
     "last": "Last result",
     "next": "Next match",
     "noMatch": "No match scheduled."
+  },
+  "search": {
+    "title": "Search",
+    "open": "Search (Ctrl+K)",
+    "placeholder": "Search a team or a player…",
+    "teams": "Teams",
+    "players": "Players",
+    "favorites": "My teams",
+    "recent": "Recent",
+    "hint": "Look up a team or a player across every league.",
+    "loading": "Loading teams…",
+    "noResults": "No results for “{{query}}”",
+    "volleyballNote": "Volleyball: only the top players on the NCAA leaderboards can be searched; the others are on their team's page."
   }
 }

@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import InstagramLink from "./InstagramLink";
 import TikTokLink from "./TikTokLink";
+import { openSearch } from "../utils/searchStore";
 
 export default function SiteHeader({ cta }) {
   const { t } = useTranslation();
@@ -20,6 +21,14 @@ export default function SiteHeader({ cta }) {
         </Link>
 
         <div className="header-right">
+          <button
+            className="icon-btn header-extra"
+            onClick={openSearch}
+            aria-label={t("search.open")}
+            title={t("search.open")}
+          >
+            <i className="fa-solid fa-magnifying-glass"></i>
+          </button>
           <InstagramLink className="header-extra" />
           <TikTokLink className="header-extra" />
           <Link to="/settings" className="icon-btn header-extra" aria-label={t("nav.settings")}>

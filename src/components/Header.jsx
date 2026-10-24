@@ -7,6 +7,7 @@ import Logo from "./Logo";
 import LanguageSwitcher, { MobileLangChip } from "./LanguageSwitcher";
 import InstagramLink from "./InstagramLink";
 import TikTokLink from "./TikTokLink";
+import { openSearch } from "../utils/searchStore";
 
 function isActive(pathname, league, section) {
   const to = section ? `/${league}/${section}` : `/${league}`;
@@ -138,6 +139,14 @@ export default function Header() {
         </nav>
 
         <div className="header-right">
+          <button
+            className="icon-btn header-extra"
+            onClick={openSearch}
+            aria-label={t("search.open")}
+            title={t("search.open")}
+          >
+            <i className="fa-solid fa-magnifying-glass"></i>
+          </button>
           <InstagramLink className="header-extra" />
           <TikTokLink className="header-extra" />
           <Link to="/settings" className="icon-btn header-extra" aria-label={t("nav.settings")}>
@@ -158,6 +167,10 @@ export default function Header() {
 
       {open && (
         <nav className="mobile-nav">
+          {/* The header bar has no room for the search icon on phones. */}
+          <button className="mobile-search" onClick={openSearch}>
+            <i className="fa-solid fa-magnifying-glass"></i> {t("search.placeholder")}
+          </button>
           <div className="chip-group" style={{ marginBottom: 14 }}>
             {LEAGUES.map((l) => (
               <Link

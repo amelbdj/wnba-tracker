@@ -515,5 +515,18 @@
     "last": "Último resultado",
     "next": "Próximo partido",
     "noMatch": "Sin partidos programados."
+  },
+  "search": {
+    "title": "Búsqueda",
+    "open": "Buscar (Ctrl+K)",
+    "placeholder": "Buscar un equipo o una jugadora…",
+    "teams": "Equipos",
+    "players": "Jugadoras",
+    "favorites": "Mis equipos",
+    "recent": "Recientes",
+    "hint": "Busca un equipo o una jugadora en todas las ligas.",
+    "loading": "Cargando equipos…",
+    "noResults": "Sin resultados para «{{query}}»",
+    "volleyballNote": "Voleibol: solo se pueden buscar las mejores jugadoras de las clasificaciones NCAA; las demás están en la página de su equipo."
   }
 }
