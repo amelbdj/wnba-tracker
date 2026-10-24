@@ -88,7 +88,11 @@ export default function HeroGame({ game, league }) {
               )}
               <span className="hero-meta">
                 <i className="fa-regular fa-calendar"></i>
-                {isFinal ? t("hero.final") : isUpcoming ? `${day} · ${time}` : `${day} · ${statusLabel}`}
+                {isFinal
+                  ? t("hero.final")
+                  : isUpcoming || isLive
+                    ? `${day} · ${time}`
+                    : `${day} · ${statusLabel}`}
               </span>
             </div>
 

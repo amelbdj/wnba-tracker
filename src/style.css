@@ -214,7 +214,7 @@ img {
   z-index: 200;
   display: flex;
   align-items: center;
-  background: rgba(7, 9, 20, 0.72);
+  background: rgba(7, 9, 20, 0.88); /* content scrolling underneath must not show through */
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border-bottom: 1px solid var(--border);
@@ -261,7 +261,12 @@ img {
   letter-spacing: 0.03em;
 }
 
+.brand {
+  flex-shrink: 0;
+}
+
 .brand-text small {
+  white-space: nowrap;
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 500;
@@ -4327,7 +4332,7 @@ a.team-link.set-table-team-link:hover {
 }
 
 .fav-match-when {
-  font-family: inherit;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -4508,4 +4513,32 @@ a.team-link.set-table-team-link:hover {
   border-radius: 0 0 var(--r-md) var(--r-md);
   padding-top: 12px;
   text-decoration: none;
+}
+
+/* "My teams" sits between the brand line and the hero: give it room on both sides. */
+.fav-section {
+  margin-top: 8px;
+  margin-bottom: 40px;
+}
+
+/* The desktop header gets crowded between the hamburger breakpoint (1040px)
+   and wide screens: shed the least useful parts step by step. */
+@media (max-width: 1320px) {
+  .brand-text small {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 9px 12px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .nav-item i {
+    display: none;
+  }
+
+  .site-header:not(.landing-header) .header-social {
+    display: none;
+  }
 }

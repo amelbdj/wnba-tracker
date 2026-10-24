@@ -68,7 +68,8 @@
       "delayed": "Retrasado",
       "forfeit": "Pérdida por incomparecencia",
       "halftime": "Descanso",
-      "endPeriod": "Fin del Q{{period}}"
+      "endPeriod": "Fin del Q{{period}}",
+      "endSet": "Fin del set {{period}}"
     }
   },
   "modal": {

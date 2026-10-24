@@ -68,7 +68,8 @@
       "delayed": "Delayed",
       "forfeit": "Forfeit",
       "halftime": "Halftime",
-      "endPeriod": "End of Q{{period}}"
+      "endPeriod": "End of Q{{period}}",
+      "endSet": "End of set {{period}}"
     }
   },
   "modal": {

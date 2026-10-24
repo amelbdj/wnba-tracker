@@ -68,7 +68,8 @@
       "delayed": "Retardé",
       "forfeit": "Forfait",
       "halftime": "Mi-temps",
-      "endPeriod": "Fin du QT{{period}}"
+      "endPeriod": "Fin du QT{{period}}",
+      "endSet": "Fin du set {{period}}"
     }
   },
   "modal": {

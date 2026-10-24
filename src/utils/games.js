@@ -100,7 +100,9 @@ export function getLiveDetail(game, sport, t) {
   const key = STATUS_KEYS[type?.name];
   // Breaks in play read better translated than as ESPN's "End of 3rd Quarter".
   if (key === "halftime") return t("game.status.halftime");
-  if (key === "endPeriod" && period) return t("game.status.endPeriod", { period });
+  if (key === "endPeriod" && period) {
+    return t(sport === "volleyball" ? "game.status.endSet" : "game.status.endPeriod", { period });
+  }
   const fallback = type?.shortDetail || type?.description || "";
   if (sport === "volleyball") return period ? t("game.set", { number: period }) : fallback;
   return displayClock && period ? `Q${period} · ${displayClock}` : fallback;
