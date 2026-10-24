@@ -9,6 +9,7 @@
 //                page works: player leaderboards come from NCAA.com instead.)
 //  - standingsLevel: ESPN groups standings by depth; NCAA volleyball only
 //                returns one flat list unless asked for conference level (3).
+//  - conferenceFixes: teams ESPN files under the wrong conference group.
 //  - bracket:    how to find the league's playoff games when ESPN doesn't tag
 //                them as a postseason (see Bracket.jsx).
 
@@ -44,6 +45,18 @@ export const LEAGUES = [
     icon: "fa-solid fa-volleyball",
     features: { players: false },
     standingsLevel: 3,
+    // ESPN files some teams under their pre-realignment conference. Teams are
+    // moved by ESPN id into the conference they really play in:
+    //  - UCLA, USC, Oregon, Washington -> Big Ten. ESPN's seeds for them are
+    //    already the Big Ten's, so the group keeps ESPN's order.
+    //  - Arizona, Arizona State, Colorado, Utah (listed under the Pac-12) and
+    //    BYU, Cincinnati, Houston (West Coast, Big East, Conference USA) ->
+    //    Big 12. The last three carry seeds from their old conferences, so
+    //    this group is ordered by win percentage instead (`byRecord`).
+    conferenceFixes: [
+      { conference: "Big Ten", teams: [26, 30, 2483, 264] },
+      { conference: "Big 12", teams: [12, 9, 38, 254, 252, 2132, 248], byRecord: true },
+    ],
     bracket: {
       // ESPN files the NCAA tournament under the regular season (type 2), and
       // conference tournaments carry similar headlines — only the national

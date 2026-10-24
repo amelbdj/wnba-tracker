@@ -124,6 +124,33 @@ function collectGroups(node, out = []) {
   return out;
 }
 
+// Moves the teams a league lists under `conferenceFixes` into the right
+// conference group (see leagues.js), keeping each group in order.
+function sortEntriesByRecord(entries) {
+  const stat = (e, name) => e.stats?.find((s) => s.name === name)?.value ?? 0;
+  return [...entries].sort(
+    (a, b) => stat(b, "winPercent") - stat(a, "winPercent") || stat(b, "wins") - stat(a, "wins"),
+  );
+}
+
+function applyConferenceFixes(groups, fixes = []) {
+  for (const { conference, teams, byRecord } of fixes) {
+    const target = groups.find((g) => g.name.includes(conference));
+    if (!target) continue;
+
+    const moving = new Set(teams.map(String));
+    const isMoving = (entry) => moving.has(String(entry.team?.id));
+    const moved = groups.flatMap((g) => (g === target ? [] : g.entries.filter(isMoving)));
+    for (const g of groups) if (g !== target) g.entries = g.entries.filter((e) => !isMoving(e));
+
+    const present = new Set(target.entries.map((e) => String(e.team?.id)));
+    const added = moved.filter((e) => !present.has(String(e.team?.id)));
+    const all = [...target.entries, ...added];
+    target.entries = byRecord ? sortEntriesByRecord(all) : sortEntriesByRank(all);
+  }
+  return groups;
+}
+
 export async function getStandings(league) {
   const level = getLeague(league).standingsLevel;
   const url = `${coreRoot(league)}/${league}/standings${level ? `?level=${level}` : ""}`;
@@ -132,12 +159,15 @@ export async function getStandings(league) {
 
   const groups = (data?.children || []).flatMap((child) => collectGroups(child));
   if (groups.length > 0) {
-    return groups.map((g) => ({
-      id: g.id,
-      name: g.name,
-      abbreviation: g.abbreviation,
-      entries: sortEntriesByRank(g.standings.entries),
-    }));
+    return applyConferenceFixes(
+      groups.map((g) => ({
+        id: g.id,
+        name: g.name,
+        abbreviation: g.abbreviation,
+        entries: sortEntriesByRank(g.standings.entries),
+      })),
+      getLeague(league).conferenceFixes,
+    );
   }
 
   return [];
