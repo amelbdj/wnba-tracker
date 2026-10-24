@@ -4148,3 +4148,197 @@ a.team-link.set-table-team-link:hover {
     text-overflow: ellipsis;
   }
 }
+
+/* Favourite teams: the star button and the "My teams" cards on the home page. */
+.fav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.fav-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.fav-btn:active {
+  transform: scale(0.94);
+}
+
+.fav-btn.is-active {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.fav-btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fav-btn-pill {
+  padding: 9px 16px;
+  border-radius: var(--r-pill);
+}
+
+.team-hero-fav {
+  margin-left: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.team-card-wrap {
+  position: relative;
+  display: flex;
+}
+
+.team-card-wrap .team-card {
+  flex: 1;
+}
+
+.fav-btn-corner {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 30px;
+  height: 30px;
+}
+
+.fav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+}
+
+.fav-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+.fav-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.fav-card-team {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.fav-card-team img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.fav-card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fav-card-name {
+  font-weight: 700;
+  font-size: 14.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fav-card-league {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.fav-match {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.fav-match:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.fav-match.is-live {
+  border-color: rgba(251, 61, 92, 0.4);
+}
+
+.fav-match-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.fav-match.is-live .fav-match-label {
+  color: var(--live);
+}
+
+.fav-match-vs {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fav-match-result {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fav-match-when {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .fav-match {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .fav-match-label {
+    grid-column: 1 / -1;
+  }
+}

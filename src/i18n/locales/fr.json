@@ -504,5 +504,16 @@
     "matchLog": "Match par match",
     "match": "Match",
     "source": "Calculé sur {{count}} matchs terminés · Source : NCAA.com"
+  },
+  "favorites": {
+    "title": "Mes équipes",
+    "add": "Ajouter aux favoris",
+    "remove": "Retirer des favoris",
+    "follow": "Suivre",
+    "following": "Suivie",
+    "live": "En direct",
+    "last": "Dernier résultat",
+    "next": "Prochain match",
+    "noMatch": "Aucun match au calendrier."
   }
 }

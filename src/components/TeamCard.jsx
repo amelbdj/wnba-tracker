@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getStat } from "../utils/stats";
+import FavoriteButton from "./FavoriteButton";
 
 export default function TeamCard({ entry, conferenceAbbr, index, league }) {
   const { t } = useTranslation();
@@ -18,25 +19,28 @@ export default function TeamCard({ entry, conferenceAbbr, index, league }) {
         : 0;
 
   return (
-    <Link to={`/${league}/teams/${team.id}`} className="team-card">
-      <div className="team-card-top">
-        <span className="rank-badge">{seed}</span>
-        {conferenceAbbr && <span className="team-card-conf">{conferenceAbbr}</span>}
-      </div>
+    <div className="team-card-wrap">
+      <Link to={`/${league}/teams/${team.id}`} className="team-card">
+        <div className="team-card-top">
+          <span className="rank-badge">{seed}</span>
+          {conferenceAbbr && <span className="team-card-conf">{conferenceAbbr}</span>}
+        </div>
 
-      <img src={team.logos?.[0]?.href} alt="" className="team-card-logo" />
+        <img src={team.logos?.[0]?.href} alt="" className="team-card-logo" />
 
-      <div className="team-card-name">{team.displayName}</div>
-      <div className="team-card-record">
-        {wins}-{losses}
-      </div>
+        <div className="team-card-name">{team.displayName}</div>
+        <div className="team-card-record">
+          {wins}-{losses}
+        </div>
 
-      <div className="team-card-foot">
-        <span className="team-card-pct">
-          {pct.toFixed(0)}
-          {t("teams.pctWin")}
-        </span>
-      </div>
-    </Link>
+        <div className="team-card-foot">
+          <span className="team-card-pct">
+            {pct.toFixed(0)}
+            {t("teams.pctWin")}
+          </span>
+        </div>
+      </Link>
+      <FavoriteButton league={league} team={team} className="fav-btn-corner" />
+    </div>
   );
 }

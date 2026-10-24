@@ -7,6 +7,7 @@ import PlayerCard from "../components/PlayerCard";
 import VolleyballRoster from "../components/VolleyballRoster";
 import TeamLink from "../components/TeamLink";
 import TeamMatches from "../components/TeamMatches";
+import FavoriteButton from "../components/FavoriteButton";
 
 function findStat(items, description, name) {
   const group = items?.find((i) => i.description === description);
@@ -119,6 +120,7 @@ export default function TeamDetailPage() {
                 )}
               </div>
             </div>
+            <FavoriteButton league={league} team={team} variant="pill" className="team-hero-fav" />
           </div>
 
           <div className="team-hero-stats">

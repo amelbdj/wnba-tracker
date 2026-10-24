@@ -5,6 +5,7 @@ import { useLiveGames } from "../hooks/useLiveGames";
 import GameCard from "../components/GameCard";
 import HeroGame from "../components/HeroGame";
 import Standings from "../components/Standings";
+import FavoriteTeams from "../components/FavoriteTeams";
 import { toLocale } from "../utils/locale";
 import { formatDateParam, getFeaturedGame } from "../utils/games";
 
@@ -40,6 +41,8 @@ export default function Home() {
         <span className="brand-kicker-divider"></span>
         <span className="brand-kicker-tagline">The home of women's sports.</span>
       </div>
+
+      <FavoriteTeams />
 
       {loading ? (
         <div className="skeleton skeleton-card"></div>
