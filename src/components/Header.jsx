@@ -101,6 +101,10 @@ function LeagueSwitcher({ league, pathname }) {
                 </div>
               );
             })}
+            <Link to="/" className="league-option league-all" onClick={() => setOpen(false)}>
+              <i className="fa-solid fa-table-cells-large"></i>
+              {t("nav.allLeagues")}
+            </Link>
           </div>
         </>
       )}

@@ -4501,3 +4501,11 @@ a.team-link.set-table-team-link:hover {
   text-align: left;
   cursor: pointer;
 }
+
+.league-all {
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  padding-top: 12px;
+  text-decoration: none;
+}

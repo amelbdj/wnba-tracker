@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { getLeagueLeaders } from "../services/api";
 import { useLiveGames } from "../hooks/useLiveGames";
 import { getFeaturedGame } from "../utils/games";
-import { LEAGUES } from "../leagues";
+import { LEAGUES, getLeague } from "../leagues";
+import { getLastLeague } from "../utils/lastLeague";
 import Logo from "../components/Logo";
 import SiteHeader from "../components/SiteHeader";
 import SiteFooter from "../components/SiteFooter";
@@ -21,6 +22,8 @@ const FUTURE_SPORTS = [
 
 export default function Landing() {
   const { t } = useTranslation();
+  // "Explore" / "See today's games" go back to the league visited last.
+  const lastLeague = getLastLeague();
   const { games, loading: loadingGames } = useLiveGames("wnba", new Date());
   const [leaders, setLeaders] = useState([]);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
@@ -43,7 +46,7 @@ export default function Landing() {
     <>
       <SiteHeader
         cta={
-          <Link to="/wnba" className="btn btn-primary landing-enter-btn">
+          <Link to={`/${lastLeague}`} className="btn btn-primary landing-enter-btn">
             {t("landing.enter")} <i className="fa-solid fa-arrow-right"></i>
           </Link>
         }
@@ -68,8 +71,8 @@ export default function Landing() {
             <p className="landing-hero-subtitle">{t("landing.heroSubtitle")}</p>
 
             <div className="landing-hero-actions">
-              <Link to="/wnba" className="btn btn-primary">
-                <i className="fa-solid fa-basketball"></i> {t("landing.ctaPrimary")}
+              <Link to={`/${lastLeague}`} className="btn btn-primary">
+                <i className={getLeague(lastLeague).icon}></i> {t("landing.ctaPrimary")}
               </Link>
               <a href="#competitions" className="btn btn-ghost">
                 {t("landing.ctaSecondary")}
