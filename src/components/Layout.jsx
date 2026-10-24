@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import Header from "./Header";
 import SiteFooter from "./SiteFooter";
@@ -26,7 +27,15 @@ export default function Layout() {
     <>
       <Header />
       <div className="page">
-        <Outlet />
+        <Suspense
+          fallback={
+            <div className="container-wide">
+              <div className="skeleton skeleton-card" style={{ height: 220 }}></div>
+            </div>
+          }
+        >
+          <Outlet />
+        </Suspense>
         <SiteFooter />
       </div>
     </>

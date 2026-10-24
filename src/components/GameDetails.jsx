@@ -4,6 +4,7 @@ import { getGameDetails } from "../services/api";
 import { getSport } from "../leagues";
 import { getPeriodScores, getSetScores } from "../utils/games";
 import VolleyballBoxscore from "./VolleyballBoxscore";
+import Modal from "./Modal";
 import TeamLink from "./TeamLink";
 
 const LIVE_REFRESH_MS = 20 * 1000;
@@ -26,58 +27,56 @@ function VolleyballScoreboard({ competition, league, onClose }) {
   const live = competition.status?.type?.state === "in";
 
   return (
-    <div className="modal" onClick={onClose}>
-      <div className="modal-content modal-content-wide" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-head">
-          <span className="modal-title">{t("modal.setScores")}</span>
-          <button className="close-btn" onClick={onClose} aria-label={t("common.close")}>
-            <i className="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div className="set-table-wrap">
-          <table className="set-table">
-            <thead>
-              <tr>
-                <th></th>
-                {sets.map((_, i) => (
-                  <th key={i}>{i + 1}</th>
-                ))}
-                <th>{t("modal.setsWon")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[a, b].map((team, side) => {
-                const opponent = side === 0 ? b : a;
-                return (
-                  <tr key={team.team.id} className={team.winner ? "is-winner" : ""}>
-                    <td className="set-table-team">
-                      <TeamLink league={league} teamId={team.team.id} className="set-table-team-link">
-                        <img src={team.team.logos?.[0]?.href || team.team.logo} alt="" />
-                        <span>{team.team.displayName}</span>
-                      </TeamLink>
-                    </td>
-                    {sets.map((pair, i) => {
-                      const mine = pair[side];
-                      const theirs = pair[1 - side];
-                      const current = live && i === sets.length - 1;
-                      return (
-                        <td key={i} className={!current && mine > theirs ? "set-won" : ""}>
-                          {mine}
-                        </td>
-                      );
-                    })}
-                    <td className="set-table-total">{team.score ?? opponent.score}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <VolleyballBoxscore competition={competition} league={league} live={live} />
+    <Modal onClose={onClose} label={t("modal.setScores")} className="modal-content-wide">
+      <div className="modal-head">
+        <span className="modal-title">{t("modal.setScores")}</span>
+        <button className="close-btn" onClick={onClose} aria-label={t("common.close")}>
+          <i className="fa-solid fa-xmark"></i>
+        </button>
       </div>
-    </div>
+
+      <div className="set-table-wrap">
+        <table className="set-table">
+          <thead>
+            <tr>
+              <th></th>
+              {sets.map((_, i) => (
+                <th key={i}>{i + 1}</th>
+              ))}
+              <th>{t("modal.setsWon")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[a, b].map((team, side) => {
+              const opponent = side === 0 ? b : a;
+              return (
+                <tr key={team.team.id} className={team.winner ? "is-winner" : ""}>
+                  <td className="set-table-team">
+                    <TeamLink league={league} teamId={team.team.id} className="set-table-team-link">
+                      <img src={team.team.logos?.[0]?.href || team.team.logo} alt="" />
+                      <span>{team.team.shortDisplayName || team.team.displayName}</span>
+                    </TeamLink>
+                  </td>
+                  {sets.map((pair, i) => {
+                    const mine = pair[side];
+                    const theirs = pair[1 - side];
+                    const current = live && i === sets.length - 1;
+                    return (
+                      <td key={i} className={!current && mine > theirs ? "set-won" : ""}>
+                        {mine}
+                      </td>
+                    );
+                  })}
+                  <td className="set-table-total">{team.score ?? opponent.score}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <VolleyballBoxscore competition={competition} league={league} live={live} />
+    </Modal>
   );
 }
 
@@ -186,14 +185,12 @@ export default function GameDetails({ gameId, league, onClose }) {
 
   if (!data || !data.boxscore || !data.boxscore.teams) {
     return (
-      <div className="modal" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-loading">
-            <div className="spinner"></div>
-            <span>{t("common.loadingStats")}</span>
-          </div>
+      <Modal onClose={onClose} label={t("common.loadingStats")}>
+        <div className="modal-loading">
+          <div className="spinner"></div>
+          <span>{t("common.loadingStats")}</span>
         </div>
-      </div>
+      </Modal>
     );
   }
 
@@ -208,60 +205,60 @@ export default function GameDetails({ gameId, league, onClose }) {
   }));
 
   return (
-    <div className="modal" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-head">
-          <span className="modal-title">{t("modal.gameStats")}</span>
-          <button className="close-btn" onClick={onClose} aria-label={t("common.close")}>
-            <i className="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        {teamA && teamB && (
-          <div className="matchup-strip">
-            <TeamLink league={league} teamId={teamA.team.id} className="team-mini">
-              <img src={teamA.team.logo} alt="" />
-              <span className="team-mini-name">{teamA.team.displayName}</span>
-            </TeamLink>
-            <span className="vs">VS</span>
-            <TeamLink league={league} teamId={teamB.team.id} className="team-mini">
-              <img src={teamB.team.logo} alt="" />
-              <span className="team-mini-name">{teamB.team.displayName}</span>
-            </TeamLink>
-          </div>
-        )}
-
-        <PeriodScores
-          competition={data.header?.competitions?.[0]}
-          league={league}
-          teamIds={[teamA?.team?.id, teamB?.team?.id]}
-        />
-
-        <div className="stat-block">
-          {pairedStats.map((stat, idx) => {
-            const a = parseNumeric(stat.a);
-            const b = parseNumeric(stat.b);
-            const total = a !== null && b !== null ? a + b : 0;
-            const pctA = total > 0 ? (a / total) * 100 : 50;
-            const pctB = total > 0 ? (b / total) * 100 : 50;
-
-            return (
-              <div key={idx} className="stat-compare-row">
-                <div className="stat-compare-label">{formatStatName(stat.name)}</div>
-                <div className="stat-compare-values">
-                  <span>{stat.a}</span>
-                  <i className="fa-solid fa-minus" style={{ fontSize: 8, color: "var(--muted)" }}></i>
-                  <span>{stat.b}</span>
-                </div>
-                <div className="stat-compare-bar">
-                  <div className="left" style={{ width: `${pctA}%` }}></div>
-                  <div className="right" style={{ width: `${pctB}%` }}></div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+    <Modal onClose={onClose} label={t("modal.gameStats")}>
+      <div className="modal-head">
+        <span className="modal-title">{t("modal.gameStats")}</span>
+        <button className="close-btn" onClick={onClose} aria-label={t("common.close")}>
+          <i className="fa-solid fa-xmark"></i>
+        </button>
       </div>
-    </div>
+
+      {teamA && teamB && (
+        <div className="matchup-strip">
+          <TeamLink league={league} teamId={teamA.team.id} className="team-mini">
+            <img src={teamA.team.logo} alt="" />
+            <span className="team-mini-name">{teamA.team.displayName}</span>
+          </TeamLink>
+          <span className="vs">VS</span>
+          <TeamLink league={league} teamId={teamB.team.id} className="team-mini">
+            <img src={teamB.team.logo} alt="" />
+            <span className="team-mini-name">{teamB.team.displayName}</span>
+          </TeamLink>
+        </div>
+      )}
+
+      <PeriodScores
+        competition={data.header?.competitions?.[0]}
+        league={league}
+        teamIds={[teamA?.team?.id, teamB?.team?.id]}
+      />
+
+      <div className="stat-block">
+        {pairedStats.map((stat, idx) => {
+          const a = parseNumeric(stat.a);
+          const b = parseNumeric(stat.b);
+          const total = a !== null && b !== null ? a + b : 0;
+          const pctA = total > 0 ? (a / total) * 100 : 50;
+          const pctB = total > 0 ? (b / total) * 100 : 50;
+
+          return (
+            <div key={idx} className="stat-compare-row">
+              <div className="stat-compare-label">
+                {t(`modal.stats.${stat.name.replace(/-/g, "_")}`, { defaultValue: formatStatName(stat.name) })}
+              </div>
+              <div className="stat-compare-values">
+                <span>{stat.a}</span>
+                <i className="fa-solid fa-minus" style={{ fontSize: 8, color: "var(--muted)" }}></i>
+                <span>{stat.b}</span>
+              </div>
+              <div className="stat-compare-bar">
+                <div className="left" style={{ width: `${pctA}%` }}></div>
+                <div className="right" style={{ width: `${pctB}%` }}></div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Modal>
   );
 }

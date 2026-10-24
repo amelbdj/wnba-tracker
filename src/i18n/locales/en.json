@@ -59,7 +59,16 @@
     "live": "LIVE",
     "final": "Final",
     "scheduled": "Scheduled",
-    "set": "Set {{number}}"
+    "set": "Set {{number}}",
+    "status": {
+      "postponed": "Postponed",
+      "canceled": "Canceled",
+      "suspended": "Suspended",
+      "delayed": "Delayed",
+      "forfeit": "Forfeit",
+      "halftime": "Halftime",
+      "endPeriod": "End of Q{{period}}"
+    }
   },
   "modal": {
     "gameStats": "Game statistics",
@@ -92,7 +101,34 @@
       "total": "Total"
     },
     "quarterScores": "Points by quarter",
-    "total": "Total"
+    "total": "Total",
+    "stats": {
+      "fieldGoalsMade_fieldGoalsAttempted": "Field goals made / attempted",
+      "fieldGoalPct": "Field goal %",
+      "threePointFieldGoalsMade_threePointFieldGoalsAttempted": "3-pointers made / attempted",
+      "threePointFieldGoalPct": "3-point %",
+      "freeThrowsMade_freeThrowsAttempted": "Free throws made / attempted",
+      "freeThrowPct": "Free throw %",
+      "totalRebounds": "Rebounds",
+      "offensiveRebounds": "Offensive rebounds",
+      "defensiveRebounds": "Defensive rebounds",
+      "assists": "Assists",
+      "steals": "Steals",
+      "blocks": "Blocks",
+      "turnovers": "Turnovers",
+      "teamTurnovers": "Team turnovers",
+      "totalTurnovers": "Total turnovers",
+      "technicalFouls": "Technical fouls",
+      "totalTechnicalFouls": "Total technical fouls",
+      "flagrantFouls": "Flagrant fouls",
+      "turnoverPoints": "Points off turnovers conceded",
+      "fastBreakPoints": "Fast break points",
+      "pointsInPaint": "Points in the paint",
+      "fouls": "Fouls",
+      "largestLead": "Largest lead",
+      "leadChanges": "Lead changes",
+      "leadPercentage": "% of time leading"
+    }
   },
   "standings": {
     "rank": "#",

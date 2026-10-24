@@ -59,7 +59,16 @@
     "live": "LIVE",
     "final": "Final",
     "scheduled": "Programmé",
-    "set": "Set {{number}}"
+    "set": "Set {{number}}",
+    "status": {
+      "postponed": "Reporté",
+      "canceled": "Annulé",
+      "suspended": "Suspendu",
+      "delayed": "Retardé",
+      "forfeit": "Forfait",
+      "halftime": "Mi-temps",
+      "endPeriod": "Fin du QT{{period}}"
+    }
   },
   "modal": {
     "gameStats": "Statistiques du match",
@@ -92,7 +101,34 @@
       "total": "Total"
     },
     "quarterScores": "Points par quart-temps",
-    "total": "Total"
+    "total": "Total",
+    "stats": {
+      "fieldGoalsMade_fieldGoalsAttempted": "Tirs réussis / tentés",
+      "fieldGoalPct": "% aux tirs",
+      "threePointFieldGoalsMade_threePointFieldGoalsAttempted": "3 points réussis / tentés",
+      "threePointFieldGoalPct": "% à 3 points",
+      "freeThrowsMade_freeThrowsAttempted": "Lancers francs réussis / tentés",
+      "freeThrowPct": "% aux lancers francs",
+      "totalRebounds": "Rebonds",
+      "offensiveRebounds": "Rebonds offensifs",
+      "defensiveRebounds": "Rebonds défensifs",
+      "assists": "Passes décisives",
+      "steals": "Interceptions",
+      "blocks": "Contres",
+      "turnovers": "Balles perdues",
+      "teamTurnovers": "Balles perdues d'équipe",
+      "totalTurnovers": "Total de balles perdues",
+      "technicalFouls": "Fautes techniques",
+      "totalTechnicalFouls": "Total de fautes techniques",
+      "flagrantFouls": "Fautes flagrantes",
+      "turnoverPoints": "Points encaissés sur balles perdues",
+      "fastBreakPoints": "Points en contre-attaque",
+      "pointsInPaint": "Points dans la raquette",
+      "fouls": "Fautes",
+      "largestLead": "Plus grande avance",
+      "leadChanges": "Changements de leader",
+      "leadPercentage": "% du temps en tête"
+    }
   },
   "standings": {
     "rank": "#",

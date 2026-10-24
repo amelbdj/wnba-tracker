@@ -5,7 +5,7 @@ import SetScores from "./SetScores";
 import TeamLink from "./TeamLink";
 import { getLeague, getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
-import { getLiveDetail } from "../utils/games";
+import { getGameStatus, getLiveDetail } from "../utils/games";
 
 export default function HeroGame({ game, league }) {
   const { t, i18n } = useTranslation();
@@ -35,10 +35,8 @@ export default function HeroGame({ game, league }) {
   const team1 = comp.competitors[0];
   const team2 = comp.competitors[1];
 
-  const statusType = game.status?.type || {};
-  const description = statusType.description || "";
-  const isLive = statusType.state === "in" || description === "In Progress";
-  const isFinal = statusType.state === "post" || description === "Final";
+  const { isLive, isFinal, label: statusLabel } = getGameStatus(game, t);
+  const isUpcoming = game.status?.type?.state === "pre";
 
   const dateObj = new Date(game.date);
   const locale = toLocale(i18n.language);
@@ -59,7 +57,13 @@ export default function HeroGame({ game, league }) {
           <div className="hero-top">
             <span className={`hero-tag${isLive ? " is-live" : ""}`}>
               <span className="dot"></span>
-              {isLive ? liveDetail || t("hero.live") : isFinal ? t("hero.final") : t("hero.upcoming")}
+              {isLive
+                ? liveDetail || t("hero.live")
+                : isFinal
+                  ? t("hero.final")
+                  : isUpcoming
+                    ? t("hero.upcoming")
+                    : statusLabel}
             </span>
           </div>
 
@@ -84,7 +88,7 @@ export default function HeroGame({ game, league }) {
               )}
               <span className="hero-meta">
                 <i className="fa-regular fa-calendar"></i>
-                {isFinal ? t("hero.final") : `${day} · ${time}`}
+                {isFinal ? t("hero.final") : isUpcoming ? `${day} · ${time}` : `${day} · ${statusLabel}`}
               </span>
             </div>
 

@@ -4121,3 +4121,30 @@ a.team-link.set-table-team-link:hover {
   background: rgba(79, 70, 229, 0.18);
   color: var(--indigo);
 }
+
+.modal-content:focus {
+  outline: none;
+}
+
+/* Phones: long team names must not run into the first set's score. */
+@media (max-width: 640px) {
+  .set-table th,
+  .set-table td {
+    padding: 12px 6px;
+  }
+
+  .set-table-team {
+    min-width: 0;
+  }
+
+  .set-table-team .set-table-team-link {
+    max-width: 118px;
+    gap: 8px;
+  }
+
+  .set-table-team .set-table-team-link span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

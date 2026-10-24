@@ -29,6 +29,8 @@ const ALIASES = {
   "a and m corpus christi": "texas a and m corpus christi",
   "mississippi valley": "mississippi valley state",
   "army west point": "army",
+  "southern u": "southern",
+  "southern n o": "southern new orleans",
 };
 
 // Words that distinguish the same school's other campuses/sports.
@@ -41,7 +43,7 @@ export function normalizeTeamName(name, { keepTag = false } = {}) {
     .toLowerCase()
     .replace(/\(([a-z]{2})\)/g, keepTag ? " $1 " : " ") // "(NY)", "(FL)", "(CA)" state tags
     .replace(/&/g, " and ")
-    .replace(/[.'’]/g, "")
+    .replace(/[.'’‘ʻ]/g, "") // apostrophes and the Hawaiian okina ("Hawai'i")
     .replace(/[^a-z0-9 ]/g, " ")
     .split(/\s+/)
     .filter(Boolean)
@@ -87,9 +89,14 @@ export function findTeam(index, ncaaName) {
 // the same (US) day. Each side is compared through every name form either
 // source offers, normalised and alias-resolved like findTeam() does.
 
-function nameKeys(name) {
+// `strict` keeps only the spelling with the state tag ("columbia sc" for
+// "Columbia (SC)"), which is how two schools sharing a name are told apart.
+function nameKeys(name, strict) {
   const keys = new Set();
-  for (const key of [normalizeTeamName(name, { keepTag: true }), normalizeTeamName(name)]) {
+  const forms = strict
+    ? [normalizeTeamName(name, { keepTag: true })]
+    : [normalizeTeamName(name, { keepTag: true }), normalizeTeamName(name)];
+  for (const key of forms) {
     if (!key) continue;
     keys.add(key);
     if (ALIASES[key]) keys.add(normalizeTeamName(ALIASES[key], { keepTag: true }));
@@ -97,9 +104,9 @@ function nameKeys(name) {
   return keys;
 }
 
-function keysOf(names) {
+function keysOf(names, strict = false) {
   const all = new Set();
-  for (const name of names.filter(Boolean)) nameKeys(name).forEach((k) => all.add(k));
+  for (const name of names.filter(Boolean)) nameKeys(name, strict).forEach((k) => all.add(k));
   return all;
 }
 
@@ -110,15 +117,25 @@ const intersects = (a, b) => [...a].some((k) => b.has(k));
 // both teams are in, or null — also when several would fit, since attaching
 // someone else's box score to a match is worse than showing none.
 export function findNcaaGame(games, teamA, teamB) {
-  const a = keysOf([teamA.shortDisplayName, teamA.location, teamA.displayName, teamA.abbreviation]);
-  const b = keysOf([teamB.shortDisplayName, teamB.location, teamB.displayName, teamB.abbreviation]);
+  const namesOf = (team) => [team.shortDisplayName, team.location, team.displayName, team.abbreviation];
+  const gameNames = (side) => [side?.names?.short, side?.names?.full, side?.names?.seo?.replace(/-/g, " "), side?.names?.char6];
 
-  const hits = [];
-  for (const game of games) {
-    const home = keysOf([game.home?.names?.short, game.home?.names?.full, game.home?.names?.seo?.replace(/-/g, " "), game.home?.names?.char6]);
-    const away = keysOf([game.away?.names?.short, game.away?.names?.full, game.away?.names?.seo?.replace(/-/g, " "), game.away?.names?.char6]);
-    if (intersects(a, home) && intersects(b, away)) hits.push({ game, aIsHome: true });
-    else if (intersects(a, away) && intersects(b, home)) hits.push({ game, aIsHome: false });
-  }
-  return hits.length === 1 ? hits[0] : null;
+  const search = (strict) => {
+    const a = keysOf(namesOf(teamA), strict);
+    const b = keysOf(namesOf(teamB), strict);
+    const hits = [];
+    for (const game of games) {
+      const home = keysOf(gameNames(game.home), strict);
+      const away = keysOf(gameNames(game.away), strict);
+      if (intersects(a, home) && intersects(b, away)) hits.push({ game, aIsHome: true });
+      else if (intersects(a, away) && intersects(b, home)) hits.push({ game, aIsHome: false });
+    }
+    return hits;
+  };
+
+  // "Columbia" and "Columbia (SC)" both read as "columbia" once the state tag
+  // is dropped, so an ambiguous match is retried on the tagged spellings only.
+  const hits = search(false);
+  const resolved = hits.length > 1 ? search(true) : hits;
+  return resolved.length === 1 ? resolved[0] : null;
 }

@@ -279,6 +279,7 @@ function memoAsync(cache, key, load, keep = () => true) {
   return cache.get(key);
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
 const ncaaScoreboards = new Map();
 const ncaaGameLookups = new Map();
 const finalBoxscores = new Map();
@@ -288,10 +289,20 @@ const finalBoxscores = new Map();
 // live refresh then only re-reads the box score.
 function lookupNcaaGame(competition) {
   return memoAsync(ncaaGameLookups, competition.id || competition.date, async () => {
-    const day = formatDateParam(new Date(competition.date));
-    const { games } = await memoAsync(ncaaScoreboards, day, () => getNcaaVolleyball({ scoreboard: day }));
+    const start = new Date(competition.date);
     const [a, b] = competition.competitors;
-    return findNcaaGame(games.map((g) => g.game), a.team, b.team);
+    const scoreboard = (day) =>
+      memoAsync(ncaaScoreboards, day, () => getNcaaVolleyball({ scoreboard: day }));
+
+    // ESPN files a match under its US Eastern day, NCAA.com under the day at
+    // the venue — so a late West Coast or Hawaii match sits one day earlier
+    // there. Try the Eastern day first, then the day before.
+    const { games } = await scoreboard(formatDateParam(start));
+    const found = findNcaaGame(games.map((g) => g.game), a.team, b.team);
+    if (found) return found;
+
+    const before = await scoreboard(formatDateParam(new Date(start.getTime() - DAY_MS))).catch(() => null);
+    return before ? findNcaaGame(before.games.map((g) => g.game), a.team, b.team) : null;
   });
 }
 

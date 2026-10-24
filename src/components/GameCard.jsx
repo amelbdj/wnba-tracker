@@ -5,7 +5,7 @@ import SetScores from "./SetScores";
 import TeamLink from "./TeamLink";
 import { getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
-import { getLiveDetail } from "../utils/games";
+import { getGameStatus, getLiveDetail } from "../utils/games";
 
 export default function GameCard({ game, league }) {
   const { t, i18n } = useTranslation();
@@ -15,10 +15,7 @@ export default function GameCard({ game, league }) {
   const team1 = comp.competitors[0];
   const team2 = comp.competitors[1];
 
-  const statusType = game.status?.type || {};
-  const description = statusType.description || "";
-  const isLive = statusType.state === "in" || description === "In Progress";
-  const isFinal = statusType.state === "post" || description === "Final";
+  const { isLive, isFinal, label: statusLabel } = getGameStatus(game, t);
 
   const score1 = Number(team1.score);
   const score2 = Number(team2.score);
@@ -32,10 +29,6 @@ export default function GameCard({ game, league }) {
 
   const sport = getSport(league);
   const liveDetail = getLiveDetail(game, sport, t);
-
-  let statusLabel = description;
-  if (isFinal) statusLabel = t("game.final");
-  else if (statusType.state === "pre") statusLabel = t("game.scheduled");
 
   return (
     <>

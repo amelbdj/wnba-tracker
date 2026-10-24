@@ -1,19 +1,24 @@
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Landing from "./pages/Landing";
-import Home from "./pages/Home";
-import StandingsPage from "./pages/StandingsPage";
-import TeamsPage from "./pages/TeamsPage";
-import TeamDetailPage from "./pages/TeamDetailPage";
-import PlayersPage from "./pages/PlayersPage";
-import PlayerProfilePage from "./pages/PlayerProfilePage";
-import VolleyballPlayerPage from "./pages/VolleyballPlayerPage";
-import StatisticsPage from "./pages/StatisticsPage";
-import PlayoffsPage from "./pages/PlayoffsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import SettingsPage from "./pages/SettingsPage";
 import PostToTikTokPage from "./pages/PostToTikTokPage";
+
+// League pages load on demand, so the first visit doesn't download the
+// bracket, statistics and player code it may never open (Layout shows the
+// placeholder while one loads).
+const Home = lazy(() => import("./pages/Home"));
+const StandingsPage = lazy(() => import("./pages/StandingsPage"));
+const TeamsPage = lazy(() => import("./pages/TeamsPage"));
+const TeamDetailPage = lazy(() => import("./pages/TeamDetailPage"));
+const PlayersPage = lazy(() => import("./pages/PlayersPage"));
+const PlayerProfilePage = lazy(() => import("./pages/PlayerProfilePage"));
+const VolleyballPlayerPage = lazy(() => import("./pages/VolleyballPlayerPage"));
+const StatisticsPage = lazy(() => import("./pages/StatisticsPage"));
+const PlayoffsPage = lazy(() => import("./pages/PlayoffsPage"));
 
 function App() {
   return (

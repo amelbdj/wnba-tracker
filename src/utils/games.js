@@ -26,7 +26,7 @@ export function getFeaturedGame(games) {
     .sort((a, b) => new Date(a.date) - new Date(b.date));
   if (upcoming.length) return upcoming[0];
 
-  const final = games.find((g) => g.status?.type?.state === "post");
+  const final = games.find((g) => g.status?.type?.completed ?? g.status?.type?.state === "post");
   if (final) return final;
 
   return games[0];
@@ -59,11 +59,48 @@ export function getPollInterval(games, now = Date.now()) {
   return interval;
 }
 
+// ESPN status names we show in the user's language. Anything else falls back
+// to ESPN's own English text.
+const STATUS_KEYS = {
+  STATUS_POSTPONED: "postponed",
+  STATUS_CANCELED: "canceled",
+  STATUS_CANCELLED: "canceled",
+  STATUS_SUSPENDED: "suspended",
+  STATUS_DELAYED: "delayed",
+  STATUS_FORFEIT: "forfeit",
+  STATUS_HALFTIME: "halftime",
+  STATUS_END_PERIOD: "endPeriod",
+  STATUS_FINAL: "final",
+  STATUS_SCHEDULED: "scheduled",
+};
+
+// Where a game stands: { isLive, isFinal, label }. A game ESPN files as
+// "post" is only *finished* if `completed` is true — postponed, canceled and
+// suspended games are "post" too, and must not read as results.
+export function getGameStatus(game, t) {
+  const type = game.status?.type || {};
+  const description = type.description || "";
+  const isLive = type.state === "in" || description === "In Progress";
+  const isFinal = type.completed ?? (type.state === "post" || description === "Final");
+
+  const key = STATUS_KEYS[type.name];
+  let label = description;
+  if (isFinal) label = t("game.final");
+  else if (type.state === "pre" && !key) label = t("game.scheduled");
+  else if (key) label = t(`game.status.${key}`, { defaultValue: description });
+
+  return { isLive, isFinal, label };
+}
+
 // What to show next to the LIVE badge: a basketball clock ("Q3 · 4:32") or,
 // for volleyball, which set is being played ("Set 3") — volleyball has no
 // running game clock.
 export function getLiveDetail(game, sport, t) {
   const { period, displayClock, type } = game.status || {};
+  const key = STATUS_KEYS[type?.name];
+  // Breaks in play read better translated than as ESPN's "End of 3rd Quarter".
+  if (key === "halftime") return t("game.status.halftime");
+  if (key === "endPeriod" && period) return t("game.status.endPeriod", { period });
   const fallback = type?.shortDetail || type?.description || "";
   if (sport === "volleyball") return period ? t("game.set", { number: period }) : fallback;
   return displayClock && period ? `Q${period} · ${displayClock}` : fallback;

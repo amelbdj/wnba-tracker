@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getTeamSchedule } from "../services/api";
 import { toLocale } from "../utils/locale";
+import { getGameStatus } from "../utils/games";
 import GameDetails from "./GameDetails";
 import TeamLink from "./TeamLink";
 
@@ -59,7 +60,7 @@ function Pager({ page, pages, onChange }) {
 
 const scoreOf = (c) => Number(c.score?.displayValue ?? c.score) || 0;
 
-function toMatch(event, teamId) {
+function toMatch(event, teamId, t) {
   const comp = event.competitions?.[0];
   const side = comp?.competitors?.findIndex((c) => String(c.team.id) === String(teamId));
   if (!comp || side == null || side < 0) return null;
@@ -74,7 +75,7 @@ function toMatch(event, teamId) {
     date: event.date,
     state,
     // "Postponed", "Canceled"… for matches that were never played.
-    note: state === "other" ? type.description : null,
+    note: state === "other" ? getGameStatus({ status: comp.status }, t).label : null,
     // ESPN season types: 1 preseason, 2 regular season, 3 postseason.
     phase: { 1: "preseason", 3: "postseason" }[Number(event.seasonType?.type ?? event.seasonType?.id)] || null,
     home: us.homeAway === "home",
@@ -99,7 +100,7 @@ export default function TeamMatches({ league, teamId }) {
     getTeamSchedule(league, teamId)
       .then((events) => {
         if (!cancelled) {
-          setState({ status: "ready", matches: events.map((e) => toMatch(e, teamId)).filter(Boolean) });
+          setState({ status: "ready", events });
         }
       })
       .catch(() => {
@@ -113,7 +114,7 @@ export default function TeamMatches({ league, teamId }) {
   if (state.status === "error") return null;
 
   const locale = toLocale(i18n.language);
-  const matches = state.matches || [];
+  const matches = (state.events || []).map((e) => toMatch(e, teamId, t)).filter(Boolean);
   const played = matches.filter((m) => m.state === "final" || m.state === "other").reverse();
   const coming = matches.filter((m) => m.state === "live" || m.state === "upcoming");
   const active = tab || (coming.length && !played.length ? "upcoming" : "results");
