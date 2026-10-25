@@ -20,6 +20,7 @@ Une application web moderne pour suivre le sport en temps réel : scores, classe
 - 👥 Liste des équipes et fiche détaillée par équipe, avec tous ses matchs (résultats et à venir, paginés)
 - 🧑‍🤝‍🧑 Liste des joueurs et profil détaillé par joueur
 - 📊 Statistiques
+- 🔗 Aperçus de liens (WhatsApp, iMessage, Discord, X, Telegram, Slack…) : titre, description et image propres à chaque page (ligues, équipes, joueuses) via `api/share.js`, en français par défaut (`?lang=en|es`)
 - 🌍 Multilingue : Français / Anglais / Espagnol
 - 🎨 Interface moderne (typo Bebas Neue + Inter, palette bleu foncé + violet)
 

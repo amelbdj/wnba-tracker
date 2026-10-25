@@ -1,3 +1,19 @@
 {
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|TelegramBot|Discordbot|Slackbot|Slack-ImgProxy|LinkedInBot|SkypeUriPreview|Embedly|[Rr]eddit[Bb]ot|Pinterest|vkShare|Iframely|Mastodon|Bluesky|Signal).*"
+        }
+      ],
+      "destination": "/api/share?path=/$1"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
