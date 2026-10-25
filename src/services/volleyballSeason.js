@@ -143,6 +143,11 @@ export function requestSeason(league, teamId, limit = Infinity) {
   pump(entry, league, teamId);
 }
 
+// The same snapshot without React (what the hook below returns, minus `settled`).
+export function peekSeason(league, teamId) {
+  return entryFor(league, teamId).state;
+}
+
 // A team's season so far: { matches (newest first), loaded, fetched, total,
 // done, error, settled }, where `settled` means the `limit` newest matches
 // have all been read (or there are no more). Re-renders as matches arrive.

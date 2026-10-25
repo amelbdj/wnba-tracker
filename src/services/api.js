@@ -133,7 +133,7 @@ function sortEntriesByRecord(entries) {
   );
 }
 
-function applyConferenceFixes(groups, fixes = []) {
+export function applyConferenceFixes(groups, fixes = []) {
   for (const { conference, teams, byRecord } of fixes) {
     const target = groups.find((g) => g.name.includes(conference));
     if (!target) continue;

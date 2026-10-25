@@ -51,3 +51,10 @@ npm run dev
 - `npm run build` — build de production
 - `npm run preview` — prévisualise le build de production
 - `npm run lint` — vérifie le code avec ESLint
+- `npm test` — lance les tests unitaires (Vitest, ~100 tests, moins d'une seconde) ; `npm run test:watch` pour les relancer à chaque modification
+
+## ✅ Tests et intégration continue
+
+Les tests couvrent la logique pure (appariement des équipes ESPN/NCAA, statuts et rythme de rafraîchissement des matchs, tableau des playoffs, box scores et fiches de volley, conférences corrigées, recherche, chargeur de saison) et la fonction serverless `api/ncaa/volleyball` (validation des requêtes, relances face aux refus de NCAA.com, en-têtes de cache). Ils tournent sans réseau ni navigateur.
+
+GitHub Actions (`.github/workflows/ci.yml`) exécute lint, tests et build à chaque push sur `main` et à chaque pull request.
