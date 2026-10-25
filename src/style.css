@@ -221,7 +221,7 @@ img {
 }
 
 .header-inner {
-  max-width: 1240px;
+  max-width: 1440px; /* wide enough for the full nav of a six-item league */
   width: 100%;
   margin: 0 auto;
   padding: 0 24px;
@@ -4522,8 +4522,9 @@ a.team-link.set-table-team-link:hover {
 }
 
 /* The desktop header gets crowded between the hamburger breakpoint (1040px)
-   and wide screens: shed the least useful parts step by step. */
-@media (max-width: 1320px) {
+   and wide screens (worst case: a league with six nav items, like the WNBA):
+   shed the least useful parts step by step. */
+@media (max-width: 1440px) {
   .brand-text small {
     display: none;
   }
@@ -4533,7 +4534,7 @@ a.team-link.set-table-team-link:hover {
   }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1280px) {
   .nav-item i {
     display: none;
   }
