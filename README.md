@@ -59,3 +59,7 @@ npm run dev
 Les tests couvrent la logique pure (appariement des équipes ESPN/NCAA, statuts et rythme de rafraîchissement des matchs, tableau des playoffs, box scores et fiches de volley, conférences corrigées, recherche, chargeur de saison) et la fonction serverless `api/ncaa/volleyball` (validation des requêtes, relances face aux refus de NCAA.com, en-têtes de cache). Ils tournent sans réseau ni navigateur.
 
 GitHub Actions (`.github/workflows/ci.yml`) exécute lint, tests et build à chaque push sur `main` et à chaque pull request.
+
+## 🚀 Déploiement
+
+Chaque push sur `main` déclenche un déploiement Vercel, dont le nombre est limité par mois. `scripts/vercel-ignore-build.sh` (branché via `ignoreCommand` dans `vercel.json`) saute le déploiement quand, depuis le dernier déploiement réussi, seuls le README, les tests, la config CI ou les sources de design (`design/`) ont changé. En cas de doute (aucun déploiement précédent, commit introuvable), il déploie.

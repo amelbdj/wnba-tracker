@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config'
 // no DOM and no React rendering, so they run in Node and take a second or two.
 export default defineConfig({
   test: {
-    include: ['src/**/*.test.js', 'api/**/*.test.js'],
+    include: ['src/**/*.test.js', 'api/**/*.test.js', 'scripts/**/*.test.js'],
     environment: 'node',
   },
 })
