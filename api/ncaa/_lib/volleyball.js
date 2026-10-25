@@ -62,3 +62,66 @@ export function resolveVolleyballRequest(query = {}) {
   }
   return null;
 }
+
+// ---- Talking to the upstream politely --------------------------------------
+// The public ncaa-api instance answers a burst of requests with an HTML
+// "428 Precondition Required" (or 429) page instead of data. A player page
+// replays a whole season, i.e. dozens of calls, so upstream calls here are
+// kept to a few at a time and the ones that get turned away are retried after
+// a short wait. (Responses are cached at the edge, so most visitors never
+// reach this.)
+const MAX_IN_FLIGHT = 4;
+const MAX_ATTEMPTS = 4;
+const RETRY_BASE_MS = 450;
+
+let inFlight = 0;
+const waiting = [];
+
+function acquire() {
+  if (inFlight < MAX_IN_FLIGHT) {
+    inFlight += 1;
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => waiting.push(resolve));
+}
+
+function release() {
+  const next = waiting.shift();
+  if (next) next(); // hand the slot straight over
+  else inFlight -= 1;
+}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// -> { status, ok, data } with `data` the parsed JSON (null when the upstream
+// answered with something else, e.g. its HTML rate-limit page). Retries when
+// the upstream is rate-limiting or erroring; a 404 and other client errors
+// are final.
+export async function fetchUpstream(path) {
+  let last = { status: 502, ok: false, data: null };
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
+    if (attempt > 0) await sleep(RETRY_BASE_MS * attempt);
+
+    await acquire();
+    try {
+      const res = await fetch(`${NCAA_UPSTREAM}${path}`, { headers: { accept: "application/json" } });
+      const body = await res.text();
+      let data = null;
+      try {
+        data = JSON.parse(body);
+      } catch {
+        // not JSON: a rate-limit or error page
+      }
+      last = { status: res.status, ok: res.ok && data !== null, data };
+
+      const turnedAway = res.status === 428 || res.status === 429 || res.status >= 500 || data === null;
+      if (!turnedAway) return last;
+    } catch {
+      last = { status: 502, ok: false, data: null };
+    } finally {
+      release();
+    }
+  }
+  return last;
+}

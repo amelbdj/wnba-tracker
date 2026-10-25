@@ -4543,3 +4543,8 @@ a.team-link.set-table-team-link:hover {
     display: none;
   }
 }
+
+/* The player page fills in while the rest of the season is still loading. */
+.vb-progress {
+  margin: 14px 0 -16px;
+}

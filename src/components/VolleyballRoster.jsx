@@ -1,7 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getVolleyballRoster } from "../services/api";
+import { requestSeason, useTeamSeason } from "../services/volleyballSeason";
+import { buildRoster } from "../utils/volleyballBoxscore";
+
+// The squad comes from the newest few matches...
+const ROSTER_MATCHES = 5;
+// ...and once it is on screen the rest of the season is read quietly in the
+// background, so a player's page opens with their stats already waiting.
+const PREFETCH_DELAY_MS = 1500;
 
 function initials(name) {
   const parts = name.split(/\s+/).filter(Boolean);
@@ -13,21 +20,24 @@ function initials(name) {
 // Volleyball squad as initials avatars: no photos exist for these players.
 export default function VolleyballRoster({ league, teamId }) {
   const { t } = useTranslation();
-  const [state, setState] = useState({ status: "loading" });
+  const season = useTeamSeason(league, teamId, ROSTER_MATCHES);
+  const recent = useMemo(() => season.matches.slice(0, ROSTER_MATCHES), [season.matches]);
+  const players = useMemo(() => buildRoster(recent), [recent]);
+
+  const status = season.error
+    ? "error"
+    : !season.settled
+      ? "loading"
+      : players.length
+        ? "ready"
+        : "empty";
+  const state = { status, players, matches: recent.length };
 
   useEffect(() => {
-    let cancelled = false;
-    getVolleyballRoster(league, teamId)
-      .then((roster) => {
-        if (!cancelled) setState({ status: roster.players.length ? "ready" : "empty", ...roster });
-      })
-      .catch(() => {
-        if (!cancelled) setState({ status: "error" });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [league, teamId]);
+    if (status !== "ready" || navigator.connection?.saveData) return undefined;
+    const timer = setTimeout(() => requestSeason(league, teamId), PREFETCH_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [status, league, teamId]);
 
   return (
     <div className="section">

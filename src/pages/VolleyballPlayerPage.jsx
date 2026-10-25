@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getTeamDetails, getVolleyballTeamMatches } from "../services/api";
+import { getTeamDetails } from "../services/api";
+import { useTeamSeason } from "../services/volleyballSeason";
 import { buildPlayerSeason } from "../utils/volleyballBoxscore";
 import { toLocale } from "../utils/locale";
 import TeamLink from "../components/TeamLink";
@@ -33,41 +34,37 @@ function initials(name) {
 export default function VolleyballPlayerPage() {
   const { t, i18n } = useTranslation();
   const { league, teamId, slug } = useParams();
-  const [state, setState] = useState({ status: "loading" });
+  const [team, setTeam] = useState(null);
+  const progress = useTeamSeason(league, teamId);
+  const season = useMemo(() => buildPlayerSeason(progress.matches, slug), [progress.matches, slug]);
 
   useEffect(() => {
     let cancelled = false;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setState({ status: "loading" });
-    Promise.all([
-      getTeamDetails(league, teamId).catch(() => null),
-      getVolleyballTeamMatches(league, teamId),
-    ])
-      .then(([team, matches]) => {
-        if (cancelled) return;
-        const season = buildPlayerSeason(matches, slug);
-        setState(season ? { status: "ready", team, season, matches: matches.length } : { status: "missing" });
+    getTeamDetails(league, teamId)
+      .then((details) => {
+        if (!cancelled) setTeam(details);
       })
-      .catch(() => {
-        if (!cancelled) setState({ status: "missing" });
-      });
+      .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [league, teamId, slug]);
+  }, [league, teamId]);
 
-  if (state.status === "loading") {
+  // Matches arrive newest first and the page fills in as they do, so it only
+  // has to wait when the player isn't in any of them yet.
+  if (!season && !progress.done && !progress.error) {
     return (
       <div className="container">
         <div className="skeleton skeleton-card" style={{ height: 220 }}></div>
         <p className="vb-note">
           <span className="tiktok-spinner"></span> {t("volleyballPlayer.loading")}
+          {progress.total ? ` ${progress.fetched}/${progress.total}` : ""}
         </p>
       </div>
     );
   }
 
-  if (state.status === "missing") {
+  if (!season) {
     return (
       <div className="container">
         <Link to={`/${league}/teams/${teamId}`} className="nav-btn">
@@ -82,7 +79,6 @@ export default function VolleyballPlayerPage() {
     );
   }
 
-  const { team, season } = state;
   const { totals, perSet, games } = season;
   const locale = toLocale(i18n.language);
   const teamLogo = team?.logos?.[0]?.href;
@@ -120,6 +116,13 @@ export default function VolleyballPlayerPage() {
           </div>
         </div>
       </section>
+
+      {!progress.done && !progress.error && (
+        <p className="vb-note vb-progress">
+          <span className="tiktok-spinner"></span> {t("volleyballPlayer.loading")} {progress.fetched}/
+          {progress.total}
+        </p>
+      )}
 
       <div className="section">
         <div className="section-head">
@@ -239,7 +242,7 @@ export default function VolleyballPlayerPage() {
             </tbody>
           </table>
         </div>
-        <p className="vb-note">{t("volleyballPlayer.source", { count: state.matches })}</p>
+        <p className="vb-note">{t("volleyballPlayer.source", { count: progress.matches.length })}</p>
       </div>
     </div>
   );

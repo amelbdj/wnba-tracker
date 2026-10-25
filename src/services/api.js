@@ -1,7 +1,7 @@
 import { getLeague, getSport } from "../leagues";
 import { findNcaaGame } from "../utils/ncaaTeams";
 import { formatDateParam } from "../utils/games";
-import { buildMatchBoxscore, buildRoster } from "../utils/volleyballBoxscore";
+import { buildMatchBoxscore } from "../utils/volleyballBoxscore";
 
 // ESPN's URLs embed the sport (…/sports/basketball/wnba/…,
 // …/sports/volleyball/womens-college-volleyball/…), so every root is derived
@@ -373,9 +373,20 @@ export async function getVolleyballLeaders(statId, page = 1) {
   return getNcaaVolleyball({ stat: statId, page });
 }
 
-async function getNcaaVolleyball(query) {
+// NCAA.com's public wrapper rate-limits bursts (HTTP 429) and sometimes
+// hiccups (5xx), and a season page fires dozens of calls — so one retry, after
+// a short pause, before giving up.
+const RETRY_DELAY_MS = 700;
+
+async function getNcaaVolleyball(query, retry = true) {
   const res = await fetch(`/api/ncaa/volleyball?${new URLSearchParams(query)}`);
-  if (!res.ok) throw new Error(`NCAA data unavailable (HTTP ${res.status})`);
+  if (!res.ok) {
+    if (retry && (res.status === 429 || res.status >= 500)) {
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+      return getNcaaVolleyball(query, false);
+    }
+    throw new Error(`NCAA data unavailable (HTTP ${res.status})`);
+  }
   return res.json();
 }
 
@@ -423,9 +434,6 @@ function lookupNcaaGame(competition) {
   });
 }
 
-// How many of a team's latest finished matches feed its squad list.
-const ROSTER_MATCHES = 5;
-
 // Per-player stats for an ESPN volleyball match (its header `competition`),
 // from NCAA.com's box score. Resolves to { isFinal, teams: [teamA, teamB] },
 // or null when NCAA.com has no matching game. Finished matches are cached.
@@ -453,65 +461,3 @@ export async function getTeamSchedule(league, teamId) {
   return events;
 }
 
-// How many matches are fetched at once (the public NCAA.com wrapper allows
-// only a few requests per second).
-const MATCH_BATCH = 6;
-const teamMatches = new Map();
-
-const scoreOf = (c) => Number(c.score?.displayValue ?? c.score) || 0;
-
-// A team's finished matches (newest first, at most `limit`), each with that
-// team's per-player box score: { id, date, opponent, home, score: [us, them],
-// won, players }. NCAA.com has no rosters or player pages, so squads and
-// player profiles are all built from these. Matches NCAA.com can't be matched
-// to are left out.
-export function getVolleyballTeamMatches(league, teamId, limit = Infinity) {
-  return memoAsync(teamMatches, `${league}:${teamId}:${limit}`, async () => {
-    const events = await getTeamSchedule(league, teamId);
-
-    const finished = events
-      .map((e) => e.competitions?.[0])
-      .filter((c) => c?.status?.type?.completed && c.competitors?.length === 2)
-      .reverse()
-      .slice(0, limit);
-
-    const matches = [];
-    for (let i = 0; i < finished.length; i += MATCH_BATCH) {
-      const results = await Promise.allSettled(
-        finished.slice(i, i + MATCH_BATCH).map(async (competition) => {
-          const side = competition.competitors.findIndex((c) => String(c.team.id) === String(teamId));
-          const box = await getVolleyballBoxscore(competition);
-          if (!box || side < 0) return null;
-          const us = competition.competitors[side];
-          const them = competition.competitors[1 - side];
-          return {
-            id: competition.id,
-            date: competition.date,
-            opponent: {
-              id: them.team.id,
-              displayName: them.team.displayName,
-              abbreviation: them.team.abbreviation,
-              logo: them.team.logos?.[0]?.href || them.team.logo,
-            },
-            home: us.homeAway === "home",
-            score: [scoreOf(us), scoreOf(them)],
-            won: scoreOf(us) > scoreOf(them),
-            players: box.teams[side].players,
-          };
-        }),
-      );
-      for (const r of results) if (r.status === "fulfilled" && r.value) matches.push(r.value);
-    }
-    return matches.sort((a, b) => new Date(b.date) - new Date(a.date));
-  });
-}
-
-// NCAA.com has no rosters, and ESPN's athlete lists for volleyball are every
-// player a program ever had. So the current squad is read off the box scores
-// of the team's latest finished matches: everyone who shows up there, with
-// their jersey number and position. Resolves to { players, matches } where
-// `matches` is how many box scores were found (0 = nothing available).
-export async function getVolleyballRoster(league, teamId) {
-  const matches = await getVolleyballTeamMatches(league, teamId, ROSTER_MATCHES);
-  return { players: buildRoster(matches), matches: matches.length };
-}
