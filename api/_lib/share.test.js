@@ -89,6 +89,27 @@ describe("buildMeta", () => {
   });
 });
 
+describe("preview image", () => {
+  it("points pages that have a card at /api/og, with their canonical path and language", () => {
+    const meta = buildMeta(parseSharePath("/womens-college-volleyball/teams/158"), "es", { name: "Nebraska" });
+    expect(meta.image).toBe("/api/og?path=%2Fwomens-college-volleyball%2Fteams%2F158&lang=es");
+    expect(buildMeta(parseSharePath("/wnba/standings"), "fr").image).toBe("/api/og?path=%2Fwnba%2Fstandings&lang=fr");
+    expect(buildMeta(parseSharePath("/wnba/players/924"), "fr", {}).image).toContain("/api/og?path=%2Fwnba%2Fplayers%2F924");
+  });
+
+  it("keeps the brand image for the site and the legal pages", () => {
+    expect(buildMeta({ kind: "site" }, "fr").image).toBeUndefined();
+    expect(buildMeta(parseSharePath("/privacy"), "fr").image).toBeUndefined();
+  });
+
+  it("renders the card URL, absolute and escaped, into og:image", () => {
+    const meta = buildMeta(parseSharePath("/wnba/teams/20"), "fr", { name: "Atlanta Dream" });
+    const html = renderShareHtml(meta, { origin: "https://thefrontrow.fr", lang: "fr" });
+    expect(html).toContain('<meta property="og:image" content="https://thefrontrow.fr/api/og?path=%2Fwnba%2Fteams%2F20&amp;lang=fr">');
+    expect(html).toContain('<meta name="twitter:image" content="https://thefrontrow.fr/api/og?path=%2Fwnba%2Fteams%2F20&amp;lang=fr">');
+  });
+});
+
 describe("nameFromSlug", () => {
   it("capitalises each word", () => {
     expect(nameFromSlug("gabby-divita")).toBe("Gabby Divita");

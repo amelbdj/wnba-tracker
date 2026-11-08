@@ -10,6 +10,14 @@ export const SITE_TITLE = "FRONTROW — The home of women's sports.";
 
 const TEXT = {
   fr: {
+    card: {
+      sectionPill: { "": "Scores en direct", standings: "Classement", playoffs: "Playoffs", teams: "Équipes", players: "Joueuses", statistics: "Stats" },
+      teamTagline: "Calendrier · Résultats · Effectif · Stats",
+      playerTagline: "Stats de la saison · Derniers matchs",
+      volleyballPlayerTagline: "Stats de la saison · Match par match",
+      leagueTagline: "Scores · Classement · Équipes · Stats",
+      season: "Saison {year}",
+    },
     siteDescription:
       "Scores en direct, classements, équipes et statistiques de la WNBA, de la NCAA, du volley universitaire, de la FIBA et des Jeux Olympiques.",
     leagues: {
@@ -39,6 +47,14 @@ const TEXT = {
     },
   },
   en: {
+    card: {
+      sectionPill: { "": "Live scores", standings: "Standings", playoffs: "Playoffs", teams: "Teams", players: "Players", statistics: "Stats" },
+      teamTagline: "Schedule · Results · Roster · Stats",
+      playerTagline: "Season stats · Recent games",
+      volleyballPlayerTagline: "Season stats · Match by match",
+      leagueTagline: "Scores · Standings · Teams · Stats",
+      season: "{year} season",
+    },
     siteDescription:
       "Live scores, standings, teams and stats for the WNBA, NCAA, college volleyball, FIBA and the Olympics.",
     leagues: {
@@ -68,6 +84,14 @@ const TEXT = {
     },
   },
   es: {
+    card: {
+      sectionPill: { "": "Resultados en directo", standings: "Clasificación", playoffs: "Playoffs", teams: "Equipos", players: "Jugadoras", statistics: "Estadísticas" },
+      teamTagline: "Calendario · Resultados · Plantilla · Estadísticas",
+      playerTagline: "Estadísticas de la temporada · Últimos partidos",
+      volleyballPlayerTagline: "Estadísticas de la temporada · Partido a partido",
+      leagueTagline: "Resultados · Clasificación · Equipos · Estadísticas",
+      season: "Temporada {year}",
+    },
     siteDescription:
       "Resultados en directo, clasificaciones, equipos y estadísticas de la WNBA, la NCAA, el voleibol universitario, la FIBA y los Juegos Olímpicos.",
     leagues: {

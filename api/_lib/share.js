@@ -72,6 +72,15 @@ function clip(text) {
 // `data` is what the handler could look up for the page: { name } for
 // a team, { name, team } for a player. Missing data degrades to a generic line.
 export function buildMeta(route, lang, data = {}) {
+  const meta = buildText(route, lang, data);
+  // Pages with a card of their own point at api/og; the rest keep the brand image.
+  const hasCard = ["league", "team", "player", "volleyballPlayer"].includes(route.kind);
+  return hasCard
+    ? { ...meta, image: `/api/og?path=${encodeURIComponent(route.canonical)}&lang=${lang}` }
+    : meta;
+}
+
+function buildText(route, lang, data) {
   const text = textFor(lang);
   const leagueName = route.league ? text.leagues[route.league] ?? getLeague(route.league).shortLabel : "";
   const withBrand = (title) => `${title} | FRONTROW`;
@@ -143,7 +152,7 @@ export function resolveOrigin(host) {
 
 export function renderShareHtml(meta, { origin = SITE_URL, lang = DEFAULT_LANG } = {}) {
   const url = `${origin}${meta.path === "/" ? "/" : meta.path}`;
-  const image = `${origin}${OG_IMAGE_PATH}`;
+  const image = `${origin}${meta.image || OG_IMAGE_PATH}`;
   const title = escapeHtml(meta.title);
   const description = escapeHtml(clip(meta.description));
   const e = escapeHtml;

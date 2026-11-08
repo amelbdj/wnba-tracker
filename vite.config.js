@@ -10,6 +10,8 @@ import shareHandler from './api/share.js'
 const FUNCTIONS = {
   '/api/ncaa/volleyball': ncaaVolleyball,
   '/api/share': shareHandler,
+  // loaded on first use: it pulls in the image renderer (satori + resvg)
+  '/api/og': async (req, res) => (await import('./api/og.js')).default(req, res),
 }
 
 function localApi() {
