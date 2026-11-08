@@ -217,6 +217,12 @@ export async function getPlayerProfile(league, playerId) {
   return data.athlete;
 }
 
+// Football's season totals (split by competition) and last five matches.
+export async function getPlayerOverview(league, playerId) {
+  const res = await fetch(`${webRoot(league)}/${league}/athletes/${playerId}/overview`);
+  return res.ok ? res.json() : null;
+}
+
 export async function getPlayerGameLog(league, playerId) {
   const res = await fetch(`${webRoot(league)}/${league}/athletes/${playerId}/gamelog`);
   if (!res.ok) return null;

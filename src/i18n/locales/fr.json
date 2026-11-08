@@ -599,5 +599,35 @@
       "yellowCards": "Cartons jaunes",
       "redCards": "Cartons rouges"
     }
+  },
+  "positionNames": {
+    "goalkeeper": "Gardienne",
+    "defender": "Défenseure",
+    "midfielder": "Milieu",
+    "forward": "Attaquante"
+  },
+  "soccerPlayer": {
+    "stat": {
+      "starts": "Titularisations",
+      "totalGoals": "Buts",
+      "goalAssists": "Passes décisives",
+      "totalShots": "Tirs",
+      "shotsOnTarget": "Tirs cadrés",
+      "saves": "Arrêts",
+      "cleanSheet": "Matchs sans but encaissé",
+      "goalsConceded": "Buts encaissés",
+      "yellowCards": "Cartons jaunes",
+      "redCards": "Cartons rouges"
+    },
+    "goals_one": "{{count}} but",
+    "goals_other": "{{count}} buts",
+    "assists_one": "{{count}} passe décisive",
+    "assists_other": "{{count}} passes décisives",
+    "saves_one": "{{count}} arrêt",
+    "saves_other": "{{count}} arrêts",
+    "yellow_one": "{{count}} carton jaune",
+    "yellow_other": "{{count}} cartons jaunes",
+    "red_one": "{{count}} carton rouge",
+    "red_other": "{{count}} cartons rouges"
   }
 }

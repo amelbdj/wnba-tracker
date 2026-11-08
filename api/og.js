@@ -74,7 +74,12 @@ async function buildCard(route, lang) {
       subtitle: [athlete.team?.displayName, athlete.position?.displayName, athlete.displayJersey]
         .filter(Boolean)
         .join(" · "),
-      stats: (summary?.statistics || []).map((s) => ({ label: s.shortDisplayName || s.abbreviation, value: s.displayValue })),
+      // ESPN's football summary is pinned to whichever cup ran last (zeros), so
+      // football cards show no numbers rather than misleading ones.
+      stats:
+        getLeague(route.league).sport === "soccer"
+          ? []
+          : (summary?.statistics || []).map((s) => ({ label: s.shortDisplayName || s.abbreviation, value: s.displayValue })),
       season: /\b(\d{4})\b/.exec(summary?.displayName || "")?.[1],
     });
   }

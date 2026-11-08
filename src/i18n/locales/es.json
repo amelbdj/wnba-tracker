@@ -599,5 +599,35 @@
       "yellowCards": "Tarjetas amarillas",
       "redCards": "Tarjetas rojas"
     }
+  },
+  "positionNames": {
+    "goalkeeper": "Portera",
+    "defender": "Defensa",
+    "midfielder": "Centrocampista",
+    "forward": "Delantera"
+  },
+  "soccerPlayer": {
+    "stat": {
+      "starts": "Titularidades",
+      "totalGoals": "Goles",
+      "goalAssists": "Asistencias",
+      "totalShots": "Tiros",
+      "shotsOnTarget": "Tiros a puerta",
+      "saves": "Paradas",
+      "cleanSheet": "Porterías a cero",
+      "goalsConceded": "Goles encajados",
+      "yellowCards": "Tarjetas amarillas",
+      "redCards": "Tarjetas rojas"
+    },
+    "goals_one": "{{count}} gol",
+    "goals_other": "{{count}} goles",
+    "assists_one": "{{count}} asistencia",
+    "assists_other": "{{count}} asistencias",
+    "saves_one": "{{count}} parada",
+    "saves_other": "{{count}} paradas",
+    "yellow_one": "{{count}} tarjeta amarilla",
+    "yellow_other": "{{count}} tarjetas amarillas",
+    "red_one": "{{count}} tarjeta roja",
+    "red_other": "{{count}} tarjetas rojas"
   }
 }

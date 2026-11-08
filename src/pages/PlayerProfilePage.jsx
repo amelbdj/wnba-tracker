@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getPlayerProfile, getPlayerGameLog } from "../services/api";
+import { getPlayerGameLog, getPlayerOverview, getPlayerProfile } from "../services/api";
+import { buildSoccerRecent, buildSoccerStats } from "../utils/soccerPlayer";
 import { toLocale } from "../utils/locale";
+import { getLeague, getSport } from "../leagues";
+import { translatePosition } from "../utils/positions";
 import TeamLink from "../components/TeamLink";
 
 function parseRecentGames(gamelog, limit = 8) {
@@ -25,23 +28,52 @@ function parseRecentGames(gamelog, limit = 8) {
   return { games, ptsIndex };
 }
 
+// What a player did in one match, as words ("1 but · 2 passes décisives"), or
+// a dash for a match without a notable number.
+function soccerMatchLine(game, t) {
+  const parts = [
+    game.goals && t("soccerPlayer.goals", { count: game.goals }),
+    game.assists && t("soccerPlayer.assists", { count: game.assists }),
+    game.saves && t("soccerPlayer.saves", { count: game.saves }),
+    game.yellow && t("soccerPlayer.yellow", { count: game.yellow }),
+    game.red && t("soccerPlayer.red", { count: game.red }),
+  ].filter(Boolean);
+  return parts.length ? parts.join(" · ") : "—";
+}
+
 export default function PlayerProfilePage() {
   const { t, i18n } = useTranslation();
   const { league, playerId } = useParams();
   const [player, setPlayer] = useState(null);
   const [gamelog, setGamelog] = useState(null);
+  const [soccer, setSoccer] = useState(null); // football: { stats, recent }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     async function load() {
+      if (getSport(league) === "soccer") {
+        // Football has its own numbers (see utils/soccerPlayer), and no
+        // points-per-game log.
+        const [profile, overview] = await Promise.all([
+          getPlayerProfile(league, playerId),
+          getPlayerOverview(league, playerId).catch(() => null),
+        ]);
+        setPlayer(profile);
+        setGamelog(null);
+        setSoccer({ stats: buildSoccerStats(overview, league), recent: buildSoccerRecent(overview) });
+        setLoading(false);
+        return;
+      }
+
       const [profile, log] = await Promise.all([
         getPlayerProfile(league, playerId),
         getPlayerGameLog(league, playerId),
       ]);
       setPlayer(profile);
       setGamelog(log);
+      setSoccer(null);
       setLoading(false);
     }
     load();
@@ -73,6 +105,22 @@ export default function PlayerProfilePage() {
   const teamLogo = player.team?.logos?.[0]?.href;
   const locale = toLocale(i18n.language);
 
+  // The season tiles: football's totals for this league, or ESPN's summary.
+  const tiles = soccer
+    ? (soccer.stats?.tiles || []).map((tile) => ({
+        key: tile.name,
+        label: t(`soccerPlayer.stat.${tile.name}`),
+        value: tile.value,
+      }))
+    : (player.statsSummary?.statistics || []).map((stat) => ({
+        key: stat.name,
+        label: stat.shortDisplayName || stat.abbreviation,
+        value: stat.displayValue,
+      }));
+  const tilesTitle = soccer
+    ? soccer.stats?.title
+    : player.statsSummary?.displayName || t("player.seasonStatsFallback");
+
   return (
     <div className="container">
       <Link to={`/${league}/players`} className="nav-btn">
@@ -92,7 +140,7 @@ export default function PlayerProfilePage() {
 
           <div className="profile-info">
             {player.position?.displayName && (
-              <span className="hero-tag">{player.position.displayName}</span>
+              <span className="hero-tag">{translatePosition(player.position.displayName, t)}</span>
             )}
             <h1 className="hero-headline" style={{ marginTop: 12, marginBottom: 0 }}>
               {player.displayName}
@@ -122,7 +170,7 @@ export default function PlayerProfilePage() {
               )}
               {player.displayExperience && (
                 <span>
-                  <i className="fa-solid fa-basketball"></i> {player.displayExperience}
+                  <i className={getLeague(league).icon}></i> {player.displayExperience}
                 </span>
               )}
             </div>
@@ -136,28 +184,29 @@ export default function PlayerProfilePage() {
         </div>
       </section>
 
-      {player.statsSummary?.statistics?.length > 0 && (
+      {tiles.length > 0 && (
         <div className="section">
           <div className="section-head">
             <div>
               <span className="section-eyebrow">
-                <i className="fa-solid fa-chart-simple"></i>{" "}
-                {player.statsSummary.displayName || t("player.seasonStatsFallback")}
+                <i className="fa-solid fa-chart-simple"></i> {tilesTitle}
               </span>
             </div>
           </div>
 
           <div className="stat-tiles">
-            {player.statsSummary.statistics.map((s) => (
-              <div key={s.name} className="stat-tile">
-                <div className="stat-tile-value">{s.displayValue}</div>
-                <div className="stat-tile-label">{s.shortDisplayName || s.abbreviation}</div>
+            {tiles.map((tile) => (
+              <div key={tile.key} className="stat-tile">
+                <div className="stat-tile-value">{tile.value}</div>
+                <div className="stat-tile-label">{tile.label}</div>
               </div>
             ))}
           </div>
         </div>
       )}
 
+      {/* "points scored per game" is a basketball chart; ESPN has no game log for football */}
+      {getSport(league) !== "soccer" && (
       <div className="section">
         <div className="section-head">
           <div>
@@ -195,6 +244,38 @@ export default function PlayerProfilePage() {
           </div>
         )}
       </div>
+      )}
+
+      {soccer && soccer.recent.length > 0 && (
+        <div className="section">
+          <div className="section-head">
+            <div>
+              <span className="section-eyebrow">
+                <i className="fa-regular fa-calendar"></i> {t("player.recentGames")}
+              </span>
+            </div>
+          </div>
+
+          <div className="games-log">
+            {soccer.recent.map((g) => (
+              <div key={g.id} className="games-log-row">
+                <span className={`games-log-result ${{ W: "win", D: "draw", L: "loss" }[g.result] || "draw"}`}>
+                  {g.result}
+                </span>
+                {/* not a link: the log spans competitions, e.g. a national-team friendly,
+                    and that opponent has no page in this league */}
+                <span className="games-log-opponent">
+                  {g.atVs} {g.opponent.displayName}
+                </span>
+                <span className="games-log-date">
+                  {new Date(g.date).toLocaleDateString(locale, { day: "2-digit", month: "short" })}
+                </span>
+                <span className="games-log-pts soccer-log-line">{soccerMatchLine(g, t)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {games.length > 0 && (
         <div className="section">

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getAllPlayers, getStandings, searchPlayers } from "../services/api";
 import PlayerCard from "../components/PlayerCard";
-import { getLeague } from "../leagues";
+import { getLeague, getSport } from "../leagues";
 
 const POSITIONS = [
   { value: "all", key: "positions.all" },
@@ -12,8 +12,17 @@ const POSITIONS = [
   { value: "Center", key: "positions.center" },
 ];
 
+const SOCCER_POSITIONS = [
+  { value: "all", key: "positions.all" },
+  { value: "Goalkeeper", key: "positions.goalkeeper" },
+  { value: "Defender", key: "positions.defender" },
+  { value: "Midfielder", key: "positions.midfielder" },
+  { value: "Forward", key: "positions.attacker" },
+];
+
 function AggregatePlayers({ league }) {
   const { t } = useTranslation();
+  const positions = getSport(league) === "soccer" ? SOCCER_POSITIONS : POSITIONS;
   const [players, setPlayers] = useState([]);
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +88,7 @@ function AggregatePlayers({ league }) {
       </div>
 
       <div className="chip-group" style={{ marginBottom: 22 }}>
-        {POSITIONS.map((pos) => (
+        {positions.map((pos) => (
           <button
             key={pos.value}
             className={`chip${positionFilter === pos.value ? " active" : ""}`}

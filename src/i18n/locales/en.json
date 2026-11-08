@@ -599,5 +599,35 @@
       "yellowCards": "Yellow cards",
       "redCards": "Red cards"
     }
+  },
+  "positionNames": {
+    "goalkeeper": "Goalkeeper",
+    "defender": "Defender",
+    "midfielder": "Midfielder",
+    "forward": "Forward"
+  },
+  "soccerPlayer": {
+    "stat": {
+      "starts": "Starts",
+      "totalGoals": "Goals",
+      "goalAssists": "Assists",
+      "totalShots": "Shots",
+      "shotsOnTarget": "Shots on target",
+      "saves": "Saves",
+      "cleanSheet": "Clean sheets",
+      "goalsConceded": "Goals conceded",
+      "yellowCards": "Yellow cards",
+      "redCards": "Red cards"
+    },
+    "goals_one": "{{count}} goal",
+    "goals_other": "{{count}} goals",
+    "assists_one": "{{count}} assist",
+    "assists_other": "{{count}} assists",
+    "saves_one": "{{count}} save",
+    "saves_other": "{{count}} saves",
+    "yellow_one": "{{count}} yellow card",
+    "yellow_other": "{{count}} yellow cards",
+    "red_one": "{{count}} red card",
+    "red_other": "{{count}} red cards"
   }
 }

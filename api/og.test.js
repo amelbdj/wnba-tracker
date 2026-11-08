@@ -80,6 +80,19 @@ describe("api/og", () => {
     expect(res.headers["Cache-Control"]).toContain("s-maxage=21600"); // stats move after each game
   });
 
+  it("draws a football player's card without the misleading summary numbers", async () => {
+    stubEspn({
+      athlete: {
+        displayName: "Trinity Rodman",
+        team: { displayName: "Washington Spirit", color: "c8102e", logos },
+        position: { displayName: "Forward" },
+        statsSummary: { displayName: "2026 NWSL Challenge Cup Stats", statistics: [{ shortDisplayName: "G", displayValue: "0" }] },
+      },
+    });
+    const res = await call({ path: "/usa.nwsl/players/317423" });
+    expect(isJpeg(res.body)).toBe(true);
+  });
+
   it("still draws a card when the logo can't be fetched", async () => {
     stubEspn({ team: { displayName: "Atlanta Dream", color: "e31837", logos }, imagesFail: true });
     expect(isJpeg((await call({ path: "/wnba/teams/20" })).body)).toBe(true);
