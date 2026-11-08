@@ -393,6 +393,9 @@ img {
   padding: 6px;
   box-shadow: var(--shadow-lg);
   animation: slideDown 0.18s ease;
+  /* eleven leagues in three sports: scroll rather than run off a short screen */
+  max-height: calc(100svh - var(--header-h) - 24px);
+  overflow-y: auto;
 }
 
 .league-menu-heading {
@@ -4619,9 +4622,17 @@ a.team-link.set-table-team-link:hover {
 }
 
 @media (max-width: 640px) {
+  /* tight columns so club names keep most of the width */
   .standings-header-row.soccer,
   .standing-row.soccer {
-    grid-template-columns: 28px minmax(0, 1fr) 26px 26px 26px 26px 38px;
+    grid-template-columns: 24px minmax(0, 1fr) 22px 22px 22px 22px 34px;
+    gap: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .standing-row.soccer .standing-team {
+    gap: 8px;
   }
 
   .soccer-diff {
@@ -4884,5 +4895,23 @@ img:not([src]) {
     grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
     gap: 6px;
     font-size: 13px;
+  }
+}
+
+/* A long league name ("Première Ligue") must not push the header's buttons off
+   a phone: keep its trigger on one line, and below 400px let the logo alone
+   stand for the brand — on those leagues only. */
+@media (max-width: 640px) {
+  .header-long-league .league-trigger {
+    max-width: 160px;
+    padding: 8px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 400px) {
+  .header-long-league .brand-text {
+    display: none;
   }
 }

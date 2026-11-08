@@ -260,17 +260,17 @@
   },
   "landing": {
     "enter": "Explore FRONTROW",
-    "heroSubtitle": "Live scores, standings, and the players to watch — professional women's basketball, all in one place.",
+    "heroSubtitle": "Live scores, standings, and the players to watch — women's basketball, volleyball and football, all in one place.",
     "ctaPrimary": "See today's games",
     "ctaSecondary": "Discover the competitions",
     "featured": "Featured",
     "competitionsEyebrow": "Competitions",
-    "competitionsTitle": "Women's basketball, across every league",
-    "competitionsSubtitle": "From the WNBA to the Olympics, follow every major women's competition.",
+    "competitionsTitle": "The major competitions in women's sport",
+    "competitionsSubtitle": "From the WNBA to the Champions League, follow every major women's competition.",
     "watchEyebrow": "Players to watch",
     "watchTitle": "This season's top scorers",
     "futureEyebrow": "What's coming",
-    "futureTitle": "FRONTROW doesn't stop at basketball",
+    "futureTitle": "FRONTROW doesn't stop here",
     "futureSubtitle": "We're building the home of women's sports as a whole. More sports are joining the platform soon.",
     "footerNote": "Built for fans of women's sports."
   },
@@ -279,7 +279,13 @@
     "ncaa": "American college basketball",
     "fiba": "The world tournament, every 4 years",
     "olympics": "The women's Olympic tournament",
-    "ncaaVolleyball": "American college volleyball"
+    "ncaaVolleyball": "American college volleyball",
+    "premiereLigue": "The French women's league",
+    "uwcl": "The peak of European football",
+    "nwsl": "America's professional league",
+    "wsl": "The English women's league",
+    "ligaF": "The Spanish women's league",
+    "wwc": "The world tournament, every 4 years"
   },
   "futureSports": {
     "soccer": "Soccer",

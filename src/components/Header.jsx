@@ -124,7 +124,7 @@ export default function Header() {
   }, [location.pathname]);
 
   return (
-    <header className="site-header">
+    <header className={`site-header${getLeague(league).shortLabel.length > 11 ? " header-long-league" : ""}`}>
       <div className="header-inner">
         <div className="header-left">
           <Link to={`/${league}`} className="brand">

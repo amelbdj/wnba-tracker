@@ -15,6 +15,7 @@ Une application web moderne pour suivre le sport en temps réel : scores, classe
 - 🏠 Page d'accueil (landing) avec présentation de l'app
 - 📅 Suivi des matchs du jour (scores, statut LIVE / FINISHED / UPCOMING), mis à jour automatiquement pendant les matchs en direct
 - 🏐 Volley féminin NCAA : scores en sets avec le détail point par set, classement par conférence, tableau du tournoi national, et classements des joueuses par catégorie (kills, aces, blocs, digs…) depuis NCAA.com via un petit proxy (`api/ncaa/volleyball`) — stats par joueuse dans le détail d'un match (box score NCAA.com, rafraîchi en direct), effectifs avec avatars à initiales et fiche par joueuse (totaux, moyennes par set, match par match) calculée à partir des box scores de la saison — ESPN ne fournit ni effectifs ni stats de joueuses pour cette ligue, donc pas de page Joueuses globale
+- ⚽ Football féminin : Première Ligue, Ligue des champions, NWSL, WSL, Liga F et Coupe du monde — scores avec minute, prolongations et tirs au but, classement en points avec zones de qualification et de relégation, effectifs, fiches joueuses (buts, passes, arrêts…) et détail de match (chronologie des buts et cartons, statistiques d'équipe, compositions). Les playoffs et les classements de buteuses ne sont pas encore pris en charge pour le football
 - 🏆 Classements par ligue
 - 🥇 Tableau des playoffs (têtes de série projetées, résultats en direct puis dernier tournoi terminé, selon la saison)
 - 👥 Liste des équipes et fiche détaillée par équipe, avec tous ses matchs (résultats et à venir, paginés)

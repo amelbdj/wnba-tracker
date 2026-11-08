@@ -260,17 +260,17 @@
   },
   "landing": {
     "enter": "Explorer FRONTROW",
-    "heroSubtitle": "Scores en direct, classements et joueuses à suivre : le basketball féminin professionnel réuni au même endroit.",
+    "heroSubtitle": "Scores en direct, classements et joueuses à suivre : basketball, volley et football féminins réunis au même endroit.",
     "ctaPrimary": "Voir les matchs du jour",
     "ctaSecondary": "Découvrir les compétitions",
     "featured": "À la une",
     "competitionsEyebrow": "Compétitions",
-    "competitionsTitle": "Le basketball féminin, toutes ligues confondues",
-    "competitionsSubtitle": "De la WNBA aux Jeux Olympiques, suis toutes les grandes compétitions féminines.",
+    "competitionsTitle": "Les grandes compétitions du sport féminin",
+    "competitionsSubtitle": "De la WNBA à la Ligue des champions, suis toutes les grandes compétitions féminines.",
     "watchEyebrow": "Joueuses à suivre",
     "watchTitle": "Les meilleures marqueuses du moment",
     "futureEyebrow": "Ce qui arrive",
-    "futureTitle": "FRONTROW ne s'arrête pas au basketball",
+    "futureTitle": "FRONTROW ne s'arrête pas là",
     "futureSubtitle": "On construit la maison du sport féminin dans son ensemble. D'autres sports rejoindront bientôt la plateforme.",
     "footerNote": "Construit pour les fans du sport féminin."
   },
@@ -279,7 +279,13 @@
     "ncaa": "Le basketball universitaire américain",
     "fiba": "Le tournoi mondial, tous les 4 ans",
     "olympics": "Le tournoi olympique féminin",
-    "ncaaVolleyball": "Le volley universitaire américain"
+    "ncaaVolleyball": "Le volley universitaire américain",
+    "premiereLigue": "Le championnat de France féminin",
+    "uwcl": "Le sommet du football européen",
+    "nwsl": "La ligue professionnelle américaine",
+    "wsl": "Le championnat d'Angleterre féminin",
+    "ligaF": "Le championnat d'Espagne féminin",
+    "wwc": "Le tournoi mondial, tous les 4 ans"
   },
   "futureSports": {
     "soccer": "Football",

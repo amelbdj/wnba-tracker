@@ -15,7 +15,6 @@ import PlayerCard from "../components/PlayerCard";
 import Standings from "../components/Standings";
 
 const FUTURE_SPORTS = [
-  { key: "soccer", icon: "fa-solid fa-futbol" },
   { key: "tennis", icon: "fa-solid fa-table-tennis-paddle-ball" },
   { key: "athletics", icon: "fa-solid fa-person-running" },
 ];

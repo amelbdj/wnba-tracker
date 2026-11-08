@@ -19,7 +19,7 @@ const TEXT = {
       season: "Saison {year}",
     },
     siteDescription:
-      "Scores en direct, classements, équipes et statistiques de la WNBA, de la NCAA, du volley universitaire, de la FIBA et des Jeux Olympiques.",
+      "Scores en direct, classements, équipes et statistiques du basketball, du volley et du football féminins : WNBA, NCAA, Ligue des champions, Première Ligue, FIBA, Jeux Olympiques.",
     leagues: {
       wnba: "WNBA",
       "womens-college-basketball": "NCAA Basket Femmes",
@@ -62,7 +62,7 @@ const TEXT = {
       season: "{year} season",
     },
     siteDescription:
-      "Live scores, standings, teams and stats for the WNBA, NCAA, college volleyball, FIBA and the Olympics.",
+      "Live scores, standings, teams and stats for women's basketball, volleyball and football: WNBA, NCAA, Champions League, Première Ligue, FIBA, the Olympics.",
     leagues: {
       wnba: "WNBA",
       "womens-college-basketball": "NCAA Women's Basketball",
@@ -105,7 +105,7 @@ const TEXT = {
       season: "Temporada {year}",
     },
     siteDescription:
-      "Resultados en directo, clasificaciones, equipos y estadísticas de la WNBA, la NCAA, el voleibol universitario, la FIBA y los Juegos Olímpicos.",
+      "Resultados en directo, clasificaciones, equipos y estadísticas del baloncesto, el voleibol y el fútbol femeninos: WNBA, NCAA, Liga de Campeones, Première Ligue, FIBA, Juegos Olímpicos.",
     leagues: {
       wnba: "WNBA",
       "womens-college-basketball": "Baloncesto femenino NCAA",
