@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import handler from "./volleyball.js";
+import handler from "../volleyball.js";
 
 function call(query, method = "GET") {
   const res = {

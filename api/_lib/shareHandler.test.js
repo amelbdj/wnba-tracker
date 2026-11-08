@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import handler from "./share.js";
+import handler from "../share.js";
 
 function call(query, { method = "GET", headers = {} } = {}) {
   const res = {
