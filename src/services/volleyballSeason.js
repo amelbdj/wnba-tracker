@@ -77,7 +77,7 @@ async function pump(entry, league, teamId) {
       entry.queue = events
         .map((e) => e.competitions?.[0])
         .filter((c) => c?.status?.type?.completed && c.competitors?.length === 2)
-        .reverse();
+        .sort((a, b) => new Date(b.date) - new Date(a.date)); // newest first
       entry.next = 0;
       entry.finished = new Set();
       publish(entry, {

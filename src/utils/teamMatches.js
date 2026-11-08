@@ -2,6 +2,14 @@ import { getGameStatus } from "./games";
 
 const scoreOf = (c) => Number(c.score?.displayValue ?? c.score) || 0;
 
+// W / D / L from `us` point of view. Football has draws, but a drawn match
+// settled on penalties still has a winner, which ESPN flags on the competitor.
+function resultOf(us, them) {
+  const diff = scoreOf(us) - scoreOf(them);
+  if (diff !== 0) return diff > 0 ? "W" : "L";
+  return us.winner ? "W" : them.winner ? "L" : "D";
+}
+
 // One ESPN schedule event, seen from `teamId`'s side: { id, date, state:
 // final | live | upcoming | other, home, opponent, score: [us, them], won, ... }.
 export function toMatch(event, teamId, t) {
@@ -12,6 +20,7 @@ export function toMatch(event, teamId, t) {
   const us = comp.competitors[side];
   const them = comp.competitors[1 - side];
   const type = comp.status?.type || {};
+  const result = resultOf(us, them);
   const state = type.completed ? "final" : type.state === "in" ? "live" : type.state === "pre" ? "upcoming" : "other";
 
   return {
@@ -27,6 +36,9 @@ export function toMatch(event, teamId, t) {
     neutral: Boolean(comp.neutralSite),
     opponent: { ...them.team, logo: them.team.logos?.[0]?.href || them.team.logo },
     score: [scoreOf(us), scoreOf(them)],
-    won: scoreOf(us) > scoreOf(them),
+    won: result === "W",
+    result,
+    // penalty shootout, football only: [us, them] or null
+    shootout: us.shootoutScore != null && them.shootoutScore != null ? [Number(us.shootoutScore), Number(them.shootoutScore)] : null,
   };
 }

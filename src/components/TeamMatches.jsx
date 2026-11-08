@@ -7,6 +7,7 @@ import GameDetails from "./GameDetails";
 import TeamLink from "./TeamLink";
 
 const PAGE_SIZE = 8;
+const RESULT_CLASS = { W: "win", D: "draw", L: "loss" };
 
 // Page numbers to show: always the first and last, and the pages next to the
 // current one, with null standing for a gap ("1 … 4 5 6 … 9").
@@ -86,7 +87,12 @@ export default function TeamMatches({ league, teamId }) {
   if (state.status === "error") return null;
 
   const locale = toLocale(i18n.language);
-  const matches = (state.events || []).map((e) => toMatch(e, teamId, t)).filter(Boolean);
+  // ESPN's schedule isn't in date order for every league (football lists some
+  // competitions apart), so sort rather than trust it.
+  const matches = (state.events || [])
+    .map((e) => toMatch(e, teamId, t))
+    .filter(Boolean)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
   const played = matches.filter((m) => m.state === "final" || m.state === "other").reverse();
   const coming = matches.filter((m) => m.state === "live" || m.state === "upcoming");
   const active = tab || (coming.length && !played.length ? "upcoming" : "results");
@@ -143,7 +149,7 @@ export default function TeamMatches({ league, teamId }) {
                     onKeyDown={(e) => e.key === "Enter" && setOpenId(m.id)}
                   >
                     {m.state === "final" ? (
-                      <span className={`games-log-result ${m.won ? "win" : "loss"}`}>{m.won ? "W" : "L"}</span>
+                      <span className={`games-log-result ${RESULT_CLASS[m.result]}`}>{m.result}</span>
                     ) : m.state === "live" ? (
                       <span className="games-log-result live">
                         <span className="dot"></span>
@@ -170,7 +176,7 @@ export default function TeamMatches({ league, teamId }) {
 
                     <span className="team-match-score">
                       {m.state === "final" || m.state === "live"
-                        ? `${m.score[0]}-${m.score[1]}`
+                        ? `${m.score[0]}-${m.score[1]}${m.shootout ? ` (${m.shootout[0]}-${m.shootout[1]})` : ""}`
                         : m.note || ""}
                     </span>
                   </div>

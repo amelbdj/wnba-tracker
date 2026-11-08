@@ -24,6 +24,7 @@ export default function TeamDetailPage() {
   // request and the roster section instead of showing an empty "unavailable".
   const showRoster = hasFeature(league, "players");
   const isVolleyball = getSport(league) === "volleyball";
+  const isSoccer = getSport(league) === "soccer";
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -76,6 +77,7 @@ export default function TeamDetailPage() {
   const items = team.record?.items;
   const wins = findStat(items, "Overall Record", "wins")?.value ?? 0;
   const losses = findStat(items, "Overall Record", "losses")?.value ?? 0;
+  const draws = findStat(items, "Overall Record", "ties")?.value ?? 0;
   const streakValue = findStat(items, "Overall Record", "streak")?.value;
   const streak = streakValue ? `${streakValue > 0 ? "W" : "L"}${Math.abs(streakValue)}` : null;
   const pointsForValue = findStat(items, "Overall Record", "avgPointsFor")?.value;
@@ -86,6 +88,29 @@ export default function TeamDetailPage() {
   const pointsFor = !isVolleyball && pointsForValue != null ? pointsForValue.toFixed(1) : null;
   const pointsAgainst = !isVolleyball && pointsAgainstValue != null ? pointsAgainstValue.toFixed(1) : null;
   const diff = !isVolleyball && diffValue != null ? `${diffValue >= 0 ? "+" : ""}${diffValue.toFixed(1)}` : null;
+
+  // The tiles under the team's name: a points table's columns for football,
+  // record and scoring for the other sports.
+  const goalsFor = findStat(items, "Overall Record", "pointsFor")?.displayValue ?? "0";
+  const goalsAgainst = findStat(items, "Overall Record", "pointsAgainst")?.displayValue ?? "0";
+  const tiles = isSoccer
+    ? [
+        [t("teamSoccer.points"), findStat(items, "Overall Record", "points")?.displayValue ?? "0"],
+        [t("teamSoccer.played"), findStat(items, "Overall Record", "gamesPlayed")?.displayValue ?? "0"],
+        [t("common.wins"), wins],
+        [t("teamSoccer.draws"), draws],
+        [t("common.losses"), losses],
+        [t("teamSoccer.goalsFor"), goalsFor],
+        [t("teamSoccer.goalsAgainst"), goalsAgainst],
+        [t("teamSoccer.goalDiff"), findStat(items, "Overall Record", "pointDifferential")?.displayValue ?? "0"],
+      ]
+    : [
+        [t("common.wins"), wins],
+        [t("common.losses"), losses],
+        pointsFor && [t("team.pointsPerGame"), pointsFor],
+        pointsAgainst && [t("team.pointsAgainst"), pointsAgainst],
+        diff && [t("team.differential"), diff],
+      ].filter(Boolean);
 
   const nextEvent = team.nextEvent?.[0];
   const nextComp = nextEvent?.competitions?.[0];
@@ -112,7 +137,7 @@ export default function TeamDetailPage() {
             <div>
               <div className="team-hero-name">{team.displayName}</div>
               <div className="team-hero-sub">
-                {team.standingSummary || `${wins}-${losses}`}
+                {team.standingSummary || (isSoccer ? `${wins}-${draws}-${losses}` : `${wins}-${losses}`)}
                 {streak && (
                   <span className={`streak-pill ${streak.startsWith("W") ? "win" : "loss"}`} style={{ marginLeft: 10 }}>
                     {streak}
@@ -124,32 +149,12 @@ export default function TeamDetailPage() {
           </div>
 
           <div className="team-hero-stats">
-            <div className="stat-tile">
-              <div className="stat-tile-value">{wins}</div>
-              <div className="stat-tile-label">{t("common.wins")}</div>
-            </div>
-            <div className="stat-tile">
-              <div className="stat-tile-value">{losses}</div>
-              <div className="stat-tile-label">{t("common.losses")}</div>
-            </div>
-            {pointsFor && (
-              <div className="stat-tile">
-                <div className="stat-tile-value">{pointsFor}</div>
-                <div className="stat-tile-label">{t("team.pointsPerGame")}</div>
+            {tiles.map(([label, value]) => (
+              <div key={label} className="stat-tile">
+                <div className="stat-tile-value">{value}</div>
+                <div className="stat-tile-label">{label}</div>
               </div>
-            )}
-            {pointsAgainst && (
-              <div className="stat-tile">
-                <div className="stat-tile-value">{pointsAgainst}</div>
-                <div className="stat-tile-label">{t("team.pointsAgainst")}</div>
-              </div>
-            )}
-            {diff && (
-              <div className="stat-tile">
-                <div className="stat-tile-value">{diff}</div>
-                <div className="stat-tile-label">{t("team.differential")}</div>
-              </div>
-            )}
+            ))}
           </div>
 
           {nextComp && (

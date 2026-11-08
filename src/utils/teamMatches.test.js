@@ -28,11 +28,24 @@ const final = { type: { state: "post", completed: true, name: "STATUS_FINAL", de
 describe("toMatch", () => {
   it("reads a finished match from the point of view of the requested team", () => {
     const home = toMatch(event(final), "10", t);
-    expect(home).toMatchObject({ state: "final", home: true, score: [3, 1], won: true });
+    expect(home).toMatchObject({ state: "final", home: true, score: [3, 1], won: true, result: "W" });
     expect(home.opponent).toMatchObject({ id: "20", displayName: "Away", logo: "20.png" });
 
     const away = toMatch(event(final), "20", t);
     expect(away).toMatchObject({ state: "final", home: false, score: [1, 3], won: false });
+  });
+
+  it("reads draws and penalty shootouts (football)", () => {
+    const drawn = toMatch(event(final, [1, 1]), "10", t);
+    expect(drawn).toMatchObject({ result: "D", won: false, shootout: null });
+
+    // 0-0, decided on penalties: ESPN flags the winner on the competitor
+    const shootout = event(final, [0, 0]);
+    shootout.competitions[0].competitors[0].winner = true;
+    shootout.competitions[0].competitors[0].shootoutScore = 7;
+    shootout.competitions[0].competitors[1].shootoutScore = 6;
+    expect(toMatch(shootout, "10", t)).toMatchObject({ result: "W", won: true, shootout: [7, 6] });
+    expect(toMatch(shootout, "20", t)).toMatchObject({ result: "L", shootout: [6, 7] });
   });
 
   it("distinguishes live, upcoming and never-played matches", () => {

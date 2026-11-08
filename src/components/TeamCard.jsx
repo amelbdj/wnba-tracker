@@ -2,13 +2,18 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getStat } from "../utils/stats";
 import FavoriteButton from "./FavoriteButton";
+import { getSport } from "../leagues";
 
 export default function TeamCard({ entry, conferenceAbbr, index, league }) {
   const { t } = useTranslation();
   const team = entry.team;
   const wins = getStat(entry, "wins")?.value ?? 0;
   const losses = getStat(entry, "losses")?.value ?? 0;
-  const seedStat = getStat(entry, "playoffSeed");
+  const soccer = getSport(league) === "soccer";
+  const ties = getStat(entry, "ties")?.value ?? 0;
+  const points = getStat(entry, "points")?.displayValue ?? "0";
+  // Football tables are ranked by ESPN's own `rank`; the other sports by seed.
+  const seedStat = getStat(entry, soccer ? "rank" : "playoffSeed");
   const seed = seedStat?.displayValue || index + 1;
   const winPercentStat = getStat(entry, "winPercent");
   const pct =
@@ -30,13 +35,12 @@ export default function TeamCard({ entry, conferenceAbbr, index, league }) {
 
         <div className="team-card-name">{team.displayName}</div>
         <div className="team-card-record">
-          {wins}-{losses}
+          {soccer ? `${wins}-${ties}-${losses}` : `${wins}-${losses}`}
         </div>
 
         <div className="team-card-foot">
           <span className="team-card-pct">
-            {pct.toFixed(0)}
-            {t("teams.pctWin")}
+            {soccer ? `${points} ${t("standingsSoccer.points")}` : `${pct.toFixed(0)}${t("teams.pctWin")}`}
           </span>
         </div>
       </Link>

@@ -109,6 +109,11 @@ function sortEntriesByRank(entries) {
     const seedB = b.stats?.find((s) => s.name === "playoffSeed")?.value;
     if (seedA != null && seedB != null) return seedA - seedB;
 
+    // Football tables carry ESPN's own `rank` (points, then goal difference…).
+    const rankA = a.stats?.find((s) => s.name === "rank")?.value;
+    const rankB = b.stats?.find((s) => s.name === "rank")?.value;
+    if (rankA != null && rankB != null && rankA !== rankB) return rankA - rankB;
+
     const pctA = a.stats?.find((s) => s.name === "winPercent")?.value ?? 0;
     const pctB = b.stats?.find((s) => s.name === "winPercent")?.value ?? 0;
     return pctB - pctA;

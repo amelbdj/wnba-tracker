@@ -16,7 +16,13 @@
     "ncaa": "NCAA Women's Basketball",
     "fiba": "FIBA World Cup",
     "olympics": "Olympics",
-    "ncaaVolleyball": "NCAA Women's Volleyball"
+    "ncaaVolleyball": "NCAA Women's Volleyball",
+    "premiereLigue": "French Première Ligue",
+    "uwcl": "UEFA Women's Champions League",
+    "nwsl": "NWSL",
+    "wsl": "English Women's Super League",
+    "ligaF": "Spanish Liga F",
+    "wwc": "FIFA Women's World Cup"
   },
   "common": {
     "viewStats": "View stats",
@@ -69,8 +75,11 @@
       "forfeit": "Forfeit",
       "halftime": "Halftime",
       "endPeriod": "End of Q{{period}}",
-      "endSet": "End of set {{period}}"
-    }
+      "endSet": "End of set {{period}}",
+      "afterExtraTime": "Final (AET)",
+      "afterPenalties": "Final (pens)"
+    },
+    "shootout": "Penalty shootout: {{a}} – {{b}}"
   },
   "modal": {
     "gameStats": "Game statistics",
@@ -215,7 +224,11 @@
     "all": "All",
     "guard": "Guards",
     "forward": "Forwards",
-    "center": "Centers"
+    "center": "Centers",
+    "goalkeeper": "Goalkeepers",
+    "defender": "Defenders",
+    "midfielder": "Midfielders",
+    "attacker": "Forwards"
   },
   "player": {
     "notFound": "Player not found",
@@ -450,7 +463,8 @@
   },
   "sport": {
     "basketball": "Basketball",
-    "volleyball": "Volleyball"
+    "volleyball": "Volleyball",
+    "soccer": "Soccer"
   },
   "volleyballStats": {
     "subtitle": "The top NCAA (Division I) players, category by category. Official data from NCAA.com.",
@@ -530,5 +544,33 @@
     "loading": "Loading teams…",
     "noResults": "No results for “{{query}}”",
     "volleyballNote": "Volleyball: only the top players on the NCAA leaderboards can be searched; the others are on their team's page."
+  },
+  "standingsSoccer": {
+    "played": "P",
+    "won": "W",
+    "drawn": "D",
+    "lost": "L",
+    "goalDiff": "GD",
+    "points": "Pts",
+    "goals": "Goals",
+    "zones": {
+      "championsLeague": "Champions League",
+      "championsLeagueGroup": "Champions League group stage",
+      "championsLeagueQualifying": "Champions League qualifying",
+      "relegation": "Relegation",
+      "relegationPlayoff": "Relegation playoff",
+      "roundOf16": "Qualifies for the round of 16",
+      "playoffs": "Qualifies for the playoffs",
+      "playoffsConcacaf": "Playoffs + Concacaf W Champions Cup",
+      "shieldPlayoffsConcacaf": "NWSL Shield, playoffs + Concacaf W Champions Cup"
+    }
+  },
+  "teamSoccer": {
+    "played": "Played",
+    "draws": "Draws",
+    "goalsFor": "Goals for",
+    "goalsAgainst": "Goals against",
+    "goalDiff": "Goal difference",
+    "points": "Points"
   }
 }

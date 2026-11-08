@@ -3,7 +3,7 @@
 // checking league slugs.
 //
 //  - sport:      the ESPN sport segment in API URLs (…/sports/<sport>/<slug>/…)
-//  - features:   players / statistics default to true. ESPN has no rosters or
+//  - features:   players / statistics / playoffs default to true. ESPN has no rosters or
 //                player profiles for NCAA volleyball, so the Players screens are
 //                switched off for it rather than shown empty. (Its Statistics
 //                page works: player leaderboards come from NCAA.com instead.)
@@ -18,6 +18,7 @@
 export const SPORTS = [
   { key: "basketball", labelKey: "sport.basketball", icon: "fa-solid fa-basketball" },
   { key: "volleyball", labelKey: "sport.volleyball", icon: "fa-solid fa-volleyball" },
+  { key: "soccer", labelKey: "sport.soccer", icon: "fa-solid fa-futbol" },
 ];
 
 export const LEAGUES = [
@@ -85,6 +86,65 @@ export const LEAGUES = [
     shortLabel: "JO",
     icon: "fa-solid fa-medal",
     playersMode: "aggregate",
+  },
+  // Women's football. ESPN serves it like the other sports (…/sports/soccer/<slug>),
+  // with a points table instead of win percentage. Playoff brackets (two-legged
+  // ties) and season leaderboards aren't built for it yet, so those sections are
+  // switched off; players and match details work.
+  {
+    slug: "fra.w.1",
+    sport: "soccer",
+    labelKey: "league.premiereLigue",
+    shortLabel: "Première Ligue",
+    icon: "fa-solid fa-futbol",
+    playersMode: "aggregate",
+    features: { statistics: false, playoffs: false },
+  },
+  {
+    slug: "uefa.wchampions",
+    sport: "soccer",
+    labelKey: "league.uwcl",
+    shortLabel: "UWCL",
+    icon: "fa-solid fa-star",
+    playersMode: "aggregate",
+    features: { statistics: false, playoffs: false },
+  },
+  {
+    slug: "usa.nwsl",
+    sport: "soccer",
+    labelKey: "league.nwsl",
+    shortLabel: "NWSL",
+    icon: "fa-solid fa-futbol",
+    playersMode: "aggregate",
+    features: { statistics: false, playoffs: false },
+  },
+  {
+    slug: "eng.w.1",
+    sport: "soccer",
+    labelKey: "league.wsl",
+    shortLabel: "WSL",
+    icon: "fa-solid fa-futbol",
+    playersMode: "aggregate",
+    features: { statistics: false, playoffs: false },
+  },
+  {
+    slug: "esp.w.1",
+    sport: "soccer",
+    labelKey: "league.ligaF",
+    shortLabel: "Liga F",
+    icon: "fa-solid fa-futbol",
+    playersMode: "aggregate",
+    features: { statistics: false, playoffs: false },
+  },
+  {
+    // 32 national squads: too many rosters to aggregate, so players are searched.
+    slug: "fifa.wwc",
+    sport: "soccer",
+    labelKey: "league.wwc",
+    shortLabel: "WWC",
+    icon: "fa-solid fa-earth-americas",
+    playersMode: "search",
+    features: { statistics: false, playoffs: false },
   },
 ];
 

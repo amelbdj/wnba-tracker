@@ -71,6 +71,7 @@ describe("renderCard", () => {
     "volleyball player": () => playerCard("fr", { name: "Gabby Divita", leagueName: "NCAA Volley Femmes", initials: "GD", subtitle: "Nebraska", tagline: "Stats de la saison" }),
     "league (volleyball)": () => leagueCard("fr", { leagueName: "NCAA Volley Femmes", sport: "volleyball", section: "standings" }),
     "league (basketball)": () => leagueCard("en", { leagueName: "WNBA", sport: "basketball", section: "" }),
+    "league (football)": () => leagueCard("fr", { leagueName: "Première Ligue", sport: "soccer", section: "standings" }),
   };
 
   for (const [name, build] of Object.entries(cases)) {

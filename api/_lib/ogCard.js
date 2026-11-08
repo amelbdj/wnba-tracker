@@ -266,10 +266,21 @@ export function playerCard(lang, data) {
 const ICON_STROKE = "#ffffff";
 
 function sportIcon(sport, size, accent) {
-  // Volleyball: the three curved panels around the centre, one drawn and
-  // rotated twice. Basketball: the cross and the two side seams.
+  // Football: a pentagon with seams. Volleyball: the three curved panels around
+  // the centre, one drawn and rotated twice. Basketball: the cross and the two
+  // side seams.
   const lines =
-    sport === "volleyball"
+    sport === "soccer"
+      ? [
+          // the pentagon in the middle and a seam from each corner to the edge
+          { d: "M50 33 L66.2 44.7 L60 63.7 L40 63.7 L33.8 44.7 Z", fill: ICON_STROKE },
+          { d: "M50 33 L50 4" },
+          { d: "M66.2 44.7 L93.8 35.8" },
+          { d: "M60 63.7 L77 87.2" },
+          { d: "M40 63.7 L23 87.2" },
+          { d: "M33.8 44.7 L6.2 35.8" },
+        ]
+      : sport === "volleyball"
       ? [0, 120, 240].map((angle) => ({ d: "M50 5 C 30 20 28 40 50 50 C 62 55 78 54 93 44", transform: `rotate(${angle} 50 50)` }))
       : [
           { d: "M50 4 L50 96" },
@@ -284,7 +295,7 @@ function sportIcon(sport, size, accent) {
     [
       el("circle", {}, undefined, { cx: 50, cy: 50, r: 46, fill: rgba(accent, 0.25), stroke: ICON_STROKE, strokeWidth: 3 }),
       ...lines.map((line) =>
-        el("path", {}, undefined, { fill: "none", stroke: ICON_STROKE, strokeWidth: 3, strokeLinecap: "round", ...line }),
+        el("path", {}, undefined, { fill: "none", stroke: ICON_STROKE, strokeWidth: 3, strokeLinecap: "round", strokeLinejoin: "round", ...line }),
       ),
     ],
     { width: size, height: size, viewBox: "0 0 100 100" },

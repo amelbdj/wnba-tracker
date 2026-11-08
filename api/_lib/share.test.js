@@ -110,6 +110,25 @@ describe("preview image", () => {
   });
 });
 
+describe("football leagues", () => {
+  it("are known pages, with names in every language", () => {
+    for (const slug of ["fra.w.1", "uefa.wchampions", "usa.nwsl", "eng.w.1", "esp.w.1", "fifa.wwc"]) {
+      expect(parseSharePath(`/${slug}/teams/21637`), slug).toMatchObject({ kind: "team", league: slug, id: "21637" });
+      for (const lang of ["fr", "en", "es"]) {
+        const meta = buildMeta(parseSharePath(`/${slug}/standings`), lang);
+        expect(meta.title, `${slug} ${lang}`).not.toMatch(/undefined|\{league\}/);
+        expect(meta.title.length).toBeGreaterThan(" | FRONTROW".length + 4);
+      }
+    }
+  });
+
+  it("title a team with the league's real name", () => {
+    const route = parseSharePath("/fra.w.1/teams/21637");
+    expect(buildMeta(route, "fr", { name: "FC Fleury 91" }).title).toBe("FC Fleury 91 — Première Ligue | FRONTROW");
+    expect(buildMeta(route, "en", { name: "FC Fleury 91" }).title).toBe("FC Fleury 91 — French Première Ligue | FRONTROW");
+  });
+});
+
 describe("nameFromSlug", () => {
   it("capitalises each word", () => {
     expect(nameFromSlug("gabby-divita")).toBe("Gabby Divita");

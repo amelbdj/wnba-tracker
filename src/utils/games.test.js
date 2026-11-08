@@ -7,6 +7,7 @@ import {
   getPeriodScores,
   getPollInterval,
   getSetScores,
+  getShootoutScore,
 } from "./games";
 
 const t = (key, options) => (options ? `${key}:${JSON.stringify(options)}` : key);
@@ -78,6 +79,17 @@ describe("getGameStatus", () => {
     });
   });
 
+  it("labels a game that hasn't started in the user's language", () => {
+    const status = getGameStatus(game("pre", { name: "STATUS_SCHEDULED", description: "Scheduled" }), t);
+    expect(status.label).toBe("game.scheduled");
+  });
+
+  it("tells a match settled in extra time or on penalties from a plain final", () => {
+    expect(getGameStatus(game("post", { name: "STATUS_FINAL_AET" }), t).label).toBe("game.status.afterExtraTime");
+    expect(getGameStatus(game("post", { name: "STATUS_FINAL_PEN" }), t).label).toBe("game.status.afterPenalties");
+    expect(getGameStatus(game("post", { name: "STATUS_FULL_TIME" }), t).label).toBe("game.final");
+  });
+
   it("does not call a postponed, canceled or suspended game final", () => {
     for (const [name, key] of [
       ["STATUS_POSTPONED", "postponed"],
@@ -106,6 +118,21 @@ describe("getLiveDetail", () => {
     expect(getLiveDetail(live({ type: { name: "STATUS_HALFTIME" } }), "basketball", t)).toBe(
       "game.status.halftime",
     );
+  });
+
+  it("shows football's running clock as ESPN writes it", () => {
+    expect(getLiveDetail(live({ period: 2, displayClock: "67'", type: { name: "STATUS_SECOND_HALF" } }), "soccer", t)).toBe("67'");
+    expect(getLiveDetail(live({ period: 2, displayClock: "90'+3'", type: {} }), "soccer", t)).toBe("90'+3'");
+    expect(getLiveDetail(live({ type: { name: "STATUS_HALFTIME" } }), "soccer", t)).toBe("game.status.halftime");
+  });
+});
+
+describe("getShootoutScore", () => {
+  it("is the penalty shootout score, or null when there was none", () => {
+    expect(getShootoutScore({ shootoutScore: 7 })).toBe(7);
+    expect(getShootoutScore({ shootoutScore: "0" })).toBe(0);
+    expect(getShootoutScore({})).toBeNull();
+    expect(getShootoutScore(undefined)).toBeNull();
   });
 });
 

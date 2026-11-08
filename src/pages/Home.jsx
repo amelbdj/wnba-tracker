@@ -7,6 +7,7 @@ import HeroGame from "../components/HeroGame";
 import Standings from "../components/Standings";
 import FavoriteTeams from "../components/FavoriteTeams";
 import { toLocale } from "../utils/locale";
+import { getLeague } from "../leagues";
 import { formatDateParam, getFeaturedGame } from "../utils/games";
 
 function isSameDay(a, b) {
@@ -80,7 +81,7 @@ export default function Home() {
         <div className="section-head">
           <div>
             <span className="section-eyebrow">
-              <i className="fa-solid fa-basketball"></i> {t("home.gamesToday")}
+              <i className={getLeague(league).icon}></i> {t("home.gamesToday")}
             </span>
           </div>
           {hasLive && (
@@ -98,7 +99,7 @@ export default function Home() {
           </div>
         ) : games.length === 0 ? (
           <div className="empty-state">
-            <i className="fa-solid fa-basketball"></i>
+            <i className={getLeague(league).icon}></i>
             <strong>{t("home.noGamesTitle")}</strong>
             <span>{t("home.noGamesSubtitle")}</span>
           </div>

@@ -4548,3 +4548,89 @@ a.team-link.set-table-team-link:hover {
 .vb-progress {
   margin: 14px 0 -16px;
 }
+
+.games-log-result.draw {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+/* Football: penalty shootout score beside the final score. */
+.shootout-score {
+  margin-left: 6px;
+  font-family: var(--font-body);
+  font-size: 0.55em;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.hero-shootout {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* Football points table. */
+.standings-header-row.soccer,
+.standing-row.soccer {
+  grid-template-columns: 36px minmax(0, 1fr) 34px 34px 34px 34px 46px 46px;
+}
+
+.standings-header-row.soccer span:nth-child(n + 3) {
+  text-align: center;
+}
+
+.standing-num {
+  text-align: center;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.standing-pts {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.rank-badge.zone {
+  --zone: transparent;
+  box-shadow: inset 3px 0 0 var(--zone);
+}
+
+.zone-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 14px 4px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.zone-legend li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.zone-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+@media (max-width: 640px) {
+  .standings-header-row.soccer,
+  .standing-row.soccer {
+    grid-template-columns: 28px minmax(0, 1fr) 26px 26px 26px 26px 38px;
+  }
+
+  .soccer-diff {
+    display: none;
+  }
+}
+
+/* Some teams have no logo on ESPN (a few French clubs): keep the space, hide
+   the broken-image box. */
+img:not([src]) {
+  visibility: hidden;
+}

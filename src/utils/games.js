@@ -72,6 +72,9 @@ const STATUS_KEYS = {
   STATUS_END_PERIOD: "endPeriod",
   STATUS_FINAL: "final",
   STATUS_SCHEDULED: "scheduled",
+  // football: a match settled in extra time or on penalties
+  STATUS_FINAL_AET: "afterExtraTime",
+  STATUS_FINAL_PEN: "afterPenalties",
 };
 
 // Where a game stands: { isLive, isFinal, label }. A game ESPN files as
@@ -85,8 +88,10 @@ export function getGameStatus(game, t) {
 
   const key = STATUS_KEYS[type.name];
   let label = description;
-  if (isFinal) label = t("game.final");
-  else if (type.state === "pre" && !key) label = t("game.scheduled");
+  if (isFinal) {
+    const settled = key === "afterExtraTime" || key === "afterPenalties";
+    label = settled ? t(`game.status.${key}`) : t("game.final");
+  } else if (type.state === "pre" && (!key || key === "scheduled")) label = t("game.scheduled");
   else if (key) label = t(`game.status.${key}`, { defaultValue: description });
 
   return { isLive, isFinal, label };
@@ -105,7 +110,17 @@ export function getLiveDetail(game, sport, t) {
   }
   const fallback = type?.shortDetail || type?.description || "";
   if (sport === "volleyball") return period ? t("game.set", { number: period }) : fallback;
+  // Football has a running match clock that ESPN already writes as "67'" or
+  // "90'+3'"; there are no quarters to prefix it with.
+  if (sport === "soccer") return displayClock && displayClock !== "0'" ? displayClock : fallback;
   return displayClock && period ? `Q${period} · ${displayClock}` : fallback;
+}
+
+// The penalty-shootout score of one side of a football match (ESPN's
+// `shootoutScore`), or null when the match wasn't decided on penalties.
+export function getShootoutScore(competitor) {
+  const value = competitor?.shootoutScore;
+  return value == null || value === "" ? null : Number(value);
 }
 
 // Points per period for a basketball game: [{ label, scores: [teamA, teamB] }],

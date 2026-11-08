@@ -16,7 +16,13 @@
     "ncaa": "Baloncesto femenino NCAA",
     "fiba": "Copa del Mundo FIBA",
     "olympics": "Juegos Olímpicos",
-    "ncaaVolleyball": "Voleibol femenino NCAA"
+    "ncaaVolleyball": "Voleibol femenino NCAA",
+    "premiereLigue": "Première Ligue (Francia)",
+    "uwcl": "Liga de Campeones femenina",
+    "nwsl": "NWSL",
+    "wsl": "Women's Super League (Inglaterra)",
+    "ligaF": "Liga F",
+    "wwc": "Copa Mundial Femenina"
   },
   "common": {
     "viewStats": "Ver estadísticas",
@@ -69,8 +75,11 @@
       "forfeit": "Pérdida por incomparecencia",
       "halftime": "Descanso",
       "endPeriod": "Fin del Q{{period}}",
-      "endSet": "Fin del set {{period}}"
-    }
+      "endSet": "Fin del set {{period}}",
+      "afterExtraTime": "Final (prór.)",
+      "afterPenalties": "Final (pen.)"
+    },
+    "shootout": "Tanda de penaltis: {{a}} – {{b}}"
   },
   "modal": {
     "gameStats": "Estadísticas del partido",
@@ -215,7 +224,11 @@
     "all": "Todas",
     "guard": "Bases",
     "forward": "Aleras",
-    "center": "Pívots"
+    "center": "Pívots",
+    "goalkeeper": "Porteras",
+    "defender": "Defensas",
+    "midfielder": "Centrocampistas",
+    "attacker": "Delanteras"
   },
   "player": {
     "notFound": "Jugadora no encontrada",
@@ -450,7 +463,8 @@
   },
   "sport": {
     "basketball": "Baloncesto",
-    "volleyball": "Voleibol"
+    "volleyball": "Voleibol",
+    "soccer": "Fútbol"
   },
   "volleyballStats": {
     "subtitle": "Las mejores jugadoras de la NCAA (División I), categoría por categoría. Datos oficiales de NCAA.com.",
@@ -530,5 +544,33 @@
     "loading": "Cargando equipos…",
     "noResults": "Sin resultados para «{{query}}»",
     "volleyballNote": "Voleibol: solo se pueden buscar las mejores jugadoras de las clasificaciones NCAA; las demás están en la página de su equipo."
+  },
+  "standingsSoccer": {
+    "played": "PJ",
+    "won": "G",
+    "drawn": "E",
+    "lost": "P",
+    "goalDiff": "DG",
+    "points": "Pts",
+    "goals": "Goles",
+    "zones": {
+      "championsLeague": "Liga de Campeones",
+      "championsLeagueGroup": "Liga de Campeones (fase de grupos)",
+      "championsLeagueQualifying": "Liga de Campeones (clasificatoria)",
+      "relegation": "Descenso",
+      "relegationPlayoff": "Promoción de descenso",
+      "roundOf16": "Clasifica a octavos",
+      "playoffs": "Clasifica a los playoffs",
+      "playoffsConcacaf": "Playoffs + Concacaf W Champions Cup",
+      "shieldPlayoffsConcacaf": "NWSL Shield, playoffs + Concacaf W Champions Cup"
+    }
+  },
+  "teamSoccer": {
+    "played": "Partidos",
+    "draws": "Empates",
+    "goalsFor": "Goles a favor",
+    "goalsAgainst": "Goles en contra",
+    "goalDiff": "Diferencia",
+    "points": "Puntos"
   }
 }

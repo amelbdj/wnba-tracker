@@ -5,7 +5,7 @@ import SetScores from "./SetScores";
 import TeamLink from "./TeamLink";
 import { getLeague, getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
-import { getGameStatus, getLiveDetail } from "../utils/games";
+import { getGameStatus, getLiveDetail, getShootoutScore } from "../utils/games";
 
 export default function HeroGame({ game, league }) {
   const { t, i18n } = useTranslation();
@@ -80,9 +80,16 @@ export default function HeroGame({ game, league }) {
 
             <div className="hero-center">
               {isFinal || isLive ? (
-                <span className="hero-score">
-                  {team1.score} – {team2.score}
-                </span>
+                <>
+                  <span className="hero-score">
+                    {team1.score} – {team2.score}
+                  </span>
+                  {getShootoutScore(team1) != null && (
+                    <span className="hero-shootout">
+                      {t("game.shootout", { a: getShootoutScore(team1), b: getShootoutScore(team2) })}
+                    </span>
+                  )}
+                </>
               ) : (
                 <span className="hero-vs">VS</span>
               )}

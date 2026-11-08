@@ -5,7 +5,13 @@ import SetScores from "./SetScores";
 import TeamLink from "./TeamLink";
 import { getSport } from "../leagues";
 import { toLocale } from "../utils/locale";
-import { getGameStatus, getLiveDetail } from "../utils/games";
+import { getGameStatus, getLiveDetail, getShootoutScore } from "../utils/games";
+
+// "(4)" after a football score when the match went to a penalty shootout.
+function Shootout({ competitor }) {
+  const score = getShootoutScore(competitor);
+  return score == null ? null : <span className="shootout-score">({score})</span>;
+}
 
 export default function GameCard({ game, league }) {
   const { t, i18n } = useTranslation();
@@ -19,8 +25,8 @@ export default function GameCard({ game, league }) {
 
   const score1 = Number(team1.score);
   const score2 = Number(team2.score);
-  const team1Wins = isFinal && score1 > score2;
-  const team2Wins = isFinal && score2 > score1;
+  const team1Wins = isFinal && (score1 > score2 || (score1 === score2 && Boolean(team1.winner)));
+  const team2Wins = isFinal && (score2 > score1 || (score1 === score2 && Boolean(team2.winner)));
 
   const time = new Date(game.date).toLocaleTimeString(toLocale(i18n.language), {
     hour: "2-digit",
@@ -58,7 +64,10 @@ export default function GameCard({ game, league }) {
               <img src={team1.team.logo} alt="" />
               <span className="card-team-name">{team1.team.displayName}</span>
             </TeamLink>
-            <span className="card-team-score">{team1.score}</span>
+            <span className="card-team-score">
+              {team1.score}
+              <Shootout competitor={team1} />
+            </span>
           </div>
 
           <div className="card-divider"></div>
@@ -68,7 +77,10 @@ export default function GameCard({ game, league }) {
               <img src={team2.team.logo} alt="" />
               <span className="card-team-name">{team2.team.displayName}</span>
             </TeamLink>
-            <span className="card-team-score">{team2.score}</span>
+            <span className="card-team-score">
+              {team2.score}
+              <Shootout competitor={team2} />
+            </span>
           </div>
         </div>
 

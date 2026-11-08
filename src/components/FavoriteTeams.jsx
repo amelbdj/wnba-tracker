@@ -11,6 +11,7 @@ import GameDetails from "./GameDetails";
 import TeamLink from "./TeamLink";
 
 const keyOf = (f) => `${f.league}:${f.id}`;
+const RESULT_CLASS = { W: "win", D: "draw", L: "loss" };
 
 // A team's schedule boiled down to what the card shows: the match in
 // progress or, failing that, the last result — plus the next match.
@@ -46,7 +47,7 @@ function MatchLine({ label, match, league, onOpen, locale }) {
         {scored ? (
           <>
             {match.state === "final" && (
-              <span className={`games-log-result ${match.won ? "win" : "loss"}`}>{match.won ? "W" : "L"}</span>
+              <span className={`games-log-result ${RESULT_CLASS[match.result]}`}>{match.result}</span>
             )}
             {match.score[0]}-{match.score[1]}
           </>

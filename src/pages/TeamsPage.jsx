@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getStandings } from "../services/api";
 import TeamCard from "../components/TeamCard";
-import { getLeague } from "../leagues";
+import { getLeague, getSport } from "../leagues";
 
 export default function TeamsPage() {
   const { t } = useTranslation();
@@ -81,15 +81,19 @@ export default function TeamsPage() {
       ) : (
         filteredGroups.map((group) => (
           <div key={group.id} className="section">
-            <div className="section-head">
-              <div className="section-title">{group.name}</div>
-            </div>
+            {/* A football league is a single table, whose ESPN name ("2026-27 French
+                Division 1 Féminine") says nothing the page title doesn't. */}
+            {!(getSport(league) === "soccer" && groups.length === 1) && (
+              <div className="section-head">
+                <div className="section-title">{group.name}</div>
+              </div>
+            )}
             <div className="team-grid">
               {group.entries.map((entry, i) => (
                 <TeamCard
                   key={entry.team.id}
                   entry={entry}
-                  conferenceAbbr={group.abbreviation}
+                  conferenceAbbr={getSport(league) === "soccer" && groups.length === 1 ? undefined : group.abbreviation}
                   index={i}
                   league={league}
                 />

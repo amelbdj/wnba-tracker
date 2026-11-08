@@ -6,7 +6,7 @@ import { LEAGUES, hasFeature } from "../leagues";
 import { getLastLeague, rememberLeague } from "../utils/lastLeague";
 
 // Sections that depend on a feature some leagues don't have data for.
-const SECTION_FEATURE = { players: "players", statistics: "statistics" };
+const SECTION_FEATURE = { players: "players", statistics: "statistics", playoffs: "playoffs" };
 
 export default function Layout() {
   const { league } = useParams();
