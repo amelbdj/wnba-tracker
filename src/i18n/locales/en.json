@@ -572,5 +572,32 @@
     "goalsAgainst": "Goals against",
     "goalDiff": "Goal difference",
     "points": "Points"
+  },
+  "soccerMatch": {
+    "events": "Events",
+    "stats": "Statistics",
+    "lineups": "Line-ups",
+    "bench": "Substitutes",
+    "noEvents": "No events yet.",
+    "notStarted": "The match hasn't started yet.",
+    "assist": "assist: {{name}}",
+    "penalty": "pen.",
+    "ownGoal": "o.g.",
+    "penaltyMissed": "penalty missed",
+    "subbedOff": "Substituted off",
+    "subbedOn": "Came on",
+    "stat": {
+      "possessionPct": "Possession",
+      "totalShots": "Shots",
+      "shotsOnTarget": "Shots on target",
+      "wonCorners": "Corners",
+      "totalPasses": "Passes",
+      "passPct": "Pass accuracy",
+      "foulsCommitted": "Fouls",
+      "offsides": "Offsides",
+      "saves": "Saves",
+      "yellowCards": "Yellow cards",
+      "redCards": "Red cards"
+    }
   }
 }

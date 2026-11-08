@@ -5,6 +5,7 @@ import { getSport } from "../leagues";
 import { getPeriodScores, getSetScores } from "../utils/games";
 import VolleyballBoxscore from "./VolleyballBoxscore";
 import Modal from "./Modal";
+import SoccerMatch from "./SoccerMatch";
 import TeamLink from "./TeamLink";
 
 const LIVE_REFRESH_MS = 20 * 1000;
@@ -176,11 +177,18 @@ export default function GameDetails({ gameId, league, onClose }) {
   }, [gameId, league]);
 
   const isVolleyball = getSport(league) === "volleyball";
+  const isSoccer = getSport(league) === "soccer";
 
   // ESPN's volleyball box score carries no team stats at all, only the
   // header — so volleyball shows the set-by-set scoreboard instead.
   if (isVolleyball && data?.header?.competitions?.[0]?.competitors) {
     return <VolleyballScoreboard competition={data.header.competitions[0]} league={league} onClose={onClose} />;
+  }
+
+  // Football has its own layout: score and clock, a timeline of goals and
+  // cards, team stats and line-ups.
+  if (isSoccer && data?.header?.competitions?.[0]?.competitors?.length === 2) {
+    return <SoccerMatch data={data} league={league} onClose={onClose} />;
   }
 
   if (!data || !data.boxscore || !data.boxscore.teams) {
