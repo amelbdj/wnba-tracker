@@ -146,7 +146,9 @@
     "team": "Equipo",
     "streak": "Racha",
     "subtitle": "La clasificación completa de la liga, actualizada en directo.",
-    "unavailable": "Clasificación no disponible"
+    "unavailable": "Clasificación no disponible",
+    "confPctAbbr": "% conf.",
+    "confNote": "Clasificado por el balance de conferencia; G y P son el balance de toda la temporada."
   },
   "playoffs": {
     "subtitle": "Los 8 mejores equipos de la liga y el cuadro de playoffs.",

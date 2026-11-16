@@ -146,7 +146,9 @@
     "team": "Équipe",
     "streak": "Série",
     "subtitle": "Le classement complet de la ligue, mis à jour en direct.",
-    "unavailable": "Classement indisponible"
+    "unavailable": "Classement indisponible",
+    "confPctAbbr": "% conf.",
+    "confNote": "Classé selon le bilan de conférence ; V et D sont le bilan sur toute la saison."
   },
   "playoffs": {
     "subtitle": "Les 8 meilleures équipes de la ligue et le tableau des playoffs.",

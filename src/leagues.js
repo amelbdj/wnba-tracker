@@ -10,6 +10,8 @@
 //  - standingsLevel: ESPN groups standings by depth; NCAA volleyball only
 //                returns one flat list unless asked for conference level (3).
 //  - conferenceFixes: teams ESPN files under the wrong conference group.
+//  - standingsSort: "record" orders a table by conference record, then overall
+//                (college leagues, where ESPN's playoff seeds are unreliable).
 //  - bracket:    how to find the league's playoff games when ESPN doesn't tag
 //                them as a postseason (see Bracket.jsx).
 
@@ -37,6 +39,7 @@ export const LEAGUES = [
     shortLabel: "NCAA Basket",
     icon: "fa-solid fa-graduation-cap",
     playersMode: "search",
+    standingsSort: "record",
   },
   {
     slug: "womens-college-volleyball",
@@ -46,6 +49,7 @@ export const LEAGUES = [
     icon: "fa-solid fa-volleyball",
     features: { players: false },
     standingsLevel: 3,
+    standingsSort: "record",
     // ESPN files some teams under their pre-realignment conference. Teams are
     // moved by ESPN id into the conference they really play in:
     //  - UCLA, USC, Oregon, Washington -> Big Ten. ESPN's seeds for them are

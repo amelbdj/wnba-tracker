@@ -103,21 +103,41 @@ export async function getTournamentGames(league, window) {
 // ESPN doesn't guarantee standings entries arrive in rank order (WNBA does,
 // but NCAA's conferences come back in an arbitrary order) — sort explicitly
 // by seed, falling back to win percentage when no seed is reported.
-function sortEntriesByRank(entries) {
-  return [...entries].sort((a, b) => {
-    const seedA = a.stats?.find((s) => s.name === "playoffSeed")?.value;
-    const seedB = b.stats?.find((s) => s.name === "playoffSeed")?.value;
-    if (seedA != null && seedB != null) return seedA - seedB;
+const statValue = (entry, name) => entry.stats?.find((s) => s.name === name)?.value;
 
-    // Football tables carry ESPN's own `rank` (points, then goal difference…).
-    const rankA = a.stats?.find((s) => s.name === "rank")?.value;
-    const rankB = b.stats?.find((s) => s.name === "rank")?.value;
-    if (rankA != null && rankB != null && rankA !== rankB) return rankA - rankB;
+// ESPN's own order: its playoff seed, or its `rank` (football's points table),
+// or failing both the win percentage. Right for the WNBA, FIBA, the Olympics
+// and football.
+function compareByEspnRank(a, b) {
+  const seedA = statValue(a, "playoffSeed");
+  const seedB = statValue(b, "playoffSeed");
+  if (seedA != null && seedB != null) return seedA - seedB;
 
-    const pctA = a.stats?.find((s) => s.name === "winPercent")?.value ?? 0;
-    const pctB = b.stats?.find((s) => s.name === "winPercent")?.value ?? 0;
-    return pctB - pctA;
-  });
+  const rankA = statValue(a, "rank");
+  const rankB = statValue(b, "rank");
+  if (rankA != null && rankB != null && rankA !== rankB) return rankA - rankB;
+
+  return (statValue(b, "winPercent") ?? 0) - (statValue(a, "winPercent") ?? 0);
+}
+
+// Conference table order: conference record first, then overall record, then
+// wins. ESPN's `playoffSeed` can't be trusted for college tables — teams that
+// changed conference keep seeds from the old one (a 20-6 team seeded 51st in a
+// 13-team table), and volleyball seeds disagree with the conference records
+// in most conferences.
+function compareByRecord(a, b) {
+  const n = (entry, name) => statValue(entry, name) ?? 0;
+  return (
+    n(b, "leagueWinPercent") - n(a, "leagueWinPercent") ||
+    n(b, "winPercent") - n(a, "winPercent") ||
+    n(b, "wins") - n(a, "wins") ||
+    n(a, "losses") - n(b, "losses")
+  );
+}
+
+// mode: "espn" (default) or "record" — see the two comparators above.
+export function sortEntries(entries, mode = "espn") {
+  return [...entries].sort(mode === "record" ? compareByRecord : compareByEspnRank);
 }
 
 // ESPN nests standings groups by depth (division -> conference -> ...) and
@@ -130,15 +150,9 @@ function collectGroups(node, out = []) {
 }
 
 // Moves the teams a league lists under `conferenceFixes` into the right
-// conference group (see leagues.js), keeping each group in order.
-function sortEntriesByRecord(entries) {
-  const stat = (e, name) => e.stats?.find((s) => s.name === name)?.value ?? 0;
-  return [...entries].sort(
-    (a, b) => stat(b, "winPercent") - stat(a, "winPercent") || stat(b, "wins") - stat(a, "wins"),
-  );
-}
-
-export function applyConferenceFixes(groups, fixes = []) {
+// conference group (see leagues.js), keeping each group in order (`sortMode`,
+// or by overall record for a fix marked `byRecord`).
+export function applyConferenceFixes(groups, fixes = [], sortMode = "espn") {
   for (const { conference, teams, byRecord } of fixes) {
     const target = groups.find((g) => g.name.includes(conference));
     if (!target) continue;
@@ -151,7 +165,7 @@ export function applyConferenceFixes(groups, fixes = []) {
     const present = new Set(target.entries.map((e) => String(e.team?.id)));
     const added = moved.filter((e) => !present.has(String(e.team?.id)));
     const all = [...target.entries, ...added];
-    target.entries = byRecord ? sortEntriesByRecord(all) : sortEntriesByRank(all);
+    target.entries = sortEntries(all, byRecord ? "record" : sortMode);
   }
   return groups;
 }
@@ -162,17 +176,25 @@ export async function getStandings(league) {
   const res = await fetch(url);
   const data = await res.json();
 
+  const { conferenceFixes, standingsSort } = getLeague(league);
   const groups = (data?.children || []).flatMap((child) => collectGroups(child));
   if (groups.length > 0) {
-    return applyConferenceFixes(
+    const fixed = applyConferenceFixes(
       groups.map((g) => ({
         id: g.id,
         name: g.name,
         abbreviation: g.abbreviation,
-        entries: sortEntriesByRank(g.standings.entries),
+        entries: sortEntries(g.standings.entries, standingsSort),
       })),
-      getLeague(league).conferenceFixes,
+      conferenceFixes,
+      standingsSort,
     );
+
+    // Where each team stands in its table, from the order above — not from
+    // ESPN's seed, which is what team cards used to show (and which reads "51"
+    // for a team that leads its conference).
+    for (const group of fixed) group.entries = group.entries.map((entry, i) => ({ ...entry, position: i + 1 }));
+    return fixed;
   }
 
   return [];

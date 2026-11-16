@@ -12,9 +12,9 @@ export default function TeamCard({ entry, conferenceAbbr, index, league }) {
   const soccer = getSport(league) === "soccer";
   const ties = getStat(entry, "ties")?.value ?? 0;
   const points = getStat(entry, "points")?.displayValue ?? "0";
-  // Football tables are ranked by ESPN's own `rank`; the other sports by seed.
-  const seedStat = getStat(entry, soccer ? "rank" : "playoffSeed");
-  const seed = seedStat?.displayValue || index + 1;
+  // Football tables carry ESPN's own `rank`; everywhere else it is the team's
+  // place in the (already sorted) table.
+  const seed = soccer ? getStat(entry, "rank")?.displayValue || index + 1 : entry.position ?? index + 1;
   const winPercentStat = getStat(entry, "winPercent");
   const pct =
     winPercentStat?.value != null

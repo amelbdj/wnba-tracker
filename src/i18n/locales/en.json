@@ -146,7 +146,9 @@
     "team": "Team",
     "streak": "Streak",
     "subtitle": "The league's full standings, updated live.",
-    "unavailable": "Standings unavailable"
+    "unavailable": "Standings unavailable",
+    "confPctAbbr": "Conf %",
+    "confNote": "Ranked by conference record; W and L are the full-season record."
   },
   "playoffs": {
     "subtitle": "The league's top 8 teams and the playoff bracket.",

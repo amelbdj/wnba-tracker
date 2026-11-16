@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getStandings } from "../services/api";
 import { getStat as stat } from "../utils/stats";
-import { getSport } from "../leagues";
+import { getLeague, getSport } from "../leagues";
 
 function rankClass(index) {
   if (index === 0) return "rank-badge gold";
@@ -101,57 +101,72 @@ function SoccerTable({ entries, league, showLegend }) {
   );
 }
 
-function StandingsTable({ entries, league }) {
+// `conference`: this is one conference's table (not the league-wide top teams
+// on the home page, which are ordered by overall record).
+function StandingsTable({ entries, league, conference = false }) {
   const { t } = useTranslation();
+  // College conference tables are ranked by conference record. The bar then
+  // shows that record too (W-L stay overall), so the order can be read off the
+  // table — unless conference play hasn't started, when everyone is at 0%.
+  const byConference =
+    conference &&
+    getLeague(league).standingsSort === "record" &&
+    entries.some((e) => (stat(e, "leagueWinPercent")?.value ?? 0) > 0);
+
   return (
-    <div className="standings-card">
-      <div className="standings-header-row">
-        <span>{t("standings.rank")}</span>
-        <span>{t("standings.team")}</span>
-        <span>{t("common.winAbbr")}</span>
-        <span>{t("common.lossAbbr")}</span>
-        <span className="standing-streak-head">{t("standings.streak")}</span>
-        <span>{t("common.pctWinAbbr")}</span>
-      </div>
+    <>
+      <div className="standings-card">
+        <div className="standings-header-row">
+          <span>{t("standings.rank")}</span>
+          <span>{t("standings.team")}</span>
+          <span>{t("common.winAbbr")}</span>
+          <span>{t("common.lossAbbr")}</span>
+          <span className="standing-streak-head">{t("standings.streak")}</span>
+          <span>{byConference ? t("standings.confPctAbbr") : t("common.pctWinAbbr")}</span>
+        </div>
 
-      {entries.map((entry, index) => {
-        const wins = stat(entry, "wins")?.value ?? 0;
-        const losses = stat(entry, "losses")?.value ?? 0;
-        const winPercentStat = stat(entry, "winPercent");
-        const pct =
-          winPercentStat?.value != null
-            ? winPercentStat.value * 100
-            : wins + losses > 0
-              ? (wins / (wins + losses)) * 100
-              : 0;
-        const streak = stat(entry, "streak")?.displayValue;
+        {entries.map((entry, index) => {
+          const wins = stat(entry, "wins")?.value ?? 0;
+          const losses = stat(entry, "losses")?.value ?? 0;
+          const winPercentStat = stat(entry, "winPercent");
+          const confPct = (stat(entry, "leagueWinPercent")?.value ?? 0) * 100;
+          const pct = byConference
+            ? confPct
+            : winPercentStat?.value != null
+              ? winPercentStat.value * 100
+              : wins + losses > 0
+                ? (wins / (wins + losses)) * 100
+                : 0;
+          const streak = stat(entry, "streak")?.displayValue;
 
-        return (
-          <div key={entry.team?.id || index} className="standing-row">
-            <span className={rankClass(index)}>{index + 1}</span>
+          return (
+            <div key={entry.team?.id || index} className="standing-row">
+              <span className={rankClass(index)}>{index + 1}</span>
 
-            <Link to={`/${league}/teams/${entry.team?.id}`} className="standing-team">
-              <img src={entry.team?.logos?.[0]?.href} alt="" />
-              <span>{entry.team?.displayName}</span>
-            </Link>
+              <Link to={`/${league}/teams/${entry.team?.id}`} className="standing-team">
+                <img src={entry.team?.logos?.[0]?.href} alt="" />
+                <span>{entry.team?.displayName}</span>
+              </Link>
 
-            <span className="standing-w">{wins}</span>
-            <span className="standing-l">{losses}</span>
+              <span className="standing-w">{wins}</span>
+              <span className="standing-l">{losses}</span>
 
-            <span className="standing-streak">
-              <StreakPill displayValue={streak} />
-            </span>
+              <span className="standing-streak">
+                <StreakPill displayValue={streak} />
+              </span>
 
-            <div className="standing-pct">
-              <div className="standing-pct-track">
-                <div className="standing-pct-fill" style={{ width: `${pct}%` }}></div>
+              <div className="standing-pct">
+                <div className="standing-pct-track">
+                  <div className="standing-pct-fill" style={{ width: `${pct}%` }}></div>
+                </div>
+                <span className="standing-pct-label">{pct.toFixed(0)}%</span>
               </div>
-              <span className="standing-pct-label">{pct.toFixed(0)}%</span>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+      {byConference && <p className="vb-note">{t("standings.confNote")}</p>}
+    </>
   );
 }
 
@@ -215,7 +230,7 @@ export default function Standings({ league, limit, grouped }) {
                 showLegend={index === groups.length - 1}
               />
             ) : (
-              <StandingsTable entries={group.entries} league={league} />
+              <StandingsTable entries={group.entries} league={league} conference />
             )}
           </div>
         ))}
@@ -227,7 +242,14 @@ export default function Standings({ league, limit, grouped }) {
   // would put a team with few matches played above the leaders.
   const sorted = soccer
     ? [...allEntries].sort((a, b) => (stat(a, "rank")?.value ?? 99) - (stat(b, "rank")?.value ?? 99))
-    : [...allEntries].sort((a, b) => (stat(b, "winPercent")?.value ?? 0) - (stat(a, "winPercent")?.value ?? 0));
+    : [...allEntries].sort(
+        // among equal percentages the one with more wins is the better record
+        // (28-0 above 3-0), then the one with fewer defeats
+        (a, b) =>
+          (stat(b, "winPercent")?.value ?? 0) - (stat(a, "winPercent")?.value ?? 0) ||
+          (stat(b, "wins")?.value ?? 0) - (stat(a, "wins")?.value ?? 0) ||
+          (stat(a, "losses")?.value ?? 0) - (stat(b, "losses")?.value ?? 0),
+      );
   const shown = limit ? sorted.slice(0, limit) : sorted;
 
   return soccer ? (
