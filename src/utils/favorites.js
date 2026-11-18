@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { track } from "./analytics";
 
 // Favourite teams, kept in this browser only (no account, no server). Each is
 // stored with the little it takes to draw it — league, ESPN id, name, logo —
@@ -64,11 +65,16 @@ export function useFavorites() {
     favorites,
     isFavorite: (league, id) => favorites.some((f) => sameTeam(f, league, id)),
     toggle(league, team) {
+      const removing = favorites.some((f) => sameTeam(f, league, team.id));
       publish(
-        favorites.some((f) => sameTeam(f, league, team.id))
+        removing
           ? favorites.filter((f) => !sameTeam(f, league, team.id))
           : [...favorites, toFavorite(league, team)],
       );
+      track(removing ? "favorite_removed" : "favorite_added", {
+        league,
+        team: team.displayName,
+      });
     },
   };
 }

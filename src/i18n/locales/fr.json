@@ -305,11 +305,16 @@
     "sections": [
       {
         "title": "Ce que nous collectons",
-        "body": "FRONTROW ne demande ni compte, ni e-mail, ni mot de passe, et n'enregistre aucune donnée personnelle sur ses propres serveurs. Il n'y a ni formulaire, ni profil, ni publicité."
+        "body": "FRONTROW ne demande ni compte, ni e-mail, ni mot de passe. Il n'y a ni formulaire, ni profil, ni publicité. La seule donnée recueillie sur nos propres serveurs est une mesure d'audience statistique, décrite dans la section « Mesure d'audience »."
       },
       {
         "title": "Cookies et stockage local",
-        "body": "Le site n'utilise aucun cookie. Il enregistre quelques préférences dans le stockage local de ton navigateur (localStorage), qui reste sur ton appareil et n'est jamais envoyé à nos serveurs : ta langue d'affichage (français, anglais ou espagnol), tes équipes favorites, la dernière ligue consultée et tes dernières recherches. Tu peux les effacer à tout moment en supprimant les données du site dans les réglages de ton navigateur."
+        "body": "Le site n'utilise aucun cookie. Il enregistre quelques préférences dans le stockage local de ton navigateur (localStorage), qui reste sur ton appareil et n'est jamais envoyé à nos serveurs : ta langue d'affichage (français, anglais ou espagnol), tes équipes favorites, la dernière ligue consultée et tes dernières recherches ainsi que, si tu l'as choisi, ta décision de ne pas être comptabilisé dans la mesure d'audience. Tu peux les effacer à tout moment en supprimant les données du site dans les réglages de ton navigateur."
+      },
+      {
+        "title": "Mesure d'audience",
+        "body": "Pour savoir combien de personnes utilisent FRONTROW et quelles pages sont utiles, nous utilisons Umami, un outil de mesure d'audience que nous hébergeons nous-mêmes sur un serveur loué chez OVH (stats.thefrontrow.fr). Il ne dépose aucun cookie et ne sert qu'à produire des statistiques sur ce site : rien n'est croisé avec d'autres données, revendu ou transmis à un tiers. Il enregistre la page consultée, le site d'où tu viens, ton type d'appareil, ton navigateur, ton système, la taille de ton écran, ta langue, ainsi que ton pays, ta région et ta ville approximatifs déduits de ton adresse IP. Cette adresse IP n'est pas conservée : elle sert uniquement, au moment de la requête, à calculer avec ton navigateur et une clé secrète renouvelée chaque mois un identifiant de visite qui ne permet ni de remonter à ton adresse ni de te suivre d'un mois à l'autre. Nous comptons aussi quelques actions (ligue ouverte, recherche ouverte, équipe suivie ou retirée de tes favoris), jamais le texte que tu tapes dans la recherche. Les données sont supprimées automatiquement au bout de 13 mois. Si ton navigateur envoie le signal « Ne pas me suivre », il est respecté. Tu peux aussi te désactiver à tout moment :",
+        "optOut": true
       },
       {
         "title": "Services tiers",
@@ -325,7 +330,7 @@
       },
       {
         "title": "Tes droits",
-        "body": "Nous ne conservons aucune donnée personnelle te concernant sur nos serveurs : il n'y a donc rien à consulter, rectifier ou supprimer chez nous. Les préférences locales (section « Cookies et stockage local ») restent sous ton contrôle direct. Pour toute question sur la confidentialité, tu peux nous contacter via notre compte Instagram @frontrow.sport."
+        "body": "Les statistiques d'audience ne contiennent ni ton nom, ni ton adresse IP, ni aucun identifiant de compte : nous ne pouvons pas les rattacher à toi, et il n'y a donc rien à consulter, rectifier ou supprimer individuellement. Tu peux t'en exclure à tout moment (section « Mesure d'audience »). Les préférences locales (section « Cookies et stockage local ») restent sous ton contrôle direct. Pour toute question sur la confidentialité, tu peux nous contacter via notre compte Instagram @frontrow.sport."
       },
       {
         "title": "Mineurs",
@@ -335,7 +340,13 @@
         "title": "Modifications de cette politique",
         "body": "Cette politique peut évoluer si le site change (nouvelles fonctionnalités, nouveaux partenaires). La date de mise à jour en haut de cette page reflète la dernière version."
       }
-    ]
+    ],
+    "optOut": {
+      "statusOn": "Ce navigateur est comptabilisé dans la mesure d'audience.",
+      "statusOff": "Ce navigateur n'est pas comptabilisé : plus rien n'est envoyé.",
+      "disable": "Ne plus me comptabiliser",
+      "enable": "Me comptabiliser à nouveau"
+    }
   },
   "terms": {
     "title": "Conditions d'utilisation",

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import SiteHeader from "../components/SiteHeader";
 import SiteFooter from "../components/SiteFooter";
+import AnalyticsOptOut from "../components/AnalyticsOptOut";
 
 export default function PrivacyPolicyPage() {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export default function PrivacyPolicyPage() {
             <div key={section.title}>
               <h2>{section.title}</h2>
               <p>{section.body}</p>
+              {section.optOut && <AnalyticsOptOut />}
             </div>
           ))}
         </div>

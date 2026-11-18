@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { track } from "./analytics";
 
 // Whether the quick-search dialog is open. Kept outside React so the header
 // button, the Ctrl+K shortcut and the dialog itself can all reach it.
@@ -11,7 +12,10 @@ function set(next) {
   listeners.forEach((l) => l());
 }
 
-export const openSearch = () => set(true);
+export function openSearch() {
+  if (!isOpen) track("search_opened"); // never what gets typed in it
+  set(true);
+}
 export const closeSearch = () => set(false);
 
 export function useSearchOpen() {

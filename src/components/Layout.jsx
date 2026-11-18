@@ -4,6 +4,7 @@ import Header from "./Header";
 import SiteFooter from "./SiteFooter";
 import { LEAGUES, hasFeature } from "../leagues";
 import { getLastLeague, rememberLeague } from "../utils/lastLeague";
+import { track } from "../utils/analytics";
 
 // Sections that depend on a feature some leagues don't have data for.
 const SECTION_FEATURE = { players: "players", statistics: "statistics", playoffs: "playoffs" };
@@ -14,7 +15,9 @@ export default function Layout() {
   const isValid = LEAGUES.some((l) => l.slug === league);
 
   useEffect(() => {
-    if (isValid) rememberLeague(league);
+    if (!isValid) return;
+    rememberLeague(league);
+    track("league_opened", { league });
   }, [isValid, league]);
 
   if (!isValid) {

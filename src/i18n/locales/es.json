@@ -305,11 +305,16 @@
     "sections": [
       {
         "title": "Qué recopilamos",
-        "body": "FRONTROW no pide cuenta, correo electrónico ni contraseña, y no guarda ningún dato personal en sus propios servidores. No hay formularios, perfiles ni publicidad."
+        "body": "FRONTROW no pide cuenta, correo electrónico ni contraseña. No hay formularios, perfiles ni publicidad. El único dato recopilado en nuestros propios servidores es una medición de audiencia estadística, descrita en la sección « Medición de audiencia »."
       },
       {
         "title": "Cookies y almacenamiento local",
-        "body": "El sitio no utiliza ninguna cookie. Guarda algunas preferencias en el almacenamiento local de tu navegador (localStorage), que permanece en tu dispositivo y nunca se envía a nuestros servidores: tu idioma de visualización (francés, inglés o español), tus equipos favoritos, la última liga consultada y tus últimas búsquedas. Puedes borrarlas en cualquier momento eliminando los datos del sitio en los ajustes de tu navegador."
+        "body": "El sitio no utiliza ninguna cookie. Guarda algunas preferencias en el almacenamiento local de tu navegador (localStorage), que permanece en tu dispositivo y nunca se envía a nuestros servidores: tu idioma de visualización (francés, inglés o español), tus equipos favoritos, la última liga consultada y tus últimas búsquedas y, si así lo has elegido, tu decisión de no ser contabilizado en la medición de audiencia. Puedes borrarlas en cualquier momento eliminando los datos del sitio en los ajustes de tu navegador."
+      },
+      {
+        "title": "Medición de audiencia",
+        "body": "Para saber cuántas personas usan FRONTROW y qué páginas resultan útiles, utilizamos Umami, una herramienta de medición de audiencia que alojamos nosotros mismos en un servidor alquilado a OVH (stats.thefrontrow.fr). No instala ninguna cookie y solo sirve para producir estadísticas de este sitio: nada se cruza con otros datos, se revende ni se transmite a un tercero. Registra la página consultada, el sitio del que vienes, tu tipo de dispositivo, tu navegador, tu sistema, el tamaño de tu pantalla, tu idioma, así como tu país, región y ciudad aproximados, deducidos de tu dirección IP. Esa dirección IP no se conserva: solo se usa, en el momento de la solicitud, junto con tu navegador y una clave secreta que se renueva cada mes, para calcular un identificador de visita que no permite remontarse a tu dirección ni seguirte de un mes a otro. También contamos algunas acciones (liga abierta, búsqueda abierta, equipo añadido o quitado de tus favoritos), nunca el texto que escribes en la búsqueda. Los datos se eliminan automáticamente a los 13 meses. Si tu navegador envía la señal « No rastrear », se respeta. También puedes desactivarte en cualquier momento:",
+        "optOut": true
       },
       {
         "title": "Servicios de terceros",
@@ -325,7 +330,7 @@
       },
       {
         "title": "Tus derechos",
-        "body": "No conservamos ningún dato personal tuyo en nuestros servidores, así que no hay nada que consultar, rectificar o eliminar por nuestra parte. Las preferencias locales (consulta « Cookies y almacenamiento local ») siguen bajo tu control directo. Para cualquier duda sobre privacidad, puedes escribirnos a través de nuestra cuenta de Instagram @frontrow.sport."
+        "body": "Las estadísticas de audiencia no contienen tu nombre, tu dirección IP ni ningún identificador de cuenta: no podemos vincularlas contigo, así que no hay nada que consultar, rectificar o eliminar de forma individual. Puedes excluirte en cualquier momento (consulta « Medición de audiencia »). Las preferencias locales (consulta « Cookies y almacenamiento local ») siguen bajo tu control directo. Para cualquier duda sobre privacidad, puedes escribirnos a través de nuestra cuenta de Instagram @frontrow.sport."
       },
       {
         "title": "Menores",
@@ -335,7 +340,13 @@
         "title": "Cambios en esta política",
         "body": "Esta política puede cambiar a medida que el sitio evolucione (nuevas funciones, nuevos socios). La fecha de actualización en la parte superior de esta página refleja la versión más reciente."
       }
-    ]
+    ],
+    "optOut": {
+      "statusOn": "Este navegador se contabiliza en la medición de audiencia.",
+      "statusOff": "Este navegador no se contabiliza: ya no se envía nada.",
+      "disable": "Dejar de contabilizarme",
+      "enable": "Volver a contabilizarme"
+    }
   },
   "terms": {
     "title": "Condiciones de uso",

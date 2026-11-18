@@ -305,11 +305,16 @@
     "sections": [
       {
         "title": "What we collect",
-        "body": "FRONTROW asks for no account, no email and no password, and stores no personal data on its own servers. There are no forms, profiles or ads."
+        "body": "FRONTROW asks for no account, no email and no password. There are no forms, profiles or ads. The only data gathered on our own servers is statistical audience measurement, described in the \"Audience measurement\" section."
       },
       {
         "title": "Cookies and local storage",
-        "body": "The site uses no cookies. It saves a few preferences in your browser's local storage (localStorage), which stays on your device and is never sent to our servers: your display language (French, English or Spanish), your favorite teams, the last league you viewed and your recent searches. You can erase them at any time by clearing the site's data in your browser settings."
+        "body": "The site uses no cookies. It saves a few preferences in your browser's local storage (localStorage), which stays on your device and is never sent to our servers: your display language (French, English or Spanish), your favorite teams, the last league you viewed and your recent searches and, if you chose it, your decision not to be counted in the audience measurement. You can erase them at any time by clearing the site's data in your browser settings."
+      },
+      {
+        "title": "Audience measurement",
+        "body": "To know how many people use FRONTROW and which pages are useful, we use Umami, an audience measurement tool that we host ourselves on a server rented from OVH (stats.thefrontrow.fr). It sets no cookies and is used only to produce statistics about this site: nothing is combined with other data, resold or passed to a third party. It records the page viewed, the site you came from, your device type, browser, operating system, screen size and language, as well as your approximate country, region and city deduced from your IP address. That IP address is not kept: at the moment of the request it is only used, together with your browser and a secret key renewed every month, to compute a visit identifier that cannot be traced back to your address or used to follow you from one month to the next. We also count a few actions (league opened, search opened, team added to or removed from your favorites), never the text you type in the search. The data is deleted automatically after 13 months. If your browser sends the \"Do Not Track\" signal, it is respected. You can also opt out at any time:",
+        "optOut": true
       },
       {
         "title": "Third-party services",
@@ -325,7 +330,7 @@
       },
       {
         "title": "Your rights",
-        "body": "We keep no personal data about you on our servers, so there is nothing for us to give you access to, correct or delete. The local preferences (see \"Cookies and local storage\") stay under your direct control. For any privacy question, you can contact us through our Instagram account @frontrow.sport."
+        "body": "Audience statistics hold no name, no IP address and no account identifier, so we cannot link them to you and there is nothing to look up, correct or delete individually. You can opt out at any time (see \"Audience measurement\"). The local preferences (see \"Cookies and local storage\") stay under your direct control. For any privacy question, you can contact us through our Instagram account @frontrow.sport."
       },
       {
         "title": "Children",
@@ -335,7 +340,13 @@
         "title": "Changes to this policy",
         "body": "This policy may change as the site evolves (new features, new partners). The update date at the top of this page reflects the latest version."
       }
-    ]
+    ],
+    "optOut": {
+      "statusOn": "This browser is counted in the audience measurement.",
+      "statusOff": "This browser is not counted: nothing is sent any more.",
+      "disable": "Stop counting me",
+      "enable": "Count me again"
+    }
   },
   "terms": {
     "title": "Terms of Service",
