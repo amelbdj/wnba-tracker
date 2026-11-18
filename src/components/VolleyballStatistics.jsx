@@ -252,7 +252,7 @@ export default function VolleyballStatistics({ league }) {
 
           {searching && hasMore && (
             <p className="vb-note">
-              <span className="tiktok-spinner"></span> {t("volleyballStats.searchingAll")}
+              <span className="spinner-inline"></span> {t("volleyballStats.searchingAll")}
             </p>
           )}
 

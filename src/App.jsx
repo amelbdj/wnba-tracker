@@ -5,8 +5,6 @@ import Landing from "./pages/Landing";
 import GlobalSearch from "./components/GlobalSearch";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
-import SettingsPage from "./pages/SettingsPage";
-import PostToTikTokPage from "./pages/PostToTikTokPage";
 
 // League pages load on demand, so the first visit doesn't download the
 // bracket, statistics and player code it may never open (Layout shows the
@@ -29,8 +27,6 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/terms" element={<TermsOfServicePage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/post-to-tiktok" element={<PostToTikTokPage />} />
         <Route path="/:league" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="standings" element={<StandingsPage />} />

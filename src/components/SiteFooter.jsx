@@ -18,7 +18,6 @@ export default function SiteFooter() {
       <nav className="footer-legal-links">
         <Link to="/privacy">{t("footer.privacy")}</Link>
         <Link to="/terms">{t("footer.terms")}</Link>
-        <Link to="/settings">{t("nav.settings")}</Link>
       </nav>
 
       <div className="footer-social-links">

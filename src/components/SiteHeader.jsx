@@ -31,9 +31,6 @@ export default function SiteHeader({ cta }) {
           </button>
           <InstagramLink className="header-extra header-social" />
           <TikTokLink className="header-extra header-social" />
-          <Link to="/settings" className="icon-btn header-extra" aria-label={t("nav.settings")}>
-            <i className="fa-solid fa-gear"></i>
-          </Link>
           <LanguageSwitcher />
           {cta}
         </div>

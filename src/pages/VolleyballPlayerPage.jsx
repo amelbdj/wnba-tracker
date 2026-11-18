@@ -57,7 +57,7 @@ export default function VolleyballPlayerPage() {
       <div className="container">
         <div className="skeleton skeleton-card" style={{ height: 220 }}></div>
         <p className="vb-note">
-          <span className="tiktok-spinner"></span> {t("volleyballPlayer.loading")}
+          <span className="spinner-inline"></span> {t("volleyballPlayer.loading")}
           {progress.total ? ` ${progress.fetched}/${progress.total}` : ""}
         </p>
       </div>
@@ -119,7 +119,7 @@ export default function VolleyballPlayerPage() {
 
       {!progress.done && !progress.error && (
         <p className="vb-note vb-progress">
-          <span className="tiktok-spinner"></span> {t("volleyballPlayer.loading")} {progress.fetched}/
+          <span className="spinner-inline"></span> {t("volleyballPlayer.loading")} {progress.fetched}/
           {progress.total}
         </p>
       )}
