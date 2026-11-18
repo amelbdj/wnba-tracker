@@ -1,6 +1,4 @@
-// No TikTok account URL yet — points at the Instagram profile in the
-// meantime. Swap TIKTOK_URL once a real TikTok link is available.
-const TIKTOK_URL = "https://www.instagram.com/frontrow.sport/";
+const TIKTOK_URL = "https://www.tiktok.com/@frontrow.women";
 
 export default function TikTokLink({ className = "" }) {
   return (
