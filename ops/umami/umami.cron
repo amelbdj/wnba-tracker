@@ -1,0 +1,6 @@
+# À copier dans /etc/cron.d/umami (voir DEPLOY.md, étape 7).
+# Sauvegarde à 03h17, purge à 03h32, tous les jours.
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+17 3 * * * root /home/amel/umami/backup.sh >> /var/log/umami-maintenance.log 2>&1
+32 3 * * * root /home/amel/umami/purge.sh  >> /var/log/umami-maintenance.log 2>&1

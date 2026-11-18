@@ -4,7 +4,8 @@
 #   exit 1 -> build and deploy
 #
 # The deployment quota is limited, so a push that only touches files the site
-# doesn't ship (README, tests, CI config, design sources) shouldn't use one.
+# doesn't ship (README, tests, CI config, design sources, server ops files)
+# shouldn't use one.
 #
 # What changed is measured against the last commit that was actually deployed
 # on this branch ($VERCEL_GIT_PREVIOUS_SHA), not just the latest commit: a
@@ -12,7 +13,7 @@
 # skip a deployment that contains real changes. Whenever that can't be worked
 # out, build — a needless deployment is better than a missed one.
 
-IGNORED='^(README\.md|design/.*|\.github/.*|vitest\.config\.js|.*\.test\.js)$'
+IGNORED='^(README\.md|design/.*|ops/.*|\.github/.*|vitest\.config\.js|.*\.test\.js)$'
 
 [ -n "$VERCEL_GIT_PREVIOUS_SHA" ] || { echo "No previous deployment: building."; exit 1; }
 
@@ -35,5 +36,5 @@ if echo "$CHANGED" | grep -Evq "$IGNORED"; then
   exit 1
 fi
 
-echo "Only README, tests, CI or design files changed: skipping."
+echo "Only README, tests, CI, ops or design files changed: skipping."
 exit 0

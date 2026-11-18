@@ -1,0 +1,51 @@
+# Umami (mesure d'audience) + sa base Postgres.
+# Dossier cible sur le VPS : /home/amel/umami (voir DEPLOY.md).
+#
+# - Le nom de projet est fixé pour ne jamais se mélanger aux autres stacks
+#   Docker du serveur (n8n, clipref…).
+# - Umami n'écoute que sur 127.0.0.1:3010 : c'est Caddy qui l'expose en HTTPS.
+# - Postgres n'est publié sur aucun port.
+# - Les secrets viennent du fichier .env (non versionné, voir .env.example).
+name: umami
+
+services:
+  umami:
+    image: ghcr.io/umami-software/umami:3.5.0
+    init: true
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3010:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}@db:5432/umami
+      APP_SECRET: ${APP_SECRET:?APP_SECRET manquant dans .env}
+      TWO_FACTOR_ENCRYPTION_KEY: ${TWO_FACTOR_ENCRYPTION_KEY:?TWO_FACTOR_ENCRYPTION_KEY manquant dans .env}
+      DISABLE_TELEMETRY: "1"
+    depends_on:
+      db:
+        condition: service_healthy
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:3000/api/heartbeat"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}
+    volumes:
+      - umami-db-data:/var/lib/postgresql/data
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  umami-db-data:
