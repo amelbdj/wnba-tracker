@@ -41,26 +41,12 @@ curl -sI "https://thefrontrow.fr/api/espn?dates=DATE&kind=scoreboard&league=wnba
 - Si c'est un `502` : ESPN ou la fonction a un problème. Le site doit continuer à
   afficher les données (le navigateur retombe sur ESPN en direct). Me le signaler.
 
-## 5. Test de panne du cache (une seule fois, après le premier déploiement du point de passage)
-Objectif : vérifier que le CDN de Vercel sert bien la dernière copie valide quand la
-fonction tombe (`stale-if-error`). Un redéploiement efface le cache, donc le test se
-fait sans toucher au code : la route `kind=canary` marche 5 minutes puis tombe en
-panne 5 minutes, selon l'horloge, en boucle.
+## 5. Test de panne du cache : fait le 19 novembre 2026
+Une route de contrôle alternait 5 minutes de marche et 5 minutes de panne. Pendant la
+panne, le CDN de Vercel a servi la dernière copie valide à chaque requête
+(`200` avec `x-vercel-cache: STALE` et un `age` de 36 à 308 secondes), puis il est
+revenu à une copie fraîche dès le rétablissement. `stale-if-error` fonctionne donc
+sur ce projet, et Upstash n'est pas nécessaire pour ce besoin. La route a été retirée.
 
-1. Vercel → Settings → Environment Variables : ajouter `ESPN_CANARY` = `1`
-   **avant** le push qui déploie la fonction : le déploiement l'a alors déjà et il n'en
-   faut aucun de plus. (Si elle est ajoutée après, il faut redéployer une fois pour
-   qu'elle soit prise en compte.)
-2. Lancer ce suivi pendant 12 minutes (il couvre une période de marche puis une de panne) :
-
-```bash
-for i in $(seq 1 24); do curl -s -o /dev/null -D - "https://thefrontrow.fr/api/espn?kind=canary" | grep -iE "^(HTTP|x-vercel-cache|age)" | tr -d '\r' | tr '\n' ' '; echo; sleep 30; done
-```
-
-3. Lire le résultat :
-   - pendant la période de **marche** : `200`, avec `MISS` puis `HIT`/`STALE` ;
-   - pendant la période de **panne** : si des `200` continuent d'arriver avec un `age`
-     qui grandit (`STALE`), le CDN sert bien la dernière copie : **ça marche** ;
-   - si des `500` apparaissent : le CDN ne sert pas de copie en cas d'erreur, il faudra
-     ajouter Upstash comme mémoire de secours.
-4. Supprimer la variable `ESPN_CANARY` et me donner le résultat : je retire la route.
+Limite : le CDN ne peut servir qu'une copie qu'il a déjà. Une page jamais consultée
+(ou une région sans copie) retombe sur ESPN en direct côté navigateur.
