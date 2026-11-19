@@ -33,8 +33,11 @@ Depuis un terminal, remplacer `DATE` par la date du jour au format AAAAMMJJ :
 curl -sI "https://thefrontrow.fr/api/espn?dates=DATE&kind=scoreboard&league=wnba" | grep -iE "^(HTTP|cache-control|x-vercel-cache|age)"
 ```
 
-- `HTTP/2 200` et un `cache-control` avec `s-maxage=20` pour aujourd'hui.
-- Relancer deux fois : `x-vercel-cache: HIT` doit apparaître (le cache fonctionne).
+- `HTTP/2 200`. Vercel retire les durées de l'en-tête `cache-control` (tu ne vois que
+  `public`) : c'est `x-vercel-cache` et `age` qui montrent le cache.
+- Relancer à quelques secondes d'intervalle : `HIT` avec un `age` qui monte.
+- Après 20 à 80 secondes : `STALE` (la copie périmée est servie tout de suite pendant
+  qu'une fraîche est récupérée), puis `HIT` avec un `age` revenu près de 0. C'est normal.
 - Si c'est un `502` : ESPN ou la fonction a un problème. Le site doit continuer à
   afficher les données (le navigateur retombe sur ESPN en direct). Me le signaler.
 
