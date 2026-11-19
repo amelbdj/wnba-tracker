@@ -1,7 +1,7 @@
 import { gunzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 import { NOT_FOUND_CACHE, cacheControlFor } from "./espnCache.js";
-import { encodeBody, fetchEspn, handleEspnRequest } from "./espnProxy.js";
+import { CANARY_WINDOW_MS, canaryResponse, encodeBody, fetchEspn, handleEspnRequest } from "./espnProxy.js";
 
 const NOW = Date.UTC(2026, 8, 21, 15, 0, 0); // 21 Sep 2026
 
@@ -227,5 +227,45 @@ describe("the function", () => {
       expect(res.statusCode).toBe(502);
       expect(res.headers["cache-control"]).toBe("no-store");
     }
+  });
+});
+
+describe("the stale-if-error canary", () => {
+  const healthyAt = 10 * 2 * CANARY_WINDOW_MS + 1000; // an even window
+  const failingAt = healthyAt + CANARY_WINDOW_MS; // the next one
+
+  it("is healthy for five minutes, then failing for five, on the clock", () => {
+    expect(canaryResponse(healthyAt).status).toBe(200);
+    expect(canaryResponse(healthyAt + CANARY_WINDOW_MS - 2000).status).toBe(200);
+    expect(canaryResponse(failingAt).status).toBe(500);
+    expect(canaryResponse(failingAt + CANARY_WINDOW_MS).status).toBe(200);
+  });
+
+  it("lets the CDN keep the healthy answer, and never caches the failing one", () => {
+    expect(canaryResponse(healthyAt).cacheControl).toMatch(/s-maxage=10.*stale-if-error=3600/);
+    expect(canaryResponse(failingAt).cacheControl).toBe("no-store");
+  });
+
+  it("doesn't exist unless it is switched on", async () => {
+    const res = fakeRes();
+    await handleEspnRequest(request({ kind: "canary" }), res, { ...options(fakeFetch(json({}))), canary: false });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it("answers when switched on, and never calls ESPN", async () => {
+    const f = fakeFetch(json({}));
+    const res = fakeRes();
+    await handleEspnRequest(request({ kind: "canary" }), res, { ...options(f), canary: true, now: healthyAt });
+    expect(res.statusCode).toBe(200);
+    expect(f.calls).toHaveLength(0);
+    const failing = fakeRes();
+    await handleEspnRequest(request({ kind: "canary" }), failing, { ...options(f), canary: true, now: failingAt });
+    expect(failing.statusCode).toBe(500);
+  });
+
+  it("takes no other field", async () => {
+    const res = fakeRes();
+    await handleEspnRequest(request({ kind: "canary", x: "1" }), res, { ...options(fakeFetch(json({}))), canary: true });
+    expect(res.statusCode).toBe(400);
   });
 });

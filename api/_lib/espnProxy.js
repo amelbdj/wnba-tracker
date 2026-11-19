@@ -69,11 +69,44 @@ export function encodeBody(text) {
   };
 }
 
+// A throwaway check that Vercel's CDN really serves the last good copy when
+// the function fails (stale-if-error). It can't be tested by redeploying: the
+// cache doesn't survive a deployment. So, only while ESPN_CANARY=1 is set, GET
+// /api/espn?kind=canary answers fine for five minutes, then fails for five,
+// on the clock, repeating. Fetched every 30 s, the sequence shows what the CDN
+// does when the function starts failing. Off by default; remove it once the
+// answer is known.
+export const CANARY_WINDOW_MS = 5 * 60 * 1000;
+
+export function canaryResponse(now = Date.now()) {
+  const healthy = Math.floor(now / CANARY_WINDOW_MS) % 2 === 0;
+  return healthy
+    ? {
+        status: 200,
+        cacheControl: "public, s-maxage=10, stale-if-error=3600",
+        body: { canary: "ok", at: new Date(now).toISOString() },
+      }
+    : { status: 500, cacheControl: "no-store", body: { canary: "failing" } };
+}
+
+function isCanaryRequest(req, options) {
+  const enabled = options.canary ?? process.env.ESPN_CANARY === "1";
+  const keys = Object.keys(req.query || {});
+  return enabled && keys.length === 1 && req.query.kind === "canary";
+}
+
 // The Vercel function: GET /api/espn?kind=scoreboard&league=wnba&dates=20260921
 export async function handleEspnRequest(req, res, options = {}) {
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.setHeader("Allow", "GET, HEAD");
     res.status(405).json({ error: "method_not_allowed" });
+    return;
+  }
+
+  if (isCanaryRequest(req, options)) {
+    const canary = canaryResponse(options.now);
+    res.setHeader("Cache-Control", canary.cacheControl);
+    res.status(canary.status).json(canary.body);
     return;
   }
 

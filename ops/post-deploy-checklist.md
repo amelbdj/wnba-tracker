@@ -37,3 +37,25 @@ curl -sI "https://thefrontrow.fr/api/espn?dates=DATE&kind=scoreboard&league=wnba
 - Relancer deux fois : `x-vercel-cache: HIT` doit apparaître (le cache fonctionne).
 - Si c'est un `502` : ESPN ou la fonction a un problème. Le site doit continuer à
   afficher les données (le navigateur retombe sur ESPN en direct). Me le signaler.
+
+## 5. Test de panne du cache (une seule fois, après le premier déploiement du point de passage)
+Objectif : vérifier que le CDN de Vercel sert bien la dernière copie valide quand la
+fonction tombe (`stale-if-error`). Un redéploiement efface le cache, donc le test se
+fait sans toucher au code : la route `kind=canary` marche 5 minutes puis tombe en
+panne 5 minutes, selon l'horloge, en boucle.
+
+1. Vercel → Settings → Environment Variables : ajouter `ESPN_CANARY` = `1`, puis
+   redéployer (une seule fois).
+2. Lancer ce suivi pendant 12 minutes (il couvre une période de marche puis une de panne) :
+
+```bash
+for i in $(seq 1 24); do curl -s -o /dev/null -D - "https://thefrontrow.fr/api/espn?kind=canary" | grep -iE "^(HTTP|x-vercel-cache|age)" | tr -d '\r' | tr '\n' ' '; echo; sleep 30; done
+```
+
+3. Lire le résultat :
+   - pendant la période de **marche** : `200`, avec `MISS` puis `HIT`/`STALE` ;
+   - pendant la période de **panne** : si des `200` continuent d'arriver avec un `age`
+     qui grandit (`STALE`), le CDN sert bien la dernière copie : **ça marche** ;
+   - si des `500` apparaissent : le CDN ne sert pas de copie en cas d'erreur, il faudra
+     ajouter Upstash comme mémoire de secours.
+4. Supprimer la variable `ESPN_CANARY` et me donner le résultat : je retire la route.
