@@ -45,16 +45,23 @@ ne la partage pas et ne la mets jamais dans le dépôt.
 
 ## 3. Vérifier Discord, essayer, puis activer
 
-1. **Vérifier que le webhook fonctionne**, avant même n8n. Copie l'URL du webhook dans le
-   presse-papiers, puis, dans un terminal sur ton Mac (l'adresse est lue dans le
-   presse-papiers : elle n'est pas tapée, donc pas dans l'historique) :
+1. **Vérifier que le webhook fonctionne**, avant même n8n. Dans un terminal sur ton Mac,
+   en deux commandes. La première te demande l'URL du webhook (colle-la dans le champ
+   masqué : elle ne s'affiche pas et n'entre pas dans l'historique) :
 
    ```bash
-   curl -s -H 'Content-Type: application/json' -d '{"content":"Test FRONTROW : le webhook fonctionne."}' "$(pbpaste)"
+   read -rs "U?Colle l'URL du webhook Discord, puis Entrée : "; echo
    ```
 
-   Le message doit apparaître dans ton salon Discord. Aucune sortie dans le terminal est
-   normal.
+   Colle l'URL, Entrée, puis :
+
+   ```bash
+   echo "longueur : ${#U}"; curl -s -o /dev/null -w "code HTTP : %{http_code}\n" -H 'Content-Type: application/json' -d '{"content":"Test FRONTROW : le webhook fonctionne."}' "$U"; unset U
+   ```
+
+   Il faut `code HTTP : 204` et une longueur proche de 120 ; le message doit apparaître
+   dans ton salon Discord. (Ne pas passer par `pbpaste` : copier la commande remplace
+   l'URL dans le presse-papiers.)
 2. Dans n8n, cliquer **Execute workflow** (le déclencheur « Lancer à la main »). Compter 20 à
    30 secondes : les adresses sont lues une par une, 0,7 s d'écart, pour ne pas dépasser les
    3 requêtes par seconde du relais NCAA public.
