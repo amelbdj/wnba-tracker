@@ -13,7 +13,7 @@
 # skip a deployment that contains real changes. Whenever that can't be worked
 # out, build — a needless deployment is better than a missed one.
 
-IGNORED='^(README\.md|design/.*|ops/.*|\.github/.*|vitest\.config\.js|.*\.test\.js)$'
+IGNORED='^(README\.md|design/.*|ops/.*|\.github/.*|vitest\.config\.js|scripts/buildN8nWorkflow\.js|.*\.test\.js)$'
 
 [ -n "$VERCEL_GIT_PREVIOUS_SHA" ] || { echo "No previous deployment: building."; exit 1; }
 
