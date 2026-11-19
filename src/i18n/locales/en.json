@@ -300,7 +300,7 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "updated": "Last updated: November 18, 2026",
+    "updated": "Last updated: November 19, 2026",
     "intro": "FRONTROW is an independent, fan-made project that aggregates public women's sports data. This page explains simply what we do — and mostly don't do — with your data.",
     "sections": [
       {
@@ -318,11 +318,11 @@
       },
       {
         "title": "Third-party services",
-        "body": "To display scores, standings and statistics, your browser queries ESPN's public API directly and loads logos and photos from ESPN's content network — as with any site that loads an external resource, this exposes your IP address to ESPN. The site also loads fonts (Google Fonts) and icons (Font Awesome via Cloudflare) from external CDNs, with the same consequence. For college volleyball, NCAA data goes through our server, which relays it: your IP address is not passed on to the source. Links to our Instagram and TikTok accounts lead to those platforms but place no trackers on our pages."
+        "body": "To display scores, standings and statistics, your browser queries our server, which reads ESPN's public API on your behalf and keeps a temporary copy of its answers (from a few seconds to a few hours): your IP address is therefore not passed to ESPN for this data. If our server doesn't answer, your browser may query ESPN directly, and your IP address is then visible to ESPN. Logos and photos, on the other hand, are loaded from ESPN's content network — as with any site that loads an external resource, this exposes your IP address to ESPN. The site also loads fonts (Google Fonts) and icons (Font Awesome via Cloudflare) from external CDNs, with the same consequence. For college volleyball, NCAA data goes through our server, which relays it: your IP address is not passed on to the source. Links to our Instagram and TikTok accounts lead to those platforms but place no trackers on our pages."
       },
       {
         "title": "Hosting",
-        "body": "The site is hosted by Vercel Inc. (United States). Like any host, Vercel keeps technical logs (IP address, date, page requested) to keep the service secure and running. These logs are not used to track or identify you."
+        "body": "The site is hosted by Vercel Inc. (United States). Like any host, Vercel keeps technical logs (IP address, date, page requested) to keep the service secure and running. Requests for sports data go through this same server and show up in these logs like any other page. These logs are not used to track or identify you."
       },
       {
         "title": "Security",

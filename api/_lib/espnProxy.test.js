@@ -59,6 +59,12 @@ describe("fetchEspn", () => {
     expect(f.calls).toHaveLength(1);
   });
 
+  it("reports a 400 as not found too: ESPN uses it for a resource a league doesn't have", async () => {
+    const f = fakeFetch(new Response("{}", { status: 400 }));
+    expect(await fetchEspn("https://x/y", options(f))).toMatchObject({ ok: false, notFound: true });
+    expect(f.calls).toHaveLength(1);
+  });
+
   it("retries once after a 5xx", async () => {
     const f = fakeFetch(new Response("", { status: 503 }), json({ ok: 1 }));
     expect(await fetchEspn("https://x/y", options(f))).toMatchObject({ ok: true });

@@ -57,18 +57,24 @@ describe("espnFetch", () => {
     expect(calls).toEqual([PROXY]);
   });
 
-  it("goes straight to ESPN for leagues not yet served through our endpoint", async () => {
-    const calls = stubFetch(json({ events: [] }));
-    await espnFetch("scoreboard", { league: "womens-college-basketball", dates: "20260921" });
-    expect(calls).toEqual([
-      "https://site.api.espn.com/apis/site/v2/sports/basketball/womens-college-basketball/scoreboard?dates=20260921",
-    ]);
+  it("serves every league through our endpoint, not just one", async () => {
+    for (const league of ["womens-college-basketball", "womens-college-volleyball", "fra.w.1"]) {
+      const calls = stubFetch(json({ events: [] }));
+      await espnFetch("scoreboard", { league, dates: "20260921" });
+      expect(calls, league).toEqual([`/api/espn?dates=20260921&kind=scoreboard&league=${league}`]);
+    }
   });
 
-  it("goes straight to ESPN for the league-less search while it is rolled out in stages", async () => {
+  it("serves the league-less player search through it too", async () => {
     const calls = stubFetch(json({ results: [] }));
     await espnFetch("search", { query: "clark", limit: 20 });
-    expect(calls).toEqual(["https://site.api.espn.com/apis/search/v2?query=clark&type=player&limit=20"]);
+    expect(calls).toEqual(["/api/espn?kind=search&limit=20&query=clark"]);
+  });
+
+  it("falls back to ESPN for the search too", async () => {
+    const calls = stubFetch(json({}, 502), json({ results: [] }));
+    await espnFetch("search", { query: "clark", limit: 20 });
+    expect(calls[1]).toBe("https://site.api.espn.com/apis/search/v2?query=clark&type=player&limit=20");
   });
 
   it("sends nothing anywhere for a request the app isn't allowed to make", async () => {

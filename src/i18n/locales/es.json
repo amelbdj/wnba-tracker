@@ -300,7 +300,7 @@
   },
   "privacy": {
     "title": "Política de privacidad",
-    "updated": "Última actualización: 18 de noviembre de 2026",
+    "updated": "Última actualización: 19 de noviembre de 2026",
     "intro": "FRONTROW es un proyecto independiente, creado por una persona fan, que recopila datos públicos sobre el deporte femenino. Esta página explica de forma sencilla qué hacemos — y sobre todo qué no hacemos — con tus datos.",
     "sections": [
       {
@@ -318,11 +318,11 @@
       },
       {
         "title": "Servicios de terceros",
-        "body": "Para mostrar resultados, clasificaciones y estadísticas, tu navegador consulta directamente la API pública de ESPN y carga los logotipos y las fotos desde la red de contenidos de ESPN — como en cualquier sitio que carga un recurso externo, esto expone tu dirección IP a ESPN. El sitio también carga fuentes (Google Fonts) e iconos (Font Awesome a través de Cloudflare) desde CDN externos, con la misma consecuencia. Para el voleibol universitario, los datos de la NCAA pasan por nuestro servidor, que los retransmite: tu dirección IP no se transmite a la fuente. Los enlaces a nuestras cuentas de Instagram y TikTok llevan a esas plataformas, pero no colocan ningún rastreador en nuestras páginas."
+        "body": "Para mostrar resultados, clasificaciones y estadísticas, tu navegador consulta nuestro servidor, que lee la API pública de ESPN en tu nombre y guarda una copia temporal de sus respuestas (de unos segundos a unas horas): tu dirección IP no se transmite, por tanto, a ESPN para estos datos. Si nuestro servidor no responde, tu navegador puede consultar ESPN directamente y tu dirección IP queda entonces visible para ESPN. Los logotipos y las fotos, en cambio, se cargan desde la red de contenidos de ESPN — como en cualquier sitio que carga un recurso externo, esto expone tu dirección IP a ESPN. El sitio también carga fuentes (Google Fonts) e iconos (Font Awesome a través de Cloudflare) desde CDN externos, con la misma consecuencia. Para el voleibol universitario, los datos de la NCAA pasan por nuestro servidor, que los retransmite: tu dirección IP no se transmite a la fuente. Los enlaces a nuestras cuentas de Instagram y TikTok llevan a esas plataformas, pero no colocan ningún rastreador en nuestras páginas."
       },
       {
         "title": "Alojamiento",
-        "body": "El sitio está alojado por Vercel Inc. (Estados Unidos). Como cualquier proveedor de alojamiento, Vercel conserva registros técnicos (dirección IP, fecha, página solicitada) para garantizar la seguridad y el buen funcionamiento del servicio. Estos registros no se utilizan para seguirte ni para identificarte."
+        "body": "El sitio está alojado por Vercel Inc. (Estados Unidos). Como cualquier proveedor de alojamiento, Vercel conserva registros técnicos (dirección IP, fecha, página solicitada) para garantizar la seguridad y el buen funcionamiento del servicio. Las solicitudes de datos deportivos pasan por este mismo servidor y aparecen en estos registros como cualquier otra página. Estos registros no se utilizan para seguirte ni para identificarte."
       },
       {
         "title": "Seguridad",

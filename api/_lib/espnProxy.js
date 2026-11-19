@@ -29,7 +29,10 @@ async function attempt(url, fetchImpl, timeoutMs) {
       headers: { accept: "application/json" },
       signal: controller.signal,
     });
-    if (res.status === 404) return { ok: false, notFound: true };
+    // ESPN answers 400 as well as 404 for a resource that doesn't exist for a
+    // league (e.g. league statistics for volleyball or FIBA): a real answer,
+    // not a failure, so it isn't retried or replaced by a stale copy.
+    if (res.status === 404 || res.status === 400) return { ok: false, notFound: true };
     // 5xx and network failures are worth one more try; 4xx (429 included)
     // are not: asking again right away would only make it worse.
     if (res.status >= 500) return { ok: false, retry: true };
