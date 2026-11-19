@@ -1,18 +1,15 @@
-import { getLeague, getSport } from "../leagues";
+import { getLeague } from "../leagues";
+import { espnFetch } from "./espnClient";
 import { findNcaaGame } from "../utils/ncaaTeams";
 import { formatDateParam } from "../utils/games";
 import { buildMatchBoxscore } from "../utils/volleyballBoxscore";
 
-// ESPN's URLs embed the sport (…/sports/basketball/wnba/…,
-// …/sports/volleyball/womens-college-volleyball/…), so every root is derived
-// from the league being asked about rather than fixed to one sport.
-const siteRoot = (league) => `https://site.api.espn.com/apis/site/v2/sports/${getSport(league)}`;
-const coreRoot = (league) => `https://site.api.espn.com/apis/v2/sports/${getSport(league)}`;
-const webRoot = (league) => `https://site.web.api.espn.com/apis/common/v3/sports/${getSport(league)}`;
-const SEARCH_API = "https://site.api.espn.com/apis/search/v2";
+// Every ESPN read goes through espnFetch (see espnClient.js and
+// espnRoutes.js): it names a kind of request and the league, and the URL —
+// which embeds the sport — is built there.
 
 export async function getGamesByDate(league, date) {
-  const res = await fetch(`${siteRoot(league)}/${league}/scoreboard?dates=${date}`);
+  const res = await espnFetch("scoreboard", { league, dates: date });
   const data = await res.json();
   return data.events;
 }
@@ -32,7 +29,7 @@ function formatYYYYMMDD(date) {
 // what lets the bracket know exactly where to look for real playoff games
 // (or that a just-finished tournament should still be shown as final).
 export async function getSeasonWindows(league) {
-  const res = await fetch(`${coreRoot(league)}/${league}/standings`);
+  const res = await espnFetch("standings", { league });
   const data = await res.json();
   const latest = data?.seasons?.[0];
   if (!latest) return null;
@@ -72,7 +69,7 @@ async function getGamesInWindow(league, window) {
   const days = eachDay(window.startDate, window.endDate);
   const perDay = await Promise.all(
     days.map(async (day) => {
-      const res = await fetch(`${siteRoot(league)}/${league}/scoreboard?dates=${formatYYYYMMDD(day)}`);
+      const res = await espnFetch("scoreboard", { league, dates: formatYYYYMMDD(day) });
       const data = await res.json();
       return data.events || [];
     }),
@@ -172,8 +169,7 @@ export function applyConferenceFixes(groups, fixes = [], sortMode = "espn") {
 
 export async function getStandings(league) {
   const level = getLeague(league).standingsLevel;
-  const url = `${coreRoot(league)}/${league}/standings${level ? `?level=${level}` : ""}`;
-  const res = await fetch(url);
+  const res = await espnFetch("standings", { league, level });
   const data = await res.json();
 
   const { conferenceFixes, standingsSort } = getLeague(league);
@@ -201,18 +197,19 @@ export async function getStandings(league) {
 }
 
 export async function getGameDetails(league, id) {
-  const res = await fetch(`${siteRoot(league)}/${league}/summary?event=${id}`);
+  const res = await espnFetch("summary", { league, event: id });
   const data = await res.json();
   return data;
 }
 
 // ESPN's `teams/{id}` endpoint sends no CORS headers (for any origin), so a
-// browser can't read it — the request fails outright. When that happens the
-// team is rebuilt from the standings entry instead, which has the same
-// record stats the page uses (just no next game or team colour).
+// browser can't read it directly. Through our own /api/espn it works; but if
+// that is unavailable the direct call fails outright, and the team is rebuilt
+// from the standings entry instead, which has the same record stats the page
+// uses (just no next game or team colour).
 export async function getTeamDetails(league, teamId) {
   try {
-    const res = await fetch(`${siteRoot(league)}/${league}/teams/${teamId}`);
+    const res = await espnFetch("team", { league, id: teamId });
     if (res.ok) {
       const data = await res.json();
       if (data.team) return data.team;
@@ -228,31 +225,31 @@ export async function getTeamDetails(league, teamId) {
 }
 
 export async function getTeamRoster(league, teamId) {
-  const res = await fetch(`${siteRoot(league)}/${league}/teams/${teamId}/roster`);
+  const res = await espnFetch("roster", { league, id: teamId });
   const data = await res.json();
   return data.athletes || [];
 }
 
 export async function getPlayerProfile(league, playerId) {
-  const res = await fetch(`${webRoot(league)}/${league}/athletes/${playerId}`);
+  const res = await espnFetch("athlete", { league, id: playerId });
   const data = await res.json();
   return data.athlete;
 }
 
 // Football's season totals (split by competition) and last five matches.
 export async function getPlayerOverview(league, playerId) {
-  const res = await fetch(`${webRoot(league)}/${league}/athletes/${playerId}/overview`);
+  const res = await espnFetch("athleteOverview", { league, id: playerId });
   return res.ok ? res.json() : null;
 }
 
 export async function getPlayerGameLog(league, playerId) {
-  const res = await fetch(`${webRoot(league)}/${league}/athletes/${playerId}/gamelog`);
+  const res = await espnFetch("athleteGameLog", { league, id: playerId });
   if (!res.ok) return null;
   return res.json();
 }
 
 export async function getLeagueLeaders(league) {
-  const res = await fetch(`${siteRoot(league)}/${league}/statistics`);
+  const res = await espnFetch("statistics", { league });
   const data = await res.json();
   return data?.stats?.categories || [];
 }
@@ -263,9 +260,7 @@ export async function getLeagueLeaders(league) {
 export async function searchPlayers(league, query) {
   if (!query || query.trim().length < 2) return [];
 
-  const res = await fetch(
-    `${SEARCH_API}?query=${encodeURIComponent(query.trim())}&type=player&limit=20`,
-  );
+  const res = await espnFetch("search", { query: query.trim(), limit: 20 });
   const data = await res.json();
   const contents = data?.results?.find((r) => r.type === "player")?.contents || [];
 
@@ -323,7 +318,7 @@ export async function searchPlayersAcross(query, leagues) {
   const q = query.trim();
   if (q.length < 2) return [];
 
-  const res = await fetch(`${SEARCH_API}?query=${encodeURIComponent(q)}&type=player&limit=30`);
+  const res = await espnFetch("search", { query: q, limit: 30 });
   const data = await res.json();
   const contents = data?.results?.find((r) => r.type === "player")?.contents || [];
 
@@ -488,7 +483,7 @@ export function getVolleyballBoxscore(competition) {
 // A team's whole season as ESPN lists it (played and still to come), oldest
 // first. Each event is { id, date, competitions: [{ competitors, status }] }.
 export async function getTeamSchedule(league, teamId) {
-  const res = await fetch(`${siteRoot(league)}/${league}/teams/${teamId}/schedule`);
+  const res = await espnFetch("schedule", { league, id: teamId });
   if (!res.ok) throw new Error(`Schedule unavailable (HTTP ${res.status})`);
   const { events = [] } = await res.json();
   return events;

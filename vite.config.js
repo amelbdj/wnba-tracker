@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
+import espnHandler from './api/espn.js'
 import ncaaVolleyball from './api/ncaa/volleyball.js'
 import shareHandler from './api/share.js'
 
@@ -8,6 +9,7 @@ import shareHandler from './api/share.js'
 // development runs the very same code (throttling, retries, caching headers,
 // link-preview pages) as production instead of a lookalike.
 const FUNCTIONS = {
+  '/api/espn': espnHandler,
   '/api/ncaa/volleyball': ncaaVolleyball,
   '/api/share': shareHandler,
   // loaded on first use: it pulls in the image renderer (satori + resvg)
