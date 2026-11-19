@@ -28,6 +28,6 @@ for (const r of results) {
 }
 
 const { message } = plan(results, {}, new Date());
-console.log("\n--- message qui serait envoyé (un lundi, tout va bien : le message hebdomadaire) ---");
-console.log(message ?? "(aucun message : tout va bien, hors lundi)");
+console.log("\n--- message qui serait envoyé sur Discord ---");
+console.log(message ?? "(aucun message)");
 process.exit(results.every((r) => r.ok) ? 0 : 1);

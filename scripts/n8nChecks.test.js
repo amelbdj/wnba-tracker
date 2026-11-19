@@ -200,25 +200,29 @@ describe("plan (what to say, and what to remember)", () => {
 
   const THURSDAY = new Date("2026-11-19T07:00:00Z");
   const FRIDAY = new Date("2026-11-20T07:00:00Z");
-  const MONDAY = new Date("2026-11-23T07:00:00Z");
 
-  it("says nothing when everything is fine on an ordinary day", () => {
-    expect(plan([ok("a"), ok("b")], {}, THURSDAY)).toEqual({ message: null, state: { failing: {}, lastWeeklyOk: undefined } });
+  it("says everything is OK when it is, with the count", () => {
+    const { message, state } = plan([ok("a"), ok("b")], {}, THURSDAY);
+    expect(message).toMatch(/✅.*tout est OK.*2\/2 contrôles réussis.*19\/11\/2026/);
+    expect(message).not.toMatch(/🔴|🟠/);
+    expect(state).toEqual({ failing: {}, lastOkDay: "2026-11-19" });
   });
 
-  it("sends the weekly all-clear on Monday, once", () => {
-    const first = plan([ok("a"), ok("b")], {}, MONDAY);
-    expect(first.message).toMatch(/✅.*tout va bien.*2 contrôles réussis/);
-    expect(first.state.lastWeeklyOk).toBe("2026-11-23");
-    const again = plan([ok("a"), ok("b")], first.state, new Date("2026-11-23T15:00:00Z"));
-    expect(again.message).toBeNull();
+  it("says it every day, but only once a day", () => {
+    const first = plan([ok("a")], {}, THURSDAY);
+    expect(first.message).toMatch(/tout est OK/);
+    expect(plan([ok("a")], first.state, new Date("2026-11-19T15:00:00Z")).message).toBeNull();
+    const next = plan([ok("a")], first.state, FRIDAY);
+    expect(next.message).toMatch(/tout est OK.*20\/11\/2026/);
+    expect(next.state.lastOkDay).toBe("2026-11-20");
   });
 
-  it("counts Monday in Paris, not in UTC", () => {
-    const sundayNightUtc = new Date("2026-11-22T23:30:00Z"); // lundi 00h30 à Paris
-    expect(plan([ok("a")], {}, sundayNightUtc).message).toMatch(/tout va bien/);
-    const mondayNightUtc = new Date("2026-11-23T23:30:00Z"); // mardi 00h30 à Paris
-    expect(plan([ok("a")], {}, mondayNightUtc).message).toBeNull();
+  it("counts the day in Paris, not in UTC", () => {
+    const state = { failing: {}, lastOkDay: "2026-11-22" };
+    // 22 novembre, 22 h à Paris : déjà dit aujourd'hui
+    expect(plan([ok("a")], state, new Date("2026-11-22T21:00:00Z")).message).toBeNull();
+    // 23 novembre, 00 h 30 à Paris (22 h 30 de la veille en UTC) : nouveau jour
+    expect(plan([ok("a")], state, new Date("2026-11-22T23:30:00Z")).message).toMatch(/tout est OK.*23\/11\/2026/);
   });
 
   it("reports a new failure, naming the check and the reason", () => {
@@ -226,6 +230,12 @@ describe("plan (what to say, and what to remember)", () => {
     expect(message).toMatch(/🔴.*1 contrôle en échec/);
     expect(message).toContain("ESPN · classement : champ « x » absent (nouveau)");
     expect(state.failing).toEqual({ b: { since: "2026-11-19", severity: "error" } });
+  });
+
+  it("never says everything is OK while something is failing", () => {
+    for (const results of [[ok("a"), bad("b")], [ok("a"), warn("w")]]) {
+      expect(plan(results, {}, THURSDAY).message).not.toMatch(/✅|tout est OK/);
+    }
   });
 
   it("keeps reminding every day, counting the days", () => {
@@ -237,18 +247,15 @@ describe("plan (what to say, and what to remember)", () => {
     expect(day5.message).toContain("depuis 5 jours");
   });
 
-  it("says when something is back, and then stops mentioning it", () => {
+  it("says when something is back, together with the all-clear, and then stops mentioning it", () => {
     const down = plan([bad("b", "B")], {}, THURSDAY);
     const up = plan([ok("b", "B")], down.state, FRIDAY);
     expect(up.message).toMatch(/🟢.*Rétabli.*B/);
+    expect(up.message).toMatch(/✅.*tout est OK/);
     expect(up.state.failing).toEqual({});
-    expect(plan([ok("b", "B")], up.state, new Date("2026-11-21T07:00:00Z")).message).toBeNull();
-  });
-
-  it("does not send the weekly all-clear while something is failing", () => {
-    const { message } = plan([ok("a"), bad("b")], {}, MONDAY);
-    expect(message).not.toMatch(/✅/);
-    expect(message).toMatch(/🔴/);
+    const later = plan([ok("b", "B")], up.state, new Date("2026-11-21T07:00:00Z"));
+    expect(later.message).toMatch(/tout est OK/);
+    expect(later.message).not.toMatch(/Rétabli/);
   });
 
   it("puts a warning apart from a failure", () => {
@@ -260,7 +267,7 @@ describe("plan (what to say, and what to remember)", () => {
   });
 
   it("mixes failures, warnings and recoveries in one message", () => {
-    const before = { failing: { r: { since: "2026-11-18", severity: "error" } }, lastWeeklyOk: undefined };
+    const before = { failing: { r: { since: "2026-11-18", severity: "error" } } };
     const { message } = plan([bad("a", "A"), warn("w", "W"), ok("r", "R")], before, THURSDAY);
     expect(message).toMatch(/🔴[\s\S]*🟠[\s\S]*🟢/);
   });

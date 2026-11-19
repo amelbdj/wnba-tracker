@@ -358,18 +358,18 @@ export async function runChecks(fetchOne, checks = CHECKS) {
   return checks.map((c) => byId.get(c.id)); // dans l'ordre de la liste
 }
 
-const FR_DAY = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", weekday: "short" });
 const FR_DATE = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric" });
 const ISO_DAY = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }); // AAAA-MM-JJ
 
 const daysBetween = (isoA, isoB) => Math.round((Date.parse(isoB) - Date.parse(isoA)) / 86_400_000);
 
 // Décide du message à envoyer, et de l'état à retenir pour la prochaine fois.
-//   state : { failing: { [id]: { since: "AAAA-MM-JJ", severity } }, lastWeeklyOk: "AAAA-MM-JJ" }
+//   state : { failing: { [id]: { since: "AAAA-MM-JJ", severity } }, lastOkDay: "AAAA-MM-JJ" }
 //   -> { message: string | null, state }
-// On écrit à chaque exécution où quelque chose ne va pas (rappel quotidien), une
-// fois quand un contrôle est rétabli, et le lundi quand tout va bien : sans ce
-// message hebdomadaire, impossible de savoir si le contrôle lui-même s'est arrêté.
+// On écrit tous les jours : soit ce qui ne va pas (avec depuis combien de jours),
+// soit « tout est OK ». Une fois quand un contrôle est rétabli. Le message
+// quotidien sert aussi de signe de vie : s'il n'arrive pas un matin, c'est le
+// contrôle lui-même (n8n) qu'il faut aller voir.
 export function plan(results, previous = {}, now = new Date()) {
   const today = ISO_DAY.format(now);
   const before = previous.failing || {};
@@ -388,11 +388,10 @@ export function plan(results, previous = {}, now = new Date()) {
   }
 
   const recovered = results.filter((r) => before[r.id] && !failing[r.id]);
-  const isMonday = FR_DAY.format(now).startsWith("lun");
-  const weeklyDue = isMonday && previous.lastWeeklyOk !== today;
+  const okDue = previous.lastOkDay !== today; // au plus un « tout est OK » par jour
   const allGood = Object.keys(failing).length === 0;
 
-  const state = { failing, lastWeeklyOk: previous.lastWeeklyOk };
+  const state = { failing, lastOkDay: previous.lastOkDay };
   const parts = [];
 
   if (lines.errors.length) {
@@ -404,9 +403,9 @@ export function plan(results, previous = {}, now = new Date()) {
   if (recovered.length) {
     parts.push(`🟢 **Rétabli** : ${recovered.map((r) => r.label).join(" ; ")}`);
   }
-  if (allGood && weeklyDue) {
-    parts.push(`✅ **FRONTROW — tout va bien** : ${results.length} contrôles réussis (${FR_DATE.format(now)}). Message hebdomadaire : s'il n'arrive plus un lundi, c'est le contrôle lui-même qui est à vérifier.`);
-    state.lastWeeklyOk = today;
+  if (allGood && okDue) {
+    parts.push(`✅ **FRONTROW — tout est OK** : ${results.length}/${results.length} contrôles réussis (${FR_DATE.format(now)}).`);
+    state.lastOkDay = today;
   }
 
   let message = parts.length ? parts.join("\n") : null;

@@ -27,8 +27,8 @@ Choix qui évitent les fausses alertes :
 - **🟠 à surveiller** : ça marche mais pas comme prévu, par exemple le relais NCAA privé ne
   répond plus et c'est le relais public qui sert.
 - **🟢 rétabli** : un contrôle qui était en échec est revenu.
-- **✅ tout va bien**, **chaque lundi** : sans lui, tu ne saurais pas si le contrôle
-  lui-même s'est arrêté. **S'il n'arrive pas un lundi, vérifie n8n.**
+- **✅ tout est OK**, **chaque matin** quand tout va bien (« 20/20 contrôles réussis »). Il
+  sert aussi de signe de vie : **s'il n'arrive pas un matin, c'est n8n qu'il faut aller voir.**
 
 ## 1. Créer le webhook Discord
 
