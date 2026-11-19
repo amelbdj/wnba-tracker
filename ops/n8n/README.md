@@ -65,9 +65,9 @@ ne la partage pas et ne la mets jamais dans le dépôt.
 2. Dans n8n, cliquer **Execute workflow** (le déclencheur « Lancer à la main »). Compter 20 à
    30 secondes : les adresses sont lues une par une, 0,7 s d'écart, pour ne pas dépasser les
    3 requêtes par seconde du relais NCAA public.
-3. Si tout va bien **hors lundi**, aucun message n'est envoyé : c'est normal. Les nœuds
-   doivent être verts jusqu'à « Analyser les réponses ». Un message Discord n'arrive que si
-   un contrôle échoue ou que c'est lundi.
+3. Si tout va bien, le message « ✅ tout est OK : 20/20 contrôles réussis » arrive sur
+   Discord. Les essais à la main n'enregistrent pas « déjà dit aujourd'hui » : chaque
+   essai en renvoie un. Seul le déclencheur programmé n'en envoie qu'un par jour.
 4. **Activer** le workflow (interrupteur « Active » en haut à droite). Sans cela, le
    déclencheur de 8 h ne part pas : seul le lancement à la main fonctionne.
 
