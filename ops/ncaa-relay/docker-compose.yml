@@ -1,0 +1,26 @@
+# Relais NCAA auto-hébergé (projet open source henrygd/ncaa-api, licence MIT).
+# Dossier cible sur le VPS : /home/amel/ncaa-relay (voir DEPLOY.md).
+#
+# - Il lit ncaa.com pour le compte de notre fonction Vercel (api/ncaa/volleyball).
+# - Il n'écoute que sur 127.0.0.1:3011 : c'est Caddy qui l'expose en HTTPS sur
+#   ncaa.thefrontrow.fr.
+# - NCAA_HEADER_KEY est un jeton : sans l'en-tête `x-ncaa-key` correspondant, le
+#   relais répond 401. Il vient du fichier .env (non versionné).
+# - L'image est un binaire unique sans shell (distroless) : très léger et sans
+#   rien d'inutile à attaquer.
+name: ncaa-relay
+
+services:
+  ncaa-api:
+    # Tag ou empreinte, fixé dans .env (voir .env.example et DEPLOY.md, étape 6).
+    image: ${NCAA_API_IMAGE:?NCAA_API_IMAGE manquant dans .env}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3011:3000"
+    environment:
+      NCAA_HEADER_KEY: ${NCAA_HEADER_KEY:?NCAA_HEADER_KEY manquant dans .env}
+    mem_limit: 256m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

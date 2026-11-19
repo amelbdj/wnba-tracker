@@ -1,0 +1,12 @@
+# Bloc à ajouter à la fin de /etc/caddy/Caddyfile (voir DEPLOY.md, étape 5).
+# Caddy obtient et renouvelle seul le certificat HTTPS de ncaa.thefrontrow.fr.
+# L'accès est protégé par le jeton x-ncaa-key, vérifié par le relais lui-même.
+
+ncaa.thefrontrow.fr {
+	encode zstd gzip
+
+	# HTTPS obligatoire pendant un an pour ce sous-domaine
+	header Strict-Transport-Security "max-age=31536000"
+
+	reverse_proxy 127.0.0.1:3011
+}
