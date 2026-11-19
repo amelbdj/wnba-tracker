@@ -82,4 +82,19 @@ describe("api/ncaa/volleyball", () => {
     expect(res.statusCode).toBe(502);
     expect(res.headers["Cache-Control"]).toBe("no-store");
   });
+
+  it("says which relay answered, in X-Ncaa-Source", async () => {
+    vi.stubGlobal("fetch", async () => upstream(200, { data: [] }));
+    const viaPublic = await call({ stat: "42" });
+    expect(viaPublic.headers["X-Ncaa-Source"]).toBe("public");
+
+    vi.stubEnv("NCAA_API_URL", "https://ncaa.example.fr");
+    vi.stubEnv("NCAA_API_KEY", "secret");
+    const seen = [];
+    vi.stubGlobal("fetch", async (url) => (seen.push(String(url)), upstream(200, { data: [] })));
+    const viaPrivate = await call({ stat: "42" });
+    expect(viaPrivate.headers["X-Ncaa-Source"]).toBe("private");
+    expect(seen[0]).toMatch(/^https:\/\/ncaa\.example\.fr\//);
+    vi.unstubAllEnvs();
+  });
 });

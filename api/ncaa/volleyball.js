@@ -58,6 +58,7 @@ export default async function handler(req, res) {
     }
 
     res.setHeader("Cache-Control", cacheControlFor(kind, upstream.data, req.query));
+    res.setHeader("X-Ncaa-Source", upstream.source); // "private" (our relay) or "public"
     res.status(200).json(upstream.data);
   } catch (err) {
     console.error("[ncaa]", err);
