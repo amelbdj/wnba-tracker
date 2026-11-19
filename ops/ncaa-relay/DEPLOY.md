@@ -78,7 +78,9 @@ probablement l'adresse d'OVH. Ne va pas plus loin : récupère les journaux avec
 
 ## 5. Ouvrir en HTTPS (Caddy)
 
-Seulement si l'étape 4 est réussie et que le DNS répond :
+Seulement si l'étape 4 est réussie et que le DNS répond. Le bloc n'expose que les trois
+chemins que lit le site (`/stats/`, `/scoreboard/`, `/game/`) : la page de documentation
+du relais et son proxy de logos répondraient sans jeton, ils sont donc fermés.
 
 ```bash
 cat /home/amel/ncaa-relay/Caddyfile.snippet >> /etc/caddy/Caddyfile
