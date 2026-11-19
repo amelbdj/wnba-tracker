@@ -44,8 +44,10 @@ fonction tombe (`stale-if-error`). Un redéploiement efface le cache, donc le te
 fait sans toucher au code : la route `kind=canary` marche 5 minutes puis tombe en
 panne 5 minutes, selon l'horloge, en boucle.
 
-1. Vercel → Settings → Environment Variables : ajouter `ESPN_CANARY` = `1`, puis
-   redéployer (une seule fois).
+1. Vercel → Settings → Environment Variables : ajouter `ESPN_CANARY` = `1`
+   **avant** le push qui déploie la fonction : le déploiement l'a alors déjà et il n'en
+   faut aucun de plus. (Si elle est ajoutée après, il faut redéployer une fois pour
+   qu'elle soit prise en compte.)
 2. Lancer ce suivi pendant 12 minutes (il couvre une période de marche puis une de panne) :
 
 ```bash
